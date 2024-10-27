@@ -41,18 +41,16 @@ Create a `.env` file in the root of your project and add the following variables
 
 ```bash
 PUBLIC_API_URL=your_api_url
-PRIVATE_API_KEY=your_api_key
-PRIVATE_EMBEDDINGS_MODEL=your_embeddings_model
-PRIVATE_CHAT_MODEL=your_chat_model
-PRIVATE_DB_ENDPOINT_URL=your_db_endpoint_url
-PRIVATE_DB_COLLECTION_NAME=your_db_collection_name
-PRIVATE_DB_API_KEY=your_db_api_key
-PRIVATE_SYSTEM_PROMPT=your_system_prompt
+PRIVATE_OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+PRIVATE_OPENAI_EMBEDDINGS_MODEL=YOUR_EMBEDDINGS_MODEL
+PRIVATE_OPENAI_CHAT_MODEL=YOUR_CHAT_MODEL
+PRIVATE_QDRANT_ENDPOINT_URL=YOUR_QDRANT_ENDPOINT_URL
+PRIVATE_QDRANT_COLLECTION_NAME=YOUR_QDRANT_COLLECTION_NAME
+PRIVATE_QDRANT_API_KEY=YOUR_QDRANT_API_KEY
+PRIVATE_SYSTEM_PROMPT=YOUR_SYSTEM_PROMPT
 ```
 
-Use a system prompt that is relevant to your data. Here is a template for your system prompt:
-
-Here’s a modified version that others can adapt to various custom chatbots:
+Use a system prompt that is relevant to your data. Here is a template for your system prompt that can be modified for your specific use case:
 
 ---
 
