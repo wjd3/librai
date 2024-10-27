@@ -1,0 +1,106 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Body Styles */
+body {
+	@apply bg-sage-50 dark:bg-sage-800; /* Changed to a cleaner white */
+}
+body {
+	@apply font-body;
+}
+
+/* Section Styles */
+section,
+header,
+footer {
+	@apply p-4 md:p-6 lg:p-8;
+}
+section > div.container,
+header > div.container,
+footer > div.container {
+	@apply mx-auto px-4 md:px-6 lg:px-8;
+}
+
+/* Form Element Styles */
+input,
+input[type='text'],
+textarea,
+select {
+	@apply border-2 bg-white border-gray-300 dark:bg-fuscous-gray-600 dark:border-rodeo-dust-400 w-full rounded-lg dark:text-pampas-100 placeholder:text-gray-400 dark:placeholder:text-rodeo-dust-100/50 shadow-sm focus:outline-none focus:ring-0 focus:border-gray-500 focus:dark:border-rodeo-dust-300 transition duration-200 text-lg;
+}
+
+/* Button Styles */
+button {
+	@apply dark:text-rodeo-dust-100 text-sage-50 px-4 py-2 rounded-lg border transition duration-200;
+}
+button.primary {
+	@apply bg-sage-500 dark:bg-lunar-green-500 border-tom-thumb-300 dark:border-lunar-green-700;
+}
+button.secondary {
+	@apply bg-tapa-200 dark:bg-fuscous-gray-600 border-tapa-300 dark:border-fuscous-gray-700;
+}
+button.primary:not(:disabled):hover {
+	@apply bg-sage-600 dark:bg-lunar-green-600;
+}
+button.secondary:not(:disabled):hover {
+	@apply bg-tapa-300 dark:bg-fuscous-gray-500;
+}
+button:disabled {
+	@apply opacity-70 cursor-default;
+}
+
+/* Heading Styles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	@apply text-gray-800 dark:text-pampas-100 font-display;
+}
+h1 {
+	@apply text-4xl md:text-5xl lg:text-6xl;
+}
+h2 {
+	@apply text-3xl md:text-4xl lg:text-5xl;
+}
+h3 {
+	@apply text-2xl md:text-3xl lg:text-4xl;
+}
+h4 {
+	@apply text-xl md:text-2xl lg:text-3xl;
+}
+h5 {
+	@apply text-lg md:text-xl lg:text-2xl;
+}
+h6 {
+	@apply text-base md:text-lg lg:text-xl;
+}
+
+/* Text Styles */
+p,
+span {
+	@apply text-lg text-gray-600 dark:text-rodeo-dust-100;
+}
+a {
+	@apply text-gray-700 dark:text-rodeo-dust-200 hover:text-gray-800 dark:hover:text-rodeo-dust-100;
+}
+
+/* List Styles */
+ul,
+ol {
+	@apply list-disc pl-5;
+}
+li {
+	@apply mb-2;
+}
+
+/* SVG Styles */
+svg {
+	@apply fill-gray-600 dark:fill-rodeo-dust-100;
+}
+button.primary svg,
+button.secondary svg {
+	@apply fill-current; /* Reset fill for SVGs inside buttons */
+}
