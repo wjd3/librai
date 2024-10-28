@@ -39,9 +39,9 @@
 	}
 </script>
 
-<header class="fixed top-0 left-0 right-0 w-full z-50">
-	<div class="container flex justify-between items-center">
-		<div>
+<header>
+	<div class="container relative">
+		<div class="fixed top-12 left-24">
 			{#if $chatHistory.length > 0}
 				<h1 class="mb-4 text-xl" in:fade={{ duration: 500, easing: cubicInOut }}>
 					{#if PUBLIC_APP_TITLE}
@@ -53,7 +53,7 @@
 			{/if}
 		</div>
 
-		<button class="border-0 p-3 rounded-full" onclick={toggleDarkMode}>
+		<button class="border-0 p-3 rounded-full fixed top-12 right-24 z-50" onclick={toggleDarkMode}>
 			<svg
 				class="w-5 h-5"
 				xmlns="http://www.w3.org/2000/svg"
