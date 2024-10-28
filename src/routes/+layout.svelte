@@ -39,6 +39,14 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{PUBLIC_APP_TITLE || 'Librai UI'}</title>
+	<meta
+		name="description"
+		content="A chatbot UI for interacting with an OpenAI chatbot trained on your data."
+	/>
+</svelte:head>
+
 <header>
 	<div class="container relative">
 		<div
