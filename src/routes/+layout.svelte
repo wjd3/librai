@@ -2,11 +2,12 @@
 	import '$styles/main.css';
 	import { onMount } from 'svelte';
 	import { PUBLIC_THEME } from '$env/static/public';
+	import { defaultTheme, themes } from '$lib/constants/theme';
 
 	let { children } = $props();
 
 	// Themes
-	const theme = PUBLIC_THEME || 'minimal';
+	const theme = themes.includes(PUBLIC_THEME) ? PUBLIC_THEME : defaultTheme;
 	const setTheme = () => {
 		document.documentElement.setAttribute('data-theme', theme);
 	};
@@ -14,10 +15,18 @@
 	// Dark mode
 	let isDarkMode = $state(false);
 	const setIsDarkMode = () => {
+		console.log('isDarkMode', isDarkMode);
 		document.documentElement.setAttribute('data-mode', isDarkMode ? 'dark' : 'light');
 	};
 
 	onMount(() => {
+		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		isDarkMode = mediaQuery.matches;
+		mediaQuery.addEventListener('change', (event) => {
+			isDarkMode = event.matches;
+			setIsDarkMode();
+		});
+
 		setIsDarkMode();
 
 		setTheme();

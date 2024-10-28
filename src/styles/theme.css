@@ -124,6 +124,21 @@
 
 /* ===== Neon Theme ===== */
 :root[data-theme='neon'] {
+	--btn-bg: theme('colors.pink.400');
+	--btn-hover-bg: theme('colors.pink.500');
+	--page-bg: theme('colors.white');
+	--primary-card-bg: theme('colors.pink.300');
+	--secondary-card-bg: theme('colors.gray.100');
+	--form-border: theme('colors.pink.300');
+	--form-focus-border: theme('colors.pink.200');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.pink.600');
+	--link-hover-color: theme('colors.pink.700');
+	--text-color: theme('colors.gray.800');
+	--placeholder-color: theme('colors.gray.400');
+}
+
+:root[data-theme='neon'][data-mode='dark'] {
 	--btn-bg: theme('colors.pink.500');
 	--btn-hover-bg: theme('colors.pink.600');
 	--page-bg: theme('colors.gray.900');
@@ -134,21 +149,6 @@
 	--form-bg: theme('colors.gray.800');
 	--link-color: theme('colors.pink.600');
 	--link-hover-color: theme('colors.pink.700');
-	--text-color: theme('colors.pink.500');
+	--text-color: theme('colors.white');
 	--placeholder-color: theme('colors.pink.300');
-}
-
-:root[data-theme='neon'][data-mode='dark'] {
-	--btn-bg: theme('colors.pink.600');
-	--btn-hover-bg: theme('colors.pink.700');
-	--page-bg: theme('colors.gray.800');
-	--primary-card-bg: theme('colors.pink.700');
-	--secondary-card-bg: theme('colors.gray.800');
-	--form-border: theme('colors.pink.600');
-	--form-focus-border: theme('colors.pink.500');
-	--form-bg: theme('colors.gray.900');
-	--link-color: theme('colors.pink.400');
-	--link-hover-color: theme('colors.pink.500');
-	--text-color: theme('colors.pink.200');
-	--placeholder-color: theme('colors.pink.700');
 }
