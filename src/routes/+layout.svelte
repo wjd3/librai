@@ -1,48 +1,36 @@
 <script lang="ts">
-	import { setTheme } from '$lib/ui';
 	import '$styles/main.css';
 	import { onMount } from 'svelte';
+	import { PUBLIC_THEME } from '$env/static/public';
 
 	let { children } = $props();
 
+	// Themes
+	const theme = PUBLIC_THEME || 'minimal';
+	const setTheme = () => {
+		document.documentElement.setAttribute('data-theme', theme);
+	};
+
+	// Dark mode
 	let isDarkMode = $state(false);
+	const setIsDarkMode = () => {
+		document.documentElement.setAttribute('data-mode', isDarkMode ? 'dark' : 'light');
+	};
+
 	onMount(() => {
-		isDarkMode =
-			localStorage.theme === 'dark' ||
-			(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+		setIsDarkMode();
 
-		document.documentElement.classList.toggle('dark', isDarkMode);
+		setTheme();
 	});
+	const toggleDarkMode = () => {
+		isDarkMode = !isDarkMode;
+		setIsDarkMode();
+	};
 </script>
-
-<svelte:head>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&display=swap"
-		rel="stylesheet"
-		as="style"
-		onload={() => (window.onload = null)}
-	/>
-	<noscript>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&display=swap"
-			rel="stylesheet"
-			type="text/css"
-		/>
-	</noscript>
-</svelte:head>
 
 <header class="fixed top-0 right-0">
 	<div class="container flex justify-end items-center">
-		<button
-			class="border-0 p-3 rounded-full"
-			onclick={() => {
-				isDarkMode = !isDarkMode;
-				setTheme(isDarkMode ? 'dark' : 'light');
-				document.documentElement.classList.toggle('dark', isDarkMode);
-			}}
-		>
+		<button class="border-0 p-3 rounded-full" onclick={toggleDarkMode}>
 			<svg
 				class="w-5 h-5"
 				xmlns="http://www.w3.org/2000/svg"

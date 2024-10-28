@@ -101,9 +101,7 @@
 				<!-- Chat display -->
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }}
-						<div
-							class={`max-w-[440px] px-4 py-2 rounded-t-lg w-fit flex flex-col ${isUser ? 'rounded-bl-lg self-end bg-sage-300 dark:bg-sage-600' : 'rounded-br-lg self-start bg-pampas-100 dark:bg-fuscous-gray-500'}`}
-						>
+						<div class={`chat-history ${isUser ? 'is-user' : ''}`}>
 							<p>
 								{#if isUser}
 									{message}

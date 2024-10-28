@@ -1,0 +1,154 @@
+/* ===== Minimal Theme ===== */
+:root[data-theme='minimal'] {
+	--btn-bg: theme('colors.gray.500');
+	--btn-hover-bg: theme('colors.gray.600');
+	--page-bg: theme('colors.white');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.gray.100');
+	--form-border: theme('colors.gray.300');
+	--form-focus-border: theme('colors.gray.500');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.gray.700');
+	--link-hover-color: theme('colors.gray.800');
+	--text-color: theme('colors.gray.900');
+	--placeholder-color: theme('colors.gray.400');
+}
+
+:root[data-theme='minimal'][data-mode='dark'] {
+	--btn-bg: theme('colors.gray.700');
+	--btn-hover-bg: theme('colors.gray.800');
+	--page-bg: theme('colors.gray.900');
+	--primary-card-bg: theme('colors.gray.800');
+	--secondary-card-bg: theme('colors.gray.700');
+	--form-border: theme('colors.gray.600');
+	--form-focus-border: theme('colors.gray.500');
+	--form-bg: theme('colors.gray.800');
+	--link-color: theme('colors.gray.400');
+	--link-hover-color: theme('colors.gray.500');
+	--text-color: theme('colors.gray.100');
+	--placeholder-color: theme('colors.gray.500');
+}
+
+/* ===== Natural Theme ===== */
+:root[data-theme='natural'] {
+	--btn-bg: theme('colors.green.600');
+	--btn-hover-bg: theme('colors.green.700');
+	--page-bg: theme('colors.green.50');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.green.100');
+	--form-border: theme('colors.green.300');
+	--form-focus-border: theme('colors.green.500');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.green.700');
+	--link-hover-color: theme('colors.green.800');
+	--text-color: theme('colors.gray.900');
+	--placeholder-color: theme('colors.green.300');
+}
+
+:root[data-theme='natural'][data-mode='dark'] {
+	--btn-bg: theme('colors.green.700');
+	--btn-hover-bg: theme('colors.green.800');
+	--page-bg: theme('colors.gray.900');
+	--primary-card-bg: theme('colors.gray.800');
+	--secondary-card-bg: theme('colors.gray.700');
+	--form-border: theme('colors.green.600');
+	--form-focus-border: theme('colors.green.500');
+	--form-bg: theme('colors.gray.800');
+	--link-color: theme('colors.green.400');
+	--link-hover-color: theme('colors.green.500');
+	--text-color: theme('colors.gray.100');
+	--placeholder-color: theme('colors.green.700');
+}
+
+/* ===== Ocean Theme ===== */
+:root[data-theme='ocean'] {
+	--btn-bg: theme('colors.blue.500');
+	--btn-hover-bg: theme('colors.blue.600');
+	--page-bg: theme('colors.blue.50');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.blue.100');
+	--form-border: theme('colors.blue.300');
+	--form-focus-border: theme('colors.blue.500');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.blue.600');
+	--link-hover-color: theme('colors.blue.700');
+	--text-color: theme('colors.gray.900');
+	--placeholder-color: theme('colors.blue.300');
+}
+
+:root[data-theme='ocean'][data-mode='dark'] {
+	--btn-bg: theme('colors.blue.700');
+	--btn-hover-bg: theme('colors.blue.800');
+	--page-bg: theme('colors.gray.900');
+	--primary-card-bg: theme('colors.gray.800');
+	--secondary-card-bg: theme('colors.gray.700');
+	--form-border: theme('colors.blue.600');
+	--form-focus-border: theme('colors.blue.500');
+	--form-bg: theme('colors.gray.800');
+	--link-color: theme('colors.blue.400');
+	--link-hover-color: theme('colors.blue.500');
+	--text-color: theme('colors.gray.100');
+	--placeholder-color: theme('colors.blue.700');
+}
+
+/* ===== Warm Theme ===== */
+:root[data-theme='warm'] {
+	--btn-bg: theme('colors.amber.500');
+	--btn-hover-bg: theme('colors.amber.600');
+	--page-bg: theme('colors.amber.50');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.amber.100');
+	--form-border: theme('colors.amber.300');
+	--form-focus-border: theme('colors.amber.500');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.amber.700');
+	--link-hover-color: theme('colors.amber.800');
+	--text-color: theme('colors.gray.900');
+	--placeholder-color: theme('colors.amber.300');
+}
+
+:root[data-theme='warm'][data-mode='dark'] {
+	--btn-bg: theme('colors.amber.700');
+	--btn-hover-bg: theme('colors.amber.800');
+	--page-bg: theme('colors.gray.900');
+	--primary-card-bg: theme('colors.gray.800');
+	--secondary-card-bg: theme('colors.gray.700');
+	--form-border: theme('colors.amber.600');
+	--form-focus-border: theme('colors.amber.500');
+	--form-bg: theme('colors.gray.800');
+	--link-color: theme('colors.amber.400');
+	--link-hover-color: theme('colors.amber.500');
+	--text-color: theme('colors.gray.100');
+	--placeholder-color: theme('colors.amber.700');
+}
+
+/* ===== Neon Theme ===== */
+:root[data-theme='neon'] {
+	--btn-bg: theme('colors.pink.500');
+	--btn-hover-bg: theme('colors.pink.600');
+	--page-bg: theme('colors.gray.900');
+	--primary-card-bg: theme('colors.gray.800');
+	--secondary-card-bg: theme('colors.pink.100');
+	--form-border: theme('colors.pink.300');
+	--form-focus-border: theme('colors.pink.500');
+	--form-bg: theme('colors.gray.800');
+	--link-color: theme('colors.pink.600');
+	--link-hover-color: theme('colors.pink.700');
+	--text-color: theme('colors.pink.500');
+	--placeholder-color: theme('colors.pink.300');
+}
+
+:root[data-theme='neon'][data-mode='dark'] {
+	--btn-bg: theme('colors.pink.600');
+	--btn-hover-bg: theme('colors.pink.700');
+	--page-bg: theme('colors.gray.800');
+	--primary-card-bg: theme('colors.pink.700');
+	--secondary-card-bg: theme('colors.gray.800');
+	--form-border: theme('colors.pink.600');
+	--form-focus-border: theme('colors.pink.500');
+	--form-bg: theme('colors.gray.900');
+	--link-color: theme('colors.pink.400');
+	--link-hover-color: theme('colors.pink.500');
+	--text-color: theme('colors.pink.200');
+	--placeholder-color: theme('colors.pink.700');
+}

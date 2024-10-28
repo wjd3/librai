@@ -2,12 +2,14 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@import './theme.css';
+
 /* Body Styles */
 body {
-	@apply bg-sage-50 dark:bg-sage-800; /* Changed to a cleaner white */
+	@apply bg-page-bg; /* Changed to a cleaner white */
 }
-body {
-	@apply font-body;
+body * {
+	@apply font-sans text-text-color;
 }
 
 /* Section Styles */
@@ -27,24 +29,18 @@ input,
 input[type='text'],
 textarea,
 select {
-	@apply border-2 bg-white border-gray-300 dark:bg-fuscous-gray-600 dark:border-rodeo-dust-400 w-full rounded-lg dark:text-pampas-100 placeholder:text-gray-400 dark:placeholder:text-rodeo-dust-100/50 shadow-sm focus:outline-none focus:ring-0 focus:border-gray-500 focus:dark:border-rodeo-dust-300 transition duration-200 text-lg;
+	@apply border-2 bg-form-bg border-form-border focus:border-form-focus-border w-full rounded-lg text-text-color placeholder:text-placeholder-color shadow-sm focus:outline-none focus:ring-0 transition duration-200 text-lg;
 }
 
 /* Button Styles */
 button {
-	@apply dark:text-rodeo-dust-100 text-sage-50 px-4 py-2 rounded-lg border transition duration-200;
+	@apply text-text-color px-4 py-2 rounded-lg border transition duration-200;
 }
 button.primary {
-	@apply bg-sage-500 dark:bg-lunar-green-500 border-tom-thumb-300 dark:border-lunar-green-700;
+	@apply bg-btn-bg;
 }
 button.secondary {
-	@apply bg-tapa-200 dark:bg-fuscous-gray-600 border-tapa-300 dark:border-fuscous-gray-700;
-}
-button.primary:not(:disabled):hover {
-	@apply bg-sage-600 dark:bg-lunar-green-600;
-}
-button.secondary:not(:disabled):hover {
-	@apply bg-tapa-300 dark:bg-fuscous-gray-500;
+	@apply bg-btn-bg;
 }
 button:disabled {
 	@apply opacity-70 cursor-default;
@@ -57,7 +53,7 @@ h3,
 h4,
 h5,
 h6 {
-	@apply text-gray-800 dark:text-pampas-100 font-display;
+	@apply text-text-color;
 }
 h1 {
 	@apply text-4xl md:text-5xl lg:text-6xl;
@@ -81,10 +77,10 @@ h6 {
 /* Text Styles */
 p,
 span {
-	@apply text-lg text-gray-600 dark:text-rodeo-dust-100;
+	@apply text-lg text-text-color;
 }
 a {
-	@apply text-gray-700 dark:text-rodeo-dust-200 hover:text-gray-800 dark:hover:text-rodeo-dust-100;
+	@apply text-link-color hover:text-link-hover-color;
 }
 
 /* List Styles */
@@ -98,9 +94,17 @@ li {
 
 /* SVG Styles */
 svg {
-	@apply fill-gray-600 dark:fill-rodeo-dust-100;
+	@apply fill-text-color;
 }
 button.primary svg,
 button.secondary svg {
 	@apply fill-current; /* Reset fill for SVGs inside buttons */
+}
+
+/* Chat History Styles */
+.chat-history {
+	@apply max-w-[440px] px-4 py-2 rounded-t-lg w-fit flex flex-col rounded-br-lg self-start;
+}
+.chat-history.is-user {
+	@apply rounded-bl-lg self-end;
 }
