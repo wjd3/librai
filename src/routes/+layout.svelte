@@ -1,8 +1,11 @@
 <script lang="ts">
 	import '$styles/main.css'
 	import { onMount } from 'svelte'
-	import { PUBLIC_THEME } from '$env/static/public'
+	import { PUBLIC_THEME, PUBLIC_APP_TITLE } from '$env/static/public'
 	import { defaultTheme, themes } from '$lib/constants/theme'
+	import { chatHistory } from '$lib/stores'
+	import { fade } from 'svelte/transition'
+	import { cubicInOut } from 'svelte/easing'
 
 	let { children } = $props()
 
@@ -36,8 +39,20 @@
 	}
 </script>
 
-<header class="fixed top-0 right-0">
-	<div class="container flex justify-end items-center">
+<header class="fixed top-0 left-0 right-0 w-full z-50">
+	<div class="container flex justify-between items-center">
+		<div>
+			{#if $chatHistory.length > 0}
+				<h1 class="mb-4 text-xl" in:fade={{ duration: 500, easing: cubicInOut }}>
+					{#if PUBLIC_APP_TITLE}
+						{PUBLIC_APP_TITLE}
+					{:else}
+						Librai UI
+					{/if}
+				</h1>
+			{/if}
+		</div>
+
 		<button class="border-0 p-3 rounded-full" onclick={toggleDarkMode}>
 			<svg
 				class="w-5 h-5"

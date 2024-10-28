@@ -3,10 +3,14 @@
 	import { writable } from 'svelte/store'
 	import DOMPurify from 'dompurify'
 	import { PUBLIC_APP_TITLE } from '$env/static/public'
+	import { chatHistory } from '$lib/stores'
+	import { onMount } from 'svelte'
+	import { fade } from 'svelte/transition'
+	import { cubicInOut, cubicOut } from 'svelte/easing'
 
 	let isDisabled = $state(true)
-
 	let isSubmitting = $state(false)
+
 	$effect(() => {
 		if (isSubmitting) {
 			isDisabled = true
@@ -19,7 +23,6 @@
 			isDisabled = value.length < 1
 		}
 	})
-	const chatHistory = writable<{ message: string; isUser: boolean }[]>([])
 
 	// Function to send query and get response
 	async function sendMessage() {
@@ -58,19 +61,47 @@
 		isSubmitting = false
 		isDisabled = false
 	}
+
+	// Scroll to bottom button logic
+	let isAtBottom = $state(false)
+	$effect(() => {
+		console.log('isAtBottom', isAtBottom)
+	})
+
+	function scrollToBottom() {
+		window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+	}
+	function checkScroll() {
+		isAtBottom = document.body.scrollHeight - window.scrollY <= window.innerHeight
+	}
+
+	// Add event listener to check scroll position
+	onMount(() => {
+		window.addEventListener('scroll', checkScroll)
+		checkScroll() // Check scroll position on mount
+		return () => {
+			window.removeEventListener('scroll', checkScroll)
+		}
+	})
 </script>
 
-<section class="min-h-[100dvh] flex flex-col justify-center items-center">
-	<div class="container flex flex-col justify-center items-center relative">
-		<h1 class="mb-4">
-			{#if PUBLIC_APP_TITLE}
-				{PUBLIC_APP_TITLE}
-			{:else}
-				Librai UI
-			{/if}
-		</h1>
-		<form class="w-full max-w-lg flex flex-col gap-4" onsubmit={sendMessage}>
-			<div>
+<section class="min-h-[100dvh] relative flex flex-col justify-center items-center">
+	<div class="container flex flex-col justify-center items-center">
+		{#if $chatHistory.length === 0}
+			<h1 class="mb-4">
+				{#if PUBLIC_APP_TITLE}
+					{PUBLIC_APP_TITLE}
+				{:else}
+					Librai UI
+				{/if}
+			</h1>
+		{/if}
+
+		<form
+			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 py-4 flex flex-row items-center justify-center space-x-4 z-40 bg-chat-bar-bg' : 'max-w-lg w-full flex flex-col space-y-4'}`}
+			onsubmit={sendMessage}
+		>
+			<div class={`${$chatHistory.length > 0 ? 'max-w-2xl w-full' : ''}`}>
 				<label for="chat-input" class="sr-only"> Query the custom Librai AI chatbot. </label>
 				<input
 					required
@@ -102,7 +133,7 @@
 		</form>
 
 		{#if $chatHistory.length > 0}
-			<div class="chat-history w-[600px] absolute top-56 pb-8">
+			<div class="chat-history w-[600px]" in:fade={{ duration: 500, easing: cubicInOut }}>
 				<!-- Chat display -->
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }}
@@ -142,21 +173,31 @@
 				</div>
 			</div>
 		{/if}
+
+		{#if !isAtBottom && $chatHistory.length > 0}
+			<button
+				class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2"
+				in:fade={{ duration: 250, easing: cubicOut }}
+				out:fade={{ duration: 250, easing: cubicOut }}
+				onclick={scrollToBottom}
+				aria-label="Scroll to bottom"
+			>
+				<svg
+					class="fill-text-color stroke-text-color w-5 h-5"
+					xmlns="http://www.w3.org/2000/svg"
+					width="1em"
+					height="1em"
+					viewBox="0 0 24 24"
+				>
+					<path
+						fill="none"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="1.5"
+						d="M12 4.5v15m0 0l-6-5.625m6 5.625l6-5.625"
+					/>
+				</svg>
+			</button>
+		{/if}
 	</div>
 </section>
-
-<style>
-	.chat-history {
-		animation: fadeIn 0.5s ease-in-out forwards;
-		opacity: 0;
-	}
-
-	@keyframes fadeIn {
-		0% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
-	}
-</style>

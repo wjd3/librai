@@ -13,6 +13,7 @@
 	--placeholder-color: theme('colors.gray.400');
 	--user-bubble-bg: theme('colors.gray.200');
 	--bot-bubble-bg: theme('colors.gray.300');
+	--chat-bar-bg: theme('colors.gray.100');
 }
 
 :root[data-theme='minimal'][data-mode='dark'] {
@@ -30,6 +31,7 @@
 	--placeholder-color: theme('colors.gray.500');
 	--user-bubble-bg: theme('colors.gray.600');
 	--bot-bubble-bg: theme('colors.gray.700');
+	--chat-bar-bg: theme('colors.gray.800');
 }
 
 :root[data-theme='nature'] {
@@ -47,6 +49,7 @@
 	--placeholder-color: theme('colors.green.300');
 	--user-bubble-bg: theme('colors.green.200');
 	--bot-bubble-bg: theme('colors.green.300');
+	--chat-bar-bg: theme('colors.green.100');
 }
 
 :root[data-theme='nature'][data-mode='dark'] {
@@ -64,6 +67,7 @@
 	--placeholder-color: theme('colors.green.700');
 	--user-bubble-bg: theme('colors.green.600');
 	--bot-bubble-bg: theme('colors.green.800');
+	--chat-bar-bg: theme('colors.gray.800');
 }
 
 :root[data-theme='ocean'] {
@@ -81,6 +85,7 @@
 	--placeholder-color: theme('colors.blue.300');
 	--user-bubble-bg: theme('colors.blue.200');
 	--bot-bubble-bg: theme('colors.blue.300');
+	--chat-bar-bg: theme('colors.blue.50');
 }
 
 :root[data-theme='ocean'][data-mode='dark'] {
@@ -98,6 +103,7 @@
 	--placeholder-color: theme('colors.blue.700');
 	--user-bubble-bg: theme('colors.blue.600');
 	--bot-bubble-bg: theme('colors.blue.700');
+	--chat-bar-bg: theme('colors.gray.800');
 }
 
 :root[data-theme='warm'] {
@@ -115,6 +121,7 @@
 	--placeholder-color: theme('colors.amber.300');
 	--user-bubble-bg: theme('colors.amber.200');
 	--bot-bubble-bg: theme('colors.amber.300');
+	--chat-bar-bg: theme('colors.amber.50');
 }
 
 :root[data-theme='warm'][data-mode='dark'] {
@@ -132,6 +139,7 @@
 	--placeholder-color: theme('colors.amber.700');
 	--user-bubble-bg: theme('colors.amber.600');
 	--bot-bubble-bg: theme('colors.amber.700');
+	--chat-bar-bg: theme('colors.gray.800');
 }
 
 :root[data-theme='neon'] {
@@ -149,6 +157,7 @@
 	--placeholder-color: theme('colors.gray.400');
 	--user-bubble-bg: theme('colors.pink.200');
 	--bot-bubble-bg: theme('colors.pink.300');
+	--chat-bar-bg: theme('colors.white');
 }
 
 :root[data-theme='neon'][data-mode='dark'] {
@@ -166,4 +175,5 @@
 	--placeholder-color: theme('colors.pink.300');
 	--user-bubble-bg: theme('colors.pink.400');
 	--bot-bubble-bg: theme('colors.pink.500');
+	--chat-bar-bg: theme('colors.gray.800');
 }

@@ -22,7 +22,8 @@ export default {
 				'text-color': 'var(--text-color)',
 				'placeholder-color': 'var(--placeholder-color)',
 				'user-bubble-bg': 'var(--user-bubble-bg)',
-				'bot-bubble-bg': 'var(--bot-bubble-bg)'
+				'bot-bubble-bg': 'var(--bot-bubble-bg)',
+				'chat-bar-bg': 'var(--chat-bar-bg)'
 			}
 		}
 	},
