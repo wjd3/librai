@@ -14,7 +14,7 @@ const qdrantClient = new QdrantClient({
 	apiKey: PRIVATE_QDRANT_API_KEY
 })
 
-export async function getSemanticResults(query: string, topK: number = 3) {
+export async function getSemanticResults(query: string, topK: number = 5) {
 	const queryEmbedding = await OpenAIService.getEmbedding(query)
 	const searchResults = await qdrantClient.search(PRIVATE_QDRANT_COLLECTION_NAME, {
 		vector: queryEmbedding,

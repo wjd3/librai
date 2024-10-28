@@ -12,7 +12,7 @@ export const POST = async ({ request }) => {
 	try {
 		// Retrieve context from Qdrant
 		const searchResults = await getSemanticResults(query)
-		const context = searchResults.map((result) => result.content).join('\n\n')
+		const context = searchResults.map((result) => `\n\n${result.content}`).join('')
 
 		// Format the prompt with context
 		const queryWithContext = humanTemplate.replace('{query}', query).replace('{context}', context)

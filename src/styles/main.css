@@ -113,3 +113,23 @@ button.secondary svg {
 .chat-message.is-user {
 	@apply rounded-bl-lg self-end bg-user-bubble-bg;
 }
+.chat-message h1 {
+	@apply text-2xl;
+}
+.chat-message h2 {
+	@apply text-xl;
+}
+.chat-message h3,
+.chat-message h4,
+.chat-message h5,
+.chat-message h6 {
+	@apply text-lg;
+}
+.chat-message li,
+.chat-message strong,
+.chat-message em,
+.chat-message b,
+.chat-message span,
+.chat-message p {
+	@apply text-lg;
+}

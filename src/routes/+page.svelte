@@ -171,13 +171,11 @@
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }, i}
 						<div class={`chat-message ${isUser ? 'is-user' : ''}`}>
-							<p>
-								{#if isUser}
-									{message}
-								{:else if typeof window != 'undefined'}
-									{@html marked.parse(DOMPurify.sanitize(message))}
-								{/if}
-							</p>
+							{#if isUser}
+								<p>{message}</p>
+							{:else if typeof window != 'undefined'}
+								{@html marked.parse(DOMPurify.sanitize(message))}
+							{/if}
 
 							{#if !isUser}
 								<button
