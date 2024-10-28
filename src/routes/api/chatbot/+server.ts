@@ -4,18 +4,26 @@ import { json } from '@sveltejs/kit'
 import { getSemanticResults } from '$lib/server/services/qdrantService'
 import { OpenAIService } from '$lib/server/services/openaiService'
 import { systemMessage, humanTemplate } from '$lib/prompts'
+import DOMPurify from 'isomorphic-dompurify'
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
 
 export const POST = async ({ request }) => {
 	const { query } = await request.json()
 
+	const sanitizedQuery = DOMPurify.sanitize(query)
+	if (!sanitizedQuery || sanitizedQuery.length < 8) {
+		return json({ error: 'Invalid query.' }, { status: 400 })
+	}
+
 	try {
 		// Retrieve context from Qdrant
-		const searchResults = await getSemanticResults(query)
+		const searchResults = await getSemanticResults(sanitizedQuery)
 		const context = searchResults.map((result) => `\n\n${result.content}`).join('')
 
 		// Format the prompt with context
-		const queryWithContext = humanTemplate.replace('{query}', query).replace('{context}', context)
+		const queryWithContext = humanTemplate
+			.replace('{query}', sanitizedQuery)
+			.replace('{context}', context)
 
 		// Construct message array for OpenAI
 		const messages: Array<ChatCompletionMessageParam> = [

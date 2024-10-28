@@ -113,6 +113,9 @@ button.secondary svg {
 .chat-message.is-user {
 	@apply rounded-bl-lg self-end bg-user-bubble-bg;
 }
+.chat-message:not(.is-user) {
+	@apply flex flex-col space-y-2;
+}
 .chat-message h1 {
 	@apply text-2xl;
 }

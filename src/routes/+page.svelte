@@ -25,12 +25,14 @@
 		}
 	})
 
+	const minQueryLength = 8
+
 	// Function to send query and get response
 	async function sendMessage() {
 		isSubmitting = true
 
-		const query = $userInput.trim()
-		if (!query) {
+		const query = DOMPurify.sanitize($userInput || '').trim()
+		if (!query || query.length < minQueryLength) {
 			return
 		}
 
@@ -135,7 +137,7 @@
 				<label for="chat-input" class="sr-only"> Query the custom Librai AI chatbot. </label>
 				<input
 					required
-					minlength="8"
+					minlength={minQueryLength}
 					maxlength="200"
 					id="chat-input"
 					type="text"
@@ -172,7 +174,7 @@
 					{#each $chatHistory as { message, isUser }, i}
 						<div class={`chat-message ${isUser ? 'is-user' : ''}`}>
 							{#if isUser}
-								<p>{message}</p>
+								<p>{DOMPurify.sanitize(message)}</p>
 							{:else if typeof window != 'undefined'}
 								{@html marked.parse(DOMPurify.sanitize(message))}
 							{/if}
