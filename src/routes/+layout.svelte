@@ -39,7 +39,7 @@
 	}
 </script>
 
-<header>
+<header class="py-0">
 	<div class="container relative">
 		<div class="fixed top-12 left-24">
 			{#if $chatHistory.length > 0}

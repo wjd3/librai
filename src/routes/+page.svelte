@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut, cubicOut } from 'svelte/easing'
+	import { tick } from 'svelte'
 
 	let isDisabled = $state(true)
 	let isSubmitting = $state(false)
@@ -33,9 +34,13 @@
 			return
 		}
 
-		// Add user message to chat history
+		// Add user message to chat history and scroll
 		chatHistory.update((history) => [...history, { message: query, isUser: true }])
 		userInput.set('')
+
+		// Wait for DOM update and scroll
+		await tick()
+		scrollToBottom()
 
 		// Send query to chatbot API
 		try {
@@ -57,6 +62,10 @@
 				{ message: 'Error fetching response', isUser: false }
 			])
 		}
+
+		// Wait for DOM update and scroll
+		await tick()
+		scrollToBottom()
 
 		isSubmitting = false
 		isDisabled = false
@@ -199,17 +208,11 @@
 						</div>
 					{/each}
 
+					<!-- Thinking... -->
 					{#if isSubmitting}
-						<svg
-							class="w-8 h-8 rounded-t-lg rounded-br-lg self-start bg-pampas-100 dark:bg-fuscous-gray-500 animate-pulse"
-							xmlns="http://www.w3.org/2000/svg"
-							width="1em"
-							height="1em"
-							viewBox="0 0 256 256"
-							><path
-								d="M144 128a16 16 0 1 1-16-16a16 16 0 0 1 16 16m-84-16a16 16 0 1 0 16 16a16 16 0 0 0-16-16m136 0a16 16 0 1 0 16 16a16 16 0 0 0-16-16"
-							/>
-						</svg>
+						<div class="rounded-t-lg rounded-br-lg self-start animate-pulse">
+							<span class="opacity-80 text-text-color">Thinking...</span>
+						</div>
 					{/if}
 				</div>
 			</div>
