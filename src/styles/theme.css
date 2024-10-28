@@ -29,8 +29,8 @@
 	--placeholder-color: theme('colors.gray.500');
 }
 
-/* ===== Natural Theme ===== */
-:root[data-theme='natural'] {
+/* ===== Nature Theme ===== */
+:root[data-theme='nature'] {
 	--btn-bg: theme('colors.green.600');
 	--btn-hover-bg: theme('colors.green.700');
 	--page-bg: theme('colors.green.50');
@@ -45,7 +45,7 @@
 	--placeholder-color: theme('colors.green.300');
 }
 
-:root[data-theme='natural'][data-mode='dark'] {
+:root[data-theme='nature'][data-mode='dark'] {
 	--btn-bg: theme('colors.green.700');
 	--btn-hover-bg: theme('colors.green.800');
 	--page-bg: theme('colors.gray.900');
