@@ -113,6 +113,7 @@
 
 <section class="min-h-[100dvh] relative z-40 flex flex-col justify-center items-center">
 	<div class="container flex flex-col justify-center items-center">
+		<!-- Title -->
 		{#if $chatHistory.length === 0}
 			<h1 class="mb-4">
 				{#if PUBLIC_APP_TITLE}
@@ -123,11 +124,14 @@
 			</h1>
 		{/if}
 
+		<!-- Form -->
 		<form
 			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 py-4 flex flex-row items-center justify-center space-x-4 z-40 bg-chat-bar-bg' : 'max-w-lg w-full flex flex-col space-y-4'}`}
 			onsubmit={sendMessage}
 		>
-			<div class={`${$chatHistory.length > 0 ? 'max-w-2xl w-full' : ''}`}>
+			<div
+				class={`${$chatHistory.length > 0 ? 'max-w-[280px] sm:max-w-xs md:max-w-lg lg:max-w-xl xl:max-w-2xl w-full' : ''}`}
+			>
 				<label for="chat-input" class="sr-only"> Query the custom Librai AI chatbot. </label>
 				<input
 					required
@@ -159,7 +163,10 @@
 		</form>
 
 		{#if $chatHistory.length > 0}
-			<div class="chat-history w-[600px]" in:fade={{ duration: 500, easing: cubicInOut }}>
+			<div
+				class="chat-history w-80 md:w-96 lg:w-[600px]"
+				in:fade={{ duration: 500, easing: cubicInOut }}
+			>
 				<!-- Chat display -->
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }, i}

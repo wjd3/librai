@@ -39,11 +39,13 @@
 	}
 </script>
 
-<header class="py-0">
+<header>
 	<div class="container relative">
-		<div class="fixed top-12 left-24">
+		<div
+			class="hidden md:block fixed top-6 md:top-8 lg:top-10 xl:top-12 left-8 md:left-12 lg:left-16 xl:left-24 z-50"
+		>
 			{#if $chatHistory.length > 0}
-				<h1 class="mb-4 text-xl" in:fade={{ duration: 500, easing: cubicInOut }}>
+				<h1 class="text-xl" in:fade={{ duration: 500, easing: cubicInOut }}>
 					{#if PUBLIC_APP_TITLE}
 						{PUBLIC_APP_TITLE}
 					{:else}
@@ -53,7 +55,10 @@
 			{/if}
 		</div>
 
-		<button class="border-0 p-3 rounded-full fixed top-12 right-24 z-50" onclick={toggleDarkMode}>
+		<button
+			class="border-0 rounded-full fixed z-50 top-6 md:top-8 lg:top-10 xl:top-12 right-8 md:right-12 lg:right-16 xl:right-24 p-0 max-md:bg-chat-bar-bg max-md:p-2"
+			onclick={toggleDarkMode}
+		>
 			<svg
 				class="w-5 h-5"
 				xmlns="http://www.w3.org/2000/svg"
