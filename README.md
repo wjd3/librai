@@ -9,7 +9,7 @@ Pairs with [librai-server](https://github.com/wjd3/librai-server) for the backen
 - **Interactive Chatbot**: Engage with an AI chatbot that provides insightful responses to user inquiries.
 - **Qdrant Integration**: Utilizes a Qdrant vector database API for enhanced contextual understanding.
 - **Responsive Design**: Built with Tailwind CSS for a modern and responsive user interface.
-- **Dark Mode Support**: Automatically adapts to user preferences for light or dark themes.
+- **Theme Customization**: Offers a variety of themes, allowing users to personalize their experience with options for light, dark, and minimal aesthetics.
 
 ## Prerequisites
 
@@ -47,6 +47,8 @@ PRIVATE_OPENAI_CHAT_MODEL=YOUR_CHAT_MODEL
 PRIVATE_QDRANT_ENDPOINT_URL=YOUR_QDRANT_ENDPOINT_URL
 PRIVATE_QDRANT_COLLECTION_NAME=YOUR_QDRANT_COLLECTION_NAME
 PRIVATE_QDRANT_API_KEY=YOUR_QDRANT_API_KEY
+PUBLIC_THEME=YOUR_THEME_CHOICE # see the available themes (including the default theme) in `src/lib/constants/theme.ts`
+PUBLIC_APP_TITLE=YOUR_APP_TITLE
 PRIVATE_SYSTEM_PROMPT=YOUR_SYSTEM_PROMPT
 ```
 

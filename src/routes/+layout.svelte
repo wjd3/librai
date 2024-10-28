@@ -1,40 +1,39 @@
 <script lang="ts">
-	import '$styles/main.css';
-	import { onMount } from 'svelte';
-	import { PUBLIC_THEME } from '$env/static/public';
-	import { defaultTheme, themes } from '$lib/constants/theme';
+	import '$styles/main.css'
+	import { onMount } from 'svelte'
+	import { PUBLIC_THEME } from '$env/static/public'
+	import { defaultTheme, themes } from '$lib/constants/theme'
 
-	let { children } = $props();
+	let { children } = $props()
 
 	// Themes
-	const theme = themes.includes(PUBLIC_THEME) ? PUBLIC_THEME : defaultTheme;
+	const theme = themes.includes(PUBLIC_THEME) ? PUBLIC_THEME : defaultTheme
 	const setTheme = () => {
-		document.documentElement.setAttribute('data-theme', theme);
-	};
+		document.documentElement.setAttribute('data-theme', theme)
+	}
 
 	// Dark mode
-	let isDarkMode = $state(false);
+	let isDarkMode = $state(false)
 	const setIsDarkMode = () => {
-		console.log('isDarkMode', isDarkMode);
-		document.documentElement.setAttribute('data-mode', isDarkMode ? 'dark' : 'light');
-	};
+		document.documentElement.setAttribute('data-mode', isDarkMode ? 'dark' : 'light')
+	}
 
 	onMount(() => {
-		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-		isDarkMode = mediaQuery.matches;
+		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+		isDarkMode = mediaQuery.matches
 		mediaQuery.addEventListener('change', (event) => {
-			isDarkMode = event.matches;
-			setIsDarkMode();
-		});
+			isDarkMode = event.matches
+			setIsDarkMode()
+		})
 
-		setIsDarkMode();
+		setIsDarkMode()
 
-		setTheme();
-	});
+		setTheme()
+	})
 	const toggleDarkMode = () => {
-		isDarkMode = !isDarkMode;
-		setIsDarkMode();
-	};
+		isDarkMode = !isDarkMode
+		setIsDarkMode()
+	}
 </script>
 
 <header class="fixed top-0 right-0">

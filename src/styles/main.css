@@ -102,9 +102,9 @@ button.secondary svg {
 }
 
 /* Chat History Styles */
-.chat-history {
-	@apply max-w-[440px] px-4 py-2 rounded-t-lg w-fit flex flex-col rounded-br-lg self-start;
+.chat-message {
+	@apply max-w-[440px] px-4 py-2 rounded-t-lg w-fit flex flex-col rounded-br-lg self-start bg-bot-bubble-bg;
 }
-.chat-history.is-user {
-	@apply rounded-bl-lg self-end;
+.chat-message.is-user {
+	@apply rounded-bl-lg self-end bg-user-bubble-bg;
 }

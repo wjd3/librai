@@ -1,37 +1,38 @@
 <script lang="ts">
-	import { marked } from 'marked';
-	import { writable } from 'svelte/store';
-	import DOMPurify from 'dompurify';
+	import { marked } from 'marked'
+	import { writable } from 'svelte/store'
+	import DOMPurify from 'dompurify'
+	import { PUBLIC_APP_TITLE } from '$env/static/public'
 
-	let isDisabled = $state(true);
+	let isDisabled = $state(true)
 
-	let isSubmitting = $state(false);
+	let isSubmitting = $state(false)
 	$effect(() => {
 		if (isSubmitting) {
-			isDisabled = true;
+			isDisabled = true
 		}
-	});
+	})
 
-	const userInput = writable('');
+	const userInput = writable('')
 	userInput.subscribe((value) => {
 		if (!isSubmitting) {
-			isDisabled = value.length < 1;
+			isDisabled = value.length < 1
 		}
-	});
-	const chatHistory = writable<{ message: string; isUser: boolean }[]>([]);
+	})
+	const chatHistory = writable<{ message: string; isUser: boolean }[]>([])
 
 	// Function to send query and get response
 	async function sendMessage() {
-		isSubmitting = true;
+		isSubmitting = true
 
-		const query = $userInput.trim();
+		const query = $userInput.trim()
 		if (!query) {
-			return;
+			return
 		}
 
 		// Add user message to chat history
-		chatHistory.update((history) => [...history, { message: query, isUser: true }]);
-		userInput.set('');
+		chatHistory.update((history) => [...history, { message: query, isUser: true }])
+		userInput.set('')
 
 		// Send query to chatbot API
 		try {
@@ -39,29 +40,35 @@
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ query })
-			});
-			const data = await res.json();
+			})
+			const data = await res.json()
 
 			if (data.response) {
 				// Add bot response to chat history
-				chatHistory.update((history) => [...history, { message: data.response, isUser: false }]);
+				chatHistory.update((history) => [...history, { message: data.response, isUser: false }])
 			}
 		} catch (error) {
-			console.error('Error fetching response:', error);
+			console.error('Error fetching response:', error)
 			chatHistory.update((history) => [
 				...history,
 				{ message: 'Error fetching response', isUser: false }
-			]);
+			])
 		}
 
-		isSubmitting = false;
-		isDisabled = false;
+		isSubmitting = false
+		isDisabled = false
 	}
 </script>
 
 <section class="min-h-[100dvh] flex flex-col justify-center items-center">
 	<div class="container flex flex-col justify-center items-center relative">
-		<h1 class="mb-4">Librai UI</h1>
+		<h1 class="mb-4">
+			{#if PUBLIC_APP_TITLE}
+				{PUBLIC_APP_TITLE}
+			{:else}
+				Librai UI
+			{/if}
+		</h1>
 		<form class="w-full max-w-lg flex flex-col gap-4" onsubmit={sendMessage}>
 			<div>
 				<label for="chat-input" class="sr-only"> Query the custom Librai AI chatbot. </label>
@@ -96,16 +103,14 @@
 
 		{#if $chatHistory.length > 0}
 			<div class="chat-history w-[600px] absolute top-56 pb-8">
-				<h2 class="mb-4 text-3xl text-center">Messages</h2>
-
 				<!-- Chat display -->
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }}
-						<div class={`chat-history ${isUser ? 'is-user' : ''}`}>
+						<div class={`chat-message ${isUser ? 'is-user' : ''}`}>
 							<p>
 								{#if isUser}
 									{message}
-								{:else}
+								{:else if typeof window != 'undefined'}
 									{@html marked.parse(DOMPurify.sanitize(message))}
 								{/if}
 							</p>
