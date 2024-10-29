@@ -1,4 +1,4 @@
-:root[data-theme='minimal'] {
+:root[data-theme='simple'] {
 	--btn-bg: theme('colors.gray.500');
 	--btn-hover-bg: theme('colors.gray.600');
 	--page-bg: theme('colors.white');
@@ -14,9 +14,10 @@
 	--user-bubble-bg: theme('colors.gray.200');
 	--bot-bubble-bg: theme('colors.gray.300');
 	--chat-bar-bg: theme('colors.gray.100');
+	--highlight: theme('colors.gray.400');
+	--highlight-dark: theme('colors.gray.600');
 }
-
-:root[data-theme='minimal'][data-mode='dark'] {
+:root[data-theme='simple'][data-mode='dark'] {
 	--btn-bg: theme('colors.gray.700');
 	--btn-hover-bg: theme('colors.gray.800');
 	--page-bg: theme('colors.gray.900');
@@ -32,9 +33,11 @@
 	--user-bubble-bg: theme('colors.gray.600');
 	--bot-bubble-bg: theme('colors.gray.700');
 	--chat-bar-bg: theme('colors.gray.800');
+	--highlight: theme('colors.gray.500');
+	--highlight-dark: theme('colors.gray.700');
 }
 
-:root[data-theme='nature'] {
+:root[data-theme='leaf'] {
 	--btn-bg: theme('colors.green.600');
 	--btn-hover-bg: theme('colors.green.700');
 	--page-bg: theme('colors.green.50');
@@ -50,9 +53,10 @@
 	--user-bubble-bg: theme('colors.green.200');
 	--bot-bubble-bg: theme('colors.green.300');
 	--chat-bar-bg: theme('colors.green.100');
+	--highlight: theme('colors.green.300');
+	--highlight-dark: theme('colors.green.600');
 }
-
-:root[data-theme='nature'][data-mode='dark'] {
+:root[data-theme='leaf'][data-mode='dark'] {
 	--btn-bg: theme('colors.green.700');
 	--btn-hover-bg: theme('colors.green.800');
 	--page-bg: theme('colors.gray.900');
@@ -68,6 +72,8 @@
 	--user-bubble-bg: theme('colors.green.600');
 	--bot-bubble-bg: theme('colors.green.800');
 	--chat-bar-bg: theme('colors.gray.800');
+	--highlight: theme('colors.green.600');
+	--highlight-dark: theme('colors.green.900');
 }
 
 :root[data-theme='ocean'] {
@@ -86,8 +92,9 @@
 	--user-bubble-bg: theme('colors.blue.200');
 	--bot-bubble-bg: theme('colors.blue.300');
 	--chat-bar-bg: theme('colors.blue.50');
+	--highlight: theme('colors.blue.300');
+	--highlight-dark: theme('colors.blue.600');
 }
-
 :root[data-theme='ocean'][data-mode='dark'] {
 	--btn-bg: theme('colors.blue.700');
 	--btn-hover-bg: theme('colors.blue.800');
@@ -104,9 +111,11 @@
 	--user-bubble-bg: theme('colors.blue.600');
 	--bot-bubble-bg: theme('colors.blue.700');
 	--chat-bar-bg: theme('colors.gray.800');
+	--highlight: theme('colors.blue.600');
+	--highlight-dark: theme('colors.blue.900');
 }
 
-:root[data-theme='warm'] {
+:root[data-theme='glow'] {
 	--btn-bg: theme('colors.amber.500');
 	--btn-hover-bg: theme('colors.amber.600');
 	--page-bg: theme('colors.amber.50');
@@ -122,9 +131,10 @@
 	--user-bubble-bg: theme('colors.amber.200');
 	--bot-bubble-bg: theme('colors.amber.300');
 	--chat-bar-bg: theme('colors.amber.50');
+	--highlight: theme('colors.amber.300');
+	--highlight-dark: theme('colors.amber.600');
 }
-
-:root[data-theme='warm'][data-mode='dark'] {
+:root[data-theme='glow'][data-mode='dark'] {
 	--btn-bg: theme('colors.amber.700');
 	--btn-hover-bg: theme('colors.amber.800');
 	--page-bg: theme('colors.gray.900');
@@ -140,9 +150,11 @@
 	--user-bubble-bg: theme('colors.amber.600');
 	--bot-bubble-bg: theme('colors.amber.700');
 	--chat-bar-bg: theme('colors.gray.800');
+	--highlight: theme('colors.amber.600');
+	--highlight-dark: theme('colors.amber.900');
 }
 
-:root[data-theme='neon'] {
+:root[data-theme='blush'] {
 	--btn-bg: theme('colors.pink.400');
 	--btn-hover-bg: theme('colors.pink.500');
 	--page-bg: theme('colors.white');
@@ -158,9 +170,10 @@
 	--user-bubble-bg: theme('colors.pink.200');
 	--bot-bubble-bg: theme('colors.pink.300');
 	--chat-bar-bg: theme('colors.white');
+	--highlight: theme('colors.pink.300');
+	--highlight-dark: theme('colors.pink.600');
 }
-
-:root[data-theme='neon'][data-mode='dark'] {
+:root[data-theme='blush'][data-mode='dark'] {
 	--btn-bg: theme('colors.pink.500');
 	--btn-hover-bg: theme('colors.pink.600');
 	--page-bg: theme('colors.gray.900');
@@ -176,4 +189,6 @@
 	--user-bubble-bg: theme('colors.pink.400');
 	--bot-bubble-bg: theme('colors.pink.500');
 	--chat-bar-bg: theme('colors.gray.800');
+	--highlight: theme('colors.pink.600');
+	--highlight-dark: theme('colors.pink.900');
 }

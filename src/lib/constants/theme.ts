@@ -1,2 +1,2 @@
-export const themes = ['minimal', 'nature', 'neon', 'warm', 'ocean']
+export const themes = ['simple', 'leaf', 'blush', 'glow', 'ocean']
 export const defaultTheme = themes[0]

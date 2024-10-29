@@ -149,7 +149,7 @@
 			<button
 				disabled={isDisabled}
 				type="submit"
-				class={`primary self-end w-16 h-11 flex items-center justify-center ${isSubmitting ? 'animate-pulse' : ''}`}
+				class={`primary w-16 h-11 flex items-center justify-center ${$chatHistory.length > 0 ? '' : 'self-end'} ${isSubmitting ? 'animate-pulse' : ''}`}
 			>
 				{#if isSubmitting}
 					<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256">
@@ -165,7 +165,7 @@
 
 		{#if $chatHistory.length > 0}
 			<div
-				class="chat-history w-80 md:w-96 lg:w-[600px]"
+				class="chat-history w-[22rem] md:w-96 lg:w-[600px]"
 				in:fade={{ duration: 500, easing: cubicInOut }}
 			>
 				<!-- Chat display -->
@@ -180,7 +180,7 @@
 
 							{#if !isUser}
 								<button
-									class="w-fit self-end secondary mt-2 p-2"
+									class="w-fit self-end secondary mt-1 md:mt-2 p-2"
 									onclick={() => copyToClipboard(message, i)}
 									aria-label="Copy to clipboard"
 								>

@@ -10,7 +10,8 @@
 	let { children } = $props()
 
 	// Themes
-	const theme = themes.includes(PUBLIC_THEME) ? PUBLIC_THEME : defaultTheme
+	const theme = 'simple'
+	// const theme = themes.includes(PUBLIC_THEME) ? PUBLIC_THEME : defaultTheme
 	const setTheme = () => {
 		document.documentElement.setAttribute('data-theme', theme)
 	}

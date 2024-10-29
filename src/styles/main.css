@@ -4,6 +4,13 @@
 
 @import './theme.css';
 
+::selection {
+	@apply bg-highlight text-text-color;
+}
+::-moz-selection {
+	@apply bg-highlight text-text-color;
+}
+
 /* Body Styles */
 body {
 	@apply bg-page-bg; /* Changed to a cleaner white */
@@ -108,13 +115,13 @@ button.secondary svg {
 
 /* Chat History Styles */
 .chat-message {
-	@apply max-w-[440px] px-4 py-2 rounded-t-lg w-fit flex flex-col rounded-br-lg self-start bg-bot-bubble-bg;
+	@apply overflow-x-scroll w-full max-w-[440px] px-4 py-2 rounded-t-lg flex flex-col;
 }
 .chat-message.is-user {
 	@apply rounded-bl-lg self-end bg-user-bubble-bg;
 }
 .chat-message:not(.is-user) {
-	@apply flex flex-col space-y-2;
+	@apply flex flex-col space-y-2 rounded-br-lg self-start bg-bot-bubble-bg;
 }
 .chat-message h1 {
 	@apply text-2xl;
@@ -135,4 +142,14 @@ button.secondary svg {
 .chat-message span,
 .chat-message p {
 	@apply text-lg;
+}
+.chat-message table {
+	@apply w-full border-collapse;
+}
+.chat-message th,
+.chat-message td {
+	@apply border px-4 py-2;
+}
+.chat-message th {
+	@apply text-left;
 }
