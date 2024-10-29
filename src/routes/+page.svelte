@@ -36,6 +36,9 @@
 			return
 		}
 
+		// Prepare the conversation history for the API request
+		const conversationHistory = JSON.stringify([...$chatHistory])
+
 		// Add user message to chat history and scroll
 		chatHistory.update((history) => [...history, { message: query, isUser: true }])
 		userInput.set('')
@@ -49,7 +52,7 @@
 			const res = await fetch('/api/chatbot', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ query })
+				body: JSON.stringify({ query, history: conversationHistory })
 			})
 			const data = await res.json()
 
@@ -75,10 +78,6 @@
 
 	// Scroll to bottom button logic
 	let isAtBottom = $state(false)
-	$effect(() => {
-		console.log('isAtBottom', isAtBottom)
-	})
-
 	function scrollToBottom() {
 		window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
 	}
