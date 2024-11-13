@@ -2,7 +2,7 @@
 	import { marked } from 'marked'
 	import { writable } from 'svelte/store'
 	import DOMPurify from 'dompurify'
-	import { PUBLIC_APP_TITLE } from '$env/static/public'
+	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
 	import { chatHistory } from '$lib/stores'
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
@@ -116,52 +116,65 @@
 	<div class="container flex flex-col justify-center items-center">
 		<!-- Title -->
 		{#if $chatHistory.length === 0}
-			<h1 class="mb-4">
+			<h1 class="mb-2 max-w-sm">
 				{#if PUBLIC_APP_TITLE}
 					{PUBLIC_APP_TITLE}
 				{:else}
 					Librai UI
 				{/if}
 			</h1>
+
+			<p class="text-center text-sm mb-4 max-w-xs sm:max-w-[500px]">
+				{PUBLIC_CHATBOT_DESCRIPTION ||
+					'This is a chatbot trained on custom data. Check answers for accuracy.'}
+			</p>
 		{/if}
 
 		<!-- Form -->
-		<form
-			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 py-4 flex flex-row items-center justify-center space-x-4 z-40 bg-chat-bar-bg' : 'max-w-lg w-full flex flex-col space-y-4'}`}
-			onsubmit={sendMessage}
+		<div
+			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 py-4 flex flex-col space-y-2 z-40 bg-chat-bar-bg' : 'max-w-lg w-full'}`}
 		>
-			<div
-				class={`${$chatHistory.length > 0 ? 'max-w-[280px] sm:max-w-xs md:max-w-lg lg:max-w-xl xl:max-w-2xl w-full' : ''}`}
+			<form
+				class={`${$chatHistory.length > 0 ? 'flex flex-row items-center justify-center space-x-4' : 'w-full flex flex-col space-y-4'}`}
+				onsubmit={sendMessage}
 			>
-				<label for="chat-input" class="sr-only"> Query the custom Librai AI chatbot. </label>
-				<input
-					required
-					minlength={minQueryLength}
-					maxlength="200"
-					id="chat-input"
-					type="text"
-					placeholder="Ask a question..."
-					bind:value={$userInput}
-					onkeydown={(e) => e.key === 'Enter' && sendMessage()}
-				/>
-			</div>
+				<div
+					class={`${$chatHistory.length > 0 ? 'max-w-[280px] sm:max-w-xs md:max-w-lg lg:max-w-xl xl:max-w-2xl w-full' : ''}`}
+				>
+					<label for="chat-input" class="sr-only"> Query the custom Librai AI chatbot. </label>
+					<input
+						required
+						minlength={minQueryLength}
+						maxlength="200"
+						id="chat-input"
+						type="text"
+						placeholder="Ask a question..."
+						bind:value={$userInput}
+						onkeydown={(e) => e.key === 'Enter' && sendMessage()}
+					/>
+				</div>
 
-			<button
-				disabled={isDisabled}
-				type="submit"
-				class={`primary w-16 h-11 flex items-center justify-center ${$chatHistory.length > 0 ? '' : 'self-end'} ${isSubmitting ? 'animate-pulse' : ''}`}
-			>
-				{#if isSubmitting}
-					<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256">
-						<path
-							d="M144 128a16 16 0 1 1-16-16a16 16 0 0 1 16 16m-84-16a16 16 0 1 0 16 16a16 16 0 0 0-16-16m136 0a16 16 0 1 0 16 16a16 16 0 0 0-16-16"
-						/>
-					</svg>
-				{:else}
-					Ask
-				{/if}
-			</button>
-		</form>
+				<button
+					disabled={isDisabled}
+					type="submit"
+					class={`primary w-16 h-11 flex items-center justify-center ${$chatHistory.length > 0 ? '' : 'self-end'} ${isSubmitting ? 'animate-pulse' : ''}`}
+				>
+					{#if isSubmitting}
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256">
+							<path
+								d="M144 128a16 16 0 1 1-16-16a16 16 0 0 1 16 16m-84-16a16 16 0 1 0 16 16a16 16 0 0 0-16-16m136 0a16 16 0 1 0 16 16a16 16 0 0 0-16-16"
+							/>
+						</svg>
+					{:else}
+						Ask
+					{/if}
+				</button>
+			</form>
+
+			{#if $chatHistory.length > 0}
+				<p class="text-xs text-center select-none opacity-70">Check answers for accuracy.</p>
+			{/if}
+		</div>
 
 		{#if $chatHistory.length > 0}
 			<div
@@ -226,7 +239,7 @@
 
 		{#if !isAtBottom && $chatHistory.length > 0}
 			<button
-				class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2"
+				class="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2"
 				in:fade={{ duration: 250, easing: cubicOut }}
 				out:fade={{ duration: 250, easing: cubicOut }}
 				onclick={scrollToBottom}
