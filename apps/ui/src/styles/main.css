@@ -118,7 +118,7 @@ button.secondary svg {
 	@apply overflow-x-scroll w-full px-4 py-2 rounded-t-lg flex flex-col;
 }
 .chat-message.is-user {
-	@apply rounded-bl-lg self-end bg-user-bubble-bg max-w-[440px];
+	@apply rounded-bl-lg self-end bg-user-bubble-bg max-w-[440px] w-fit;
 }
 .chat-message:not(.is-user) {
 	@apply flex flex-col space-y-2 rounded-br-lg self-start bg-bot-bubble-bg;

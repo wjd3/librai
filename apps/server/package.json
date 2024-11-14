@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "concurrently \"ts-node src/app.ts\" \"tailwindcss -i src/public/css/input.css -o src/public/css/output.css --watch\"",
-		"build": "tsc --outDir dist && mkdir -p dist/public && cp -r src/public/*.html dist/public/ && tailwindcss -i src/public/css/input.css -o dist/public/css/output.css",
+		"build": "tsc --outDir dist && mkdir -p dist/public && cp -r src/public/*.{html,png,ico,webmanifest} dist/public/ && tailwindcss -i src/public/css/input.css -o dist/public/css/output.css",
 		"start": "node dist/app.js"
 	},
 	"devDependencies": {

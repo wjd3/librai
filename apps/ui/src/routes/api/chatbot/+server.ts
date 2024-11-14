@@ -11,8 +11,14 @@ export const POST = async ({ request }) => {
 	const { query, history } = await request.json()
 
 	const sanitizedQuery = DOMPurify.sanitize(query)
-	if (!sanitizedQuery || sanitizedQuery.length < 8) {
-		return json({ error: 'Invalid query.' }, { status: 400 })
+	if (!sanitizedQuery || sanitizedQuery.length < 1) {
+		return json(
+			{
+				response: "I'm sorry, I couldn't understand that! Please try again.",
+				error: 'Invalid query.'
+			},
+			{ status: 400 }
+		)
 	}
 
 	try {

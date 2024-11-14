@@ -9,6 +9,13 @@
 	import { cubicInOut, cubicOut } from 'svelte/easing'
 	import { tick } from 'svelte'
 
+	let promptInput: HTMLTextAreaElement | null = $state(null)
+	onMount(() => {
+		if (promptInput) {
+			promptInput.focus()
+		}
+	})
+
 	let isDisabled = $state(true)
 	let isSubmitting = $state(false)
 
@@ -18,21 +25,22 @@
 		}
 	})
 
-	const userInput = writable('')
-	userInput.subscribe((value) => {
+	let userInput = $state('')
+	$effect(() => {
 		if (!isSubmitting) {
-			isDisabled = value.length < 1
+			isDisabled = userInput.length < 1
 		}
 	})
 
-	const minQueryLength = 8
+	const minQueryLength = 1
 
 	// Function to send query and get response
 	async function sendMessage() {
 		isSubmitting = true
 
-		const query = DOMPurify.sanitize($userInput || '').trim()
+		const query = DOMPurify.sanitize(userInput || '').trim()
 		if (!query || query.length < minQueryLength) {
+			isSubmitting = false
 			return
 		}
 
@@ -41,7 +49,7 @@
 
 		// Add user message to chat history and scroll
 		chatHistory.update((history) => [...history, { message: query, isUser: true }])
-		userInput.set('')
+		userInput = ''
 
 		// Wait for DOM update and scroll
 		await tick()
@@ -131,29 +139,39 @@
 			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 py-4 flex flex-col space-y-2 z-40 bg-chat-bar-bg' : 'max-w-lg w-full'}`}
 		>
 			<form
-				class={`${$chatHistory.length > 0 ? 'flex flex-row items-center justify-center space-x-4' : 'w-full flex flex-col space-y-4'}`}
+				class="flex flex-row items-center justify-center space-x-4 w-full h-12"
 				onsubmit={sendMessage}
 			>
 				<div
-					class={`${$chatHistory.length > 0 ? 'max-w-[280px] sm:max-w-xs md:max-w-lg lg:max-w-xl xl:max-w-2xl w-full' : ''}`}
+					class={`w-full h-full ${$chatHistory.length > 0 ? 'max-w-[280px] sm:max-w-xs md:max-w-lg lg:max-w-xl xl:max-w-2xl' : ''}`}
 				>
 					<label for="chat-input" class="sr-only"> Query the custom Librai AI chatbot. </label>
-					<input
+					<textarea
 						required
 						minlength={minQueryLength}
 						maxlength="200"
 						id="chat-input"
-						type="text"
 						placeholder="Ask a question..."
-						bind:value={$userInput}
-						onkeydown={(e) => e.key === 'Enter' && sendMessage()}
-					/>
+						bind:this={promptInput}
+						bind:value={userInput}
+						class="resize-none w-full h-full"
+						onkeydown={(e) => {
+							if (e.key === 'Enter') {
+								if (e.shiftKey) {
+									return
+								}
+
+								e.preventDefault()
+								sendMessage()
+							}
+						}}
+					></textarea>
 				</div>
 
 				<button
 					disabled={isDisabled}
 					type="submit"
-					class={`primary w-16 h-11 flex items-center justify-center ${$chatHistory.length > 0 ? '' : 'self-end'} ${isSubmitting ? 'animate-pulse' : ''}`}
+					class={`primary w-16 h-full flex items-center justify-center ${$chatHistory.length > 0 ? '' : 'self-end'} ${isSubmitting ? 'animate-pulse' : ''}`}
 				>
 					{#if isSubmitting}
 						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256">
@@ -181,6 +199,12 @@
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }, i}
 						<div class={`chat-message ${isUser ? 'is-user' : ''}`}>
+							{#if isUser}
+								<h2 class="sr-only">You said:</h2>
+							{:else}
+								<h2 class="sr-only">The AI chatbot said:</h2>
+							{/if}
+
 							{#if isUser}
 								<p>{DOMPurify.sanitize(message)}</p>
 							{:else if typeof window != 'undefined'}
