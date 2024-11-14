@@ -1,0 +1,41 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"globalDependencies": [".env"],
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**", ".svelte-kit/**", ".vercel/**"]
+		},
+		"build:css": {
+			"outputs": ["dist/public/css/**", "src/public/css/**"]
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"preview": {
+			"dependsOn": ["build"],
+			"cache": false
+		},
+		"check": {
+			"outputs": []
+		},
+		"test": {
+			"dependsOn": ["build"],
+			"inputs": ["src/**/*.test.{js,ts}", "test/**/*.{js,ts}"]
+		},
+		"test:unit": {
+			"dependsOn": ["build"],
+			"inputs": ["src/**/*.test.{js,ts}", "test/**/*.{js,ts}"]
+		},
+		"lint": {
+			"outputs": []
+		},
+		"format": {
+			"outputs": []
+		},
+		"clean": {
+			"cache": false
+		}
+	}
+}
