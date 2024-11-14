@@ -1,0 +1,50 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"globalDependencies": [".env"],
+	"globalEnv": [
+		"PRIVATE_OPENAI_API_KEY",
+		"PRIVATE_OPENAI_EMBEDDINGS_MODEL",
+		"PRIVATE_OPENAI_CHAT_MODEL",
+		"PRIVATE_QDRANT_ENDPOINT_URL",
+		"PRIVATE_QDRANT_COLLECTION_NAME",
+		"PRIVATE_QDRANT_API_KEY",
+		"PRIVATE_SYSTEM_PROMPT",
+		"PUBLIC_CHATBOT_DESCRIPTION",
+		"PUBLIC_THEME",
+		"PUBLIC_APP_TITLE"
+	],
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**", ".svelte-kit/**", ".vercel/**"]
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"preview": {
+			"dependsOn": ["build"],
+			"cache": false
+		},
+		"check": {
+			"outputs": []
+		},
+		"test": {
+			"dependsOn": ["build"],
+			"inputs": ["src/**/*.test.{js,ts}", "test/**/*.{js,ts}"]
+		},
+		"test:unit": {
+			"dependsOn": ["build"],
+			"inputs": ["src/**/*.test.{js,ts}", "test/**/*.{js,ts}"]
+		},
+		"lint": {
+			"outputs": []
+		},
+		"format": {
+			"outputs": []
+		},
+		"clean": {
+			"cache": false
+		}
+	}
+}
