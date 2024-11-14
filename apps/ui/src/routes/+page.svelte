@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { marked } from 'marked'
-	import { writable } from 'svelte/store'
 	import DOMPurify from 'dompurify'
 	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
 	import { chatHistory } from '$lib/stores'
@@ -136,7 +135,7 @@
 
 		<!-- Form -->
 		<div
-			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 py-4 flex flex-col space-y-2 z-40 bg-chat-bar-bg' : 'max-w-lg w-full'}`}
+			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 py-4 flex flex-col space-y-2 z-40 bg-chat-bar-bg max-sm:px-2' : 'max-w-lg w-full'}`}
 		>
 			<form
 				class="flex flex-row items-center justify-center space-x-4 w-full h-12"
@@ -191,10 +190,7 @@
 		</div>
 
 		{#if $chatHistory.length > 0}
-			<div
-				class="chat-history w-[22rem] md:w-96 lg:w-[600px]"
-				in:fade={{ duration: 500, easing: cubicInOut }}
-			>
+			<div class="chat-history" in:fade={{ duration: 500, easing: cubicInOut }}>
 				<!-- Chat display -->
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }, i}
@@ -250,7 +246,7 @@
 					<!-- Thinking... -->
 					{#if isSubmitting}
 						<div class="rounded-t-lg rounded-br-lg self-start animate-pulse">
-							<span class="opacity-80 text-text-color">Thinking...</span>
+							<span class="opacity-80 text-text-color text-base">Thinking...</span>
 						</div>
 					{/if}
 				</div>

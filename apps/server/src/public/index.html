@@ -26,7 +26,8 @@
 				@dragenter.prevent="isDragging = true"
 				@dragover.prevent="isDragging = true"
 				@dragleave.prevent="isDragging = false"
-				@drop.prevent="handleDrop($event)">
+				@drop.prevent="handleDrop($event)"
+				:disabled="isUploading">
 				<p class="text-text-color/70 mb-4">Drag and drop your file here or</p>
 				<input
 					type="file"

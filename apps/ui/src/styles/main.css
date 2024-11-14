@@ -30,11 +30,6 @@ footer {
 footer {
 	@apply py-4 md:py-6 lg:py-8;
 }
-section > div.container,
-header > div.container,
-footer > div.container {
-	@apply mx-auto px-4 md:px-6 lg:px-8;
-}
 
 /* Form Element Styles */
 input,
@@ -89,7 +84,7 @@ h6 {
 /* Text Styles */
 p,
 span {
-	@apply text-lg text-text-color;
+	@apply text-base text-text-color;
 }
 a {
 	@apply text-link-color hover:text-link-hover-color;
@@ -114,6 +109,14 @@ button.secondary svg {
 }
 
 /* Chat History Styles */
+.chat-history {
+	@apply w-[22rem] md:w-96 lg:w-[600px];
+}
+@media (max-width: 360px) {
+	.chat-history {
+		@apply w-full;
+	}
+}
 .chat-message {
 	@apply overflow-x-scroll w-full px-4 py-2 rounded-t-lg flex flex-col;
 }

@@ -52,16 +52,17 @@ router.post(
 
 			console.log('Processing file:', file.originalname)
 			const fileContent = await processFile(file, excludePages)
+			const fileTitle = file.originalname
 
 			console.log('Generating and storing embeddings in Qdrant...')
 			const result = await storeFileEmbeddingsInQdrant({
 				fileContent,
-				fileTitle: file.originalname
+				fileTitle
 			})
 
 			res.json({
 				success: true,
-				message: 'File processed successfully',
+				message: `File processed successfully: ${fileTitle}`,
 				result
 			})
 		} catch (error: unknown) {
