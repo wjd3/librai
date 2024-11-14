@@ -115,25 +115,31 @@ button.secondary svg {
 
 /* Chat History Styles */
 .chat-message {
-	@apply overflow-x-scroll w-full max-w-[440px] px-4 py-2 rounded-t-lg flex flex-col;
+	@apply overflow-x-scroll w-full px-4 py-2 rounded-t-lg flex flex-col;
 }
 .chat-message.is-user {
-	@apply rounded-bl-lg self-end bg-user-bubble-bg;
+	@apply rounded-bl-lg self-end bg-user-bubble-bg max-w-[440px];
 }
 .chat-message:not(.is-user) {
 	@apply flex flex-col space-y-2 rounded-br-lg self-start bg-bot-bubble-bg;
 }
 .chat-message h1 {
-	@apply text-2xl;
+	@apply text-4xl font-bold mb-2;
 }
 .chat-message h2 {
-	@apply text-xl;
+	@apply text-3xl font-semibold mb-2;
 }
-.chat-message h3,
-.chat-message h4,
-.chat-message h5,
+.chat-message h3 {
+	@apply text-2xl font-medium mb-2;
+}
+.chat-message h4 {
+	@apply text-xl font-medium mb-2;
+}
+.chat-message h5 {
+	@apply text-lg font-medium mb-2;
+}
 .chat-message h6 {
-	@apply text-lg;
+	@apply text-lg font-normal mb-2;
 }
 .chat-message li,
 .chat-message strong,
@@ -141,7 +147,7 @@ button.secondary svg {
 .chat-message b,
 .chat-message span,
 .chat-message p {
-	@apply text-lg;
+	@apply text-base;
 }
 .chat-message table {
 	@apply w-full border-collapse;

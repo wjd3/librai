@@ -17,7 +17,7 @@ const generatePoints = async ({
 	content: string
 	title: string
 }): Promise<{ id: string; vector: number[]; payload: Record<any, any> }[]> => {
-	const maxCharactersPerCall = 2000
+	const maxCharactersPerCall = 2750
 	let embeddings: { id: string; vector: number[]; payload: Record<any, any> }[] = []
 
 	// Split content into chunks if it exceeds the max character limit
@@ -29,7 +29,9 @@ const generatePoints = async ({
 
 		const response = await openai.embeddings.create({
 			model: process.env.OPENAI_EMBEDDINGS_MODEL as EmbeddingModel,
-			input: chunk
+			input: chunk,
+			// 1536 for text-embedding-3-small or 3072 for text-embedding-3-large
+			dimensions: 3072
 		})
 
 		const id = uuidv4()

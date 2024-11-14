@@ -2,6 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	--btn-bg: #3b82f6;
+	--btn-hover-bg: #2563eb;
+	--page-bg: #111827;
+	--primary-card-bg: #1f2937;
+	--secondary-card-bg: #374151;
+	--form-border: #4b5563;
+	--form-focus-border: #3b82f6;
+	--form-bg: #1f2937;
+	--text-color: #f3f4f6;
+	--chat-bar-bg: rgba(17, 24, 39, 0.8);
+}
+
+body {
+	@apply bg-page-bg text-text-color;
+}
+
+input[type='text'],
+input[type='file'] {
+	@apply bg-form-bg border-form-border focus:border-form-focus-border text-text-color;
+}
+
+button {
+	@apply transition-colors duration-200;
+}
+
+button:disabled {
+	@apply opacity-50 cursor-not-allowed;
+}
+
 [x-cloak] {
 	@apply !hidden;
 }

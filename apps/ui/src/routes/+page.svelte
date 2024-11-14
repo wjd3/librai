@@ -68,10 +68,6 @@
 			])
 		}
 
-		// Wait for DOM update and scroll
-		await tick()
-		scrollToBottom()
-
 		isSubmitting = false
 		isDisabled = false
 	}
