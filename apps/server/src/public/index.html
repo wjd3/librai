@@ -28,49 +28,66 @@
 				@dragleave.prevent="isDragging = false"
 				@drop.prevent="handleDrop($event)"
 				:disabled="isUploading">
-				<p class="text-text-color/70 mb-4">Drag and drop your file here or</p>
+				<p class="text-text-color/70 mb-4">Drag and drop your files here or</p>
 				<input
 					type="file"
 					class="hidden"
 					accept=".pdf,.epub,.txt,.md"
 					@change="handleFileSelect($event)"
 					:disabled="isUploading"
-					x-ref="fileInput" />
+					x-ref="fileInput"
+					multiple />
 				<button
 					class="px-4 py-2 bg-btn-bg text-text-color rounded-md hover:bg-btn-hover-bg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 					@click="$refs.fileInput.click()"
 					:disabled="isUploading">
-					Choose File
+					Choose Files
 				</button>
 				<p class="text-sm text-text-color/50 mt-4">Maximum file size: 100MB</p>
 			</div>
 
-			<div class="mt-6 text-center" x-show="selectedFile" x-cloak x-transition>
-				<p class="text-text-color/80">
-					Selected file: <span class="font-semibold" x-text="selectedFile?.name"></span>
-				</p>
+			<div class="mt-6" x-show="selectedFiles.length > 0" x-cloak x-transition>
+				<h3 class="text-lg font-semibold text-text-color/80 mb-2">Selected Files:</h3>
+				<ul class="space-y-4">
+					<template x-for="(file, index) in selectedFiles" :key="index">
+						<li class="bg-primary-card-bg rounded-lg p-4 border border-form-border">
+							<div class="flex items-center justify-between mb-2">
+								<span class="text-text-color/80" x-text="file.name"></span>
+								<button
+									@click="removeFile(index)"
+									class="text-red-500 hover:text-red-700"
+									:disabled="isUploading">
+									Remove
+								</button>
+							</div>
+
+							<!-- Page exclusion input for PDFs -->
+							<template x-if="file.name.toLowerCase().endsWith('.pdf')">
+								<div class="mt-2">
+									<p class="text-text-color/70 mb-2">Exclude Pages (Optional)</p>
+									<input
+										type="text"
+										x-model="file.pageRange"
+										placeholder="e.g., 1-4, 7, 9-12"
+										:disabled="isUploading"
+										class="w-full px-3 py-2 bg-form-bg border border-form-border rounded-md focus:outline-none focus:ring-2 focus:ring-form-focus-border text-text-color disabled:bg-secondary-card-bg disabled:cursor-not-allowed" />
+									<p class="text-sm text-text-color/50 mt-1">
+										Separate ranges with commas (e.g., 12, 142, 396). Use hyphen for ranges (e.g.,
+										1-4).
+									</p>
+								</div>
+							</template>
+						</li>
+					</template>
+				</ul>
 			</div>
 
-			<div class="mt-6" x-show="showPageRange" x-cloak x-transition>
-				<h3 class="text-lg font-semibold text-text-color/80 mb-2">Exclude Pages (Optional)</h3>
-				<p class="text-text-color/70 mb-2">Enter page ranges to exclude (e.g., "1-4, 7, 9-12")</p>
-				<input
-					type="text"
-					x-model="pageRange"
-					placeholder="e.g., 1-4, 7, 9-12"
-					:disabled="isUploading"
-					class="w-full px-3 py-2 bg-form-bg border border-form-border rounded-md focus:outline-none focus:ring-2 focus:ring-form-focus-border text-text-color disabled:bg-secondary-card-bg disabled:cursor-not-allowed" />
-				<p class="text-sm text-text-color/50 mt-2">
-					Separate ranges with commas (e.g., 12, 142, 396). Use hyphen for ranges (e.g., 1-4).
-				</p>
-			</div>
-
-			<div class="mt-6 text-center" x-show="selectedFile" x-cloak x-transition>
+			<div class="mt-6 text-center" x-show="selectedFiles.length > 0" x-cloak x-transition>
 				<button
 					class="px-6 py-2 bg-green-600 hover:bg-green-700 text-text-color rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 					@click="submitFile"
 					:disabled="isUploading"
-					x-text="isUploading ? 'Uploading...' : 'Upload File'"></button>
+					x-text="isUploading ? 'Uploading Files...' : 'Upload Files'"></button>
 			</div>
 
 			<div
@@ -102,41 +119,31 @@
 			document.addEventListener('alpine:init', () => {
 				Alpine.data('fileUploader', () => ({
 					isDragging: false,
-					selectedFile: null,
-					pageRange: '',
+					selectedFiles: [],
 					isUploading: false,
 					errorMessage: '',
 					successMessage: '',
 					result: null,
 
-					get showPageRange() {
-						if (!this.selectedFile) return false
-						const fileType = this.selectedFile.name.split('.').pop().toLowerCase()
-						return ['pdf'].includes(fileType)
-					},
-
 					handleDrop(event) {
 						this.isDragging = false
-						const file = event.dataTransfer.files[0]
-						this.handleFile(file)
+						const files = Array.from(event.dataTransfer.files)
+						files.forEach((file) => this.handleFile(file))
 					},
 
 					handleFileSelect(event) {
-						const file = event.target.files[0]
-						this.handleFile(file)
+						const files = Array.from(event.target.files)
+						files.forEach((file) => this.handleFile(file))
 					},
 
 					handleFile(file) {
-						// Reset state
+						// Reset error messages
 						this.errorMessage = ''
 						this.successMessage = ''
-						this.result = null
-						this.selectedFile = null
-						this.pageRange = ''
 
 						// Validate file size
 						if (file.size > 100000000) {
-							this.errorMessage = 'File size exceeds 100MB limit'
+							this.errorMessage = `File ${file.name} exceeds 100MB limit`
 							return
 						}
 
@@ -144,19 +151,29 @@
 						const fileType = file.name.split('.').pop().toLowerCase()
 						const allowedTypes = ['pdf', 'epub', 'txt', 'md']
 						if (!allowedTypes.includes(fileType)) {
-							this.errorMessage =
-								'Unsupported file type. Please upload PDF, EPUB, TXT, or MD files.'
+							this.errorMessage = `File ${file.name} is not supported. Please upload PDF, EPUB, TXT, or MD files.`
 							return
 						}
 
-						this.selectedFile = file
+						// Add pageRange property for PDFs
+						const fileObj = {
+							file,
+							name: file.name,
+							pageRange: ''
+						}
+
+						this.selectedFiles.push(fileObj)
 					},
 
-					parsePageRanges() {
-						if (!this.pageRange.trim()) return null
+					removeFile(index) {
+						this.selectedFiles.splice(index, 1)
+					},
+
+					parsePageRanges(pageRange) {
+						if (!pageRange?.trim()) return null
 
 						try {
-							const ranges = this.pageRange.split(',').map((range) => range.trim())
+							const ranges = pageRange.split(',').map((range) => range.trim())
 							return ranges.map((range) => {
 								if (range.includes('-')) {
 									const [start, end] = range.split('-').map((num) => parseInt(num.trim()))
@@ -179,41 +196,55 @@
 					},
 
 					async submitFile() {
-						if (!this.selectedFile || this.isUploading) return
-
-						const formData = new FormData()
-						formData.append('file', this.selectedFile)
-
-						const pageRanges = this.parsePageRanges()
-						if (pageRanges) {
-							formData.append('excludePages', JSON.stringify(pageRanges))
-						}
+						if (this.selectedFiles.length === 0 || this.isUploading) return
 
 						this.isUploading = true
 						this.errorMessage = ''
 						this.successMessage = ''
 						this.result = null
 
-						try {
-							const response = await fetch('/api/files/upload', {
-								method: 'POST',
-								body: formData
-							})
+						const results = []
 
-							const data = await response.json()
+						for (const fileObj of this.selectedFiles) {
+							const formData = new FormData()
+							formData.append('file', fileObj.file)
 
-							if (response.ok) {
-								this.successMessage = 'File processed successfully!'
-								this.result = data
-							} else {
-								this.errorMessage = data.error || 'Upload failed'
+							if (fileObj.name.toLowerCase().endsWith('.pdf')) {
+								const pageRanges = this.parsePageRanges(fileObj.pageRange)
+								if (pageRanges) {
+									formData.append('excludePages', JSON.stringify(pageRanges))
+								}
 							}
-						} catch (error) {
-							this.errorMessage = 'An error occurred during upload'
-							console.error('Upload error:', error)
-						} finally {
-							this.isUploading = false
+
+							try {
+								const response = await fetch('/api/files/upload', {
+									method: 'POST',
+
+									body: formData
+								})
+
+								const data = await response.json()
+
+								if (response.ok) {
+									results.push({ file: fileObj.name, ...data })
+								} else {
+									this.errorMessage = `Failed to upload ${fileObj.name}: ${data.error || 'Upload failed'}`
+									break
+								}
+							} catch (error) {
+								this.errorMessage = `Error uploading ${fileObj.name}`
+								console.error('Upload error:', error)
+								break
+							}
 						}
+
+						if (results.length > 0) {
+							this.successMessage = 'Files processed successfully!'
+							this.result = results
+							this.selectedFiles = []
+						}
+
+						this.isUploading = false
 					}
 				}))
 			})
