@@ -160,7 +160,7 @@
 
 		<!-- Form -->
 		<div
-			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 py-2 md:py-3 flex flex-col space-y-2 z-40 bg-chat-bar-bg max-sm:px-2' : 'max-w-lg w-full'}`}
+			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 pt-3 pb-2 md:py-3 flex flex-col space-y-2 z-40 bg-chat-bar-bg max-sm:px-2' : 'max-w-lg w-full'}`}
 		>
 			<form
 				class="flex flex-row items-center justify-center space-x-4 w-full h-12"

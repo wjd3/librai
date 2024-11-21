@@ -74,7 +74,7 @@
 	--text-color: theme('colors.eucalyptus.50');
 	--placeholder-color: theme('colors.eucalyptus.600');
 	--user-bubble-bg: theme('colors.eucalyptus.800');
-	--bot-bubble-bg: theme('colors.citron.800');
+	--bot-bubble-bg: theme('colors.citron.700');
 	--chat-bar-bg: theme('colors.eucalyptus.900');
 	--highlight: theme('colors.lightning.400');
 	--highlight-dark: theme('colors.lightning.600');
