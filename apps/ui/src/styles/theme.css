@@ -1,194 +1,204 @@
+/* Simple Theme */
 :root[data-theme='simple'] {
-	--btn-bg: theme('colors.gray.500');
-	--btn-hover-bg: theme('colors.gray.600');
+	--btn-bg: theme('colors.mamba.500');
+	--btn-hover-bg: theme('colors.mamba.600');
 	--page-bg: theme('colors.white');
 	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.gray.100');
-	--form-border: theme('colors.gray.300');
-	--form-focus-border: theme('colors.gray.500');
+	--secondary-card-bg: theme('colors.mamba.100');
+	--form-border: theme('colors.mamba.300');
+	--form-focus-border: theme('colors.fuchsia.500');
 	--form-bg: theme('colors.white');
-	--link-color: theme('colors.gray.700');
-	--link-hover-color: theme('colors.gray.800');
-	--text-color: theme('colors.gray.900');
-	--placeholder-color: theme('colors.gray.400');
-	--user-bubble-bg: theme('colors.gray.200');
-	--bot-bubble-bg: theme('colors.gray.300');
-	--chat-bar-bg: theme('colors.gray.100');
-	--highlight: theme('colors.gray.400');
-	--highlight-dark: theme('colors.gray.600');
+	--link-color: theme('colors.kashmir.600');
+	--link-hover-color: theme('colors.kashmir.700');
+	--text-color: theme('colors.mamba.900');
+	--placeholder-color: theme('colors.mamba.400');
+	--user-bubble-bg: theme('colors.mamba.200');
+	--bot-bubble-bg: theme('colors.kashmir.200');
+	--chat-bar-bg: theme('colors.mamba.50');
+	--highlight: theme('colors.fuchsia.400');
+	--highlight-dark: theme('colors.fuchsia.600');
 }
+
 :root[data-theme='simple'][data-mode='dark'] {
-	--btn-bg: theme('colors.gray.700');
-	--btn-hover-bg: theme('colors.gray.800');
-	--page-bg: theme('colors.gray.900');
-	--primary-card-bg: theme('colors.gray.800');
-	--secondary-card-bg: theme('colors.gray.700');
-	--form-border: theme('colors.gray.600');
-	--form-focus-border: theme('colors.gray.500');
-	--form-bg: theme('colors.gray.800');
-	--link-color: theme('colors.gray.400');
-	--link-hover-color: theme('colors.gray.500');
-	--text-color: theme('colors.gray.100');
-	--placeholder-color: theme('colors.gray.500');
-	--user-bubble-bg: theme('colors.gray.600');
-	--bot-bubble-bg: theme('colors.gray.700');
-	--chat-bar-bg: theme('colors.gray.800');
-	--highlight: theme('colors.gray.500');
-	--highlight-dark: theme('colors.gray.700');
+	--btn-bg: theme('colors.fuchsia.500');
+	--btn-hover-bg: theme('colors.fuchsia.600');
+	--page-bg: theme('colors.mamba.950');
+	--primary-card-bg: theme('colors.mamba.900');
+	--secondary-card-bg: theme('colors.mamba.800');
+	--form-border: theme('colors.mamba.700');
+	--form-focus-border: theme('colors.fuchsia.400');
+	--form-bg: theme('colors.mamba.900');
+	--link-color: theme('colors.kashmir.400');
+	--link-hover-color: theme('colors.kashmir.300');
+	--text-color: theme('colors.mamba.50');
+	--placeholder-color: theme('colors.mamba.600');
+	--user-bubble-bg: theme('colors.mamba.800');
+	--bot-bubble-bg: theme('colors.kashmir.800');
+	--chat-bar-bg: theme('colors.mamba.900');
+	--highlight: theme('colors.fuchsia.500');
+	--highlight-dark: theme('colors.fuchsia.700');
 }
 
+/* Leaf Theme */
 :root[data-theme='leaf'] {
-	--btn-bg: theme('colors.green.600');
-	--btn-hover-bg: theme('colors.green.700');
-	--page-bg: theme('colors.green.50');
-	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.green.100');
-	--form-border: theme('colors.green.300');
-	--form-focus-border: theme('colors.green.500');
-	--form-bg: theme('colors.white');
-	--link-color: theme('colors.green.700');
-	--link-hover-color: theme('colors.green.800');
-	--text-color: theme('colors.gray.900');
-	--placeholder-color: theme('colors.green.300');
-	--user-bubble-bg: theme('colors.green.200');
-	--bot-bubble-bg: theme('colors.green.300');
-	--chat-bar-bg: theme('colors.green.100');
-	--highlight: theme('colors.green.300');
-	--highlight-dark: theme('colors.green.600');
-}
-:root[data-theme='leaf'][data-mode='dark'] {
-	--btn-bg: theme('colors.green.700');
-	--btn-hover-bg: theme('colors.green.800');
-	--page-bg: theme('colors.gray.900');
-	--primary-card-bg: theme('colors.gray.800');
-	--secondary-card-bg: theme('colors.gray.700');
-	--form-border: theme('colors.green.600');
-	--form-focus-border: theme('colors.green.500');
-	--form-bg: theme('colors.gray.800');
-	--link-color: theme('colors.green.400');
-	--link-hover-color: theme('colors.green.500');
-	--text-color: theme('colors.gray.100');
-	--placeholder-color: theme('colors.green.700');
-	--user-bubble-bg: theme('colors.green.600');
-	--bot-bubble-bg: theme('colors.green.800');
-	--chat-bar-bg: theme('colors.gray.800');
-	--highlight: theme('colors.green.600');
-	--highlight-dark: theme('colors.green.900');
-}
-
-:root[data-theme='ocean'] {
-	--btn-bg: theme('colors.blue.500');
-	--btn-hover-bg: theme('colors.blue.600');
-	--page-bg: theme('colors.blue.50');
-	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.blue.100');
-	--form-border: theme('colors.blue.300');
-	--form-focus-border: theme('colors.blue.500');
-	--form-bg: theme('colors.white');
-	--link-color: theme('colors.blue.600');
-	--link-hover-color: theme('colors.blue.700');
-	--text-color: theme('colors.gray.900');
-	--placeholder-color: theme('colors.blue.300');
-	--user-bubble-bg: theme('colors.blue.200');
-	--bot-bubble-bg: theme('colors.blue.300');
-	--chat-bar-bg: theme('colors.blue.50');
-	--highlight: theme('colors.blue.300');
-	--highlight-dark: theme('colors.blue.600');
-}
-:root[data-theme='ocean'][data-mode='dark'] {
-	--btn-bg: theme('colors.blue.700');
-	--btn-hover-bg: theme('colors.blue.800');
-	--page-bg: theme('colors.gray.900');
-	--primary-card-bg: theme('colors.gray.800');
-	--secondary-card-bg: theme('colors.gray.700');
-	--form-border: theme('colors.blue.600');
-	--form-focus-border: theme('colors.blue.500');
-	--form-bg: theme('colors.gray.800');
-	--link-color: theme('colors.blue.400');
-	--link-hover-color: theme('colors.blue.500');
-	--text-color: theme('colors.gray.100');
-	--placeholder-color: theme('colors.blue.700');
-	--user-bubble-bg: theme('colors.blue.600');
-	--bot-bubble-bg: theme('colors.blue.700');
-	--chat-bar-bg: theme('colors.gray.800');
-	--highlight: theme('colors.blue.600');
-	--highlight-dark: theme('colors.blue.900');
-}
-
-:root[data-theme='glow'] {
-	--btn-bg: theme('colors.amber.500');
-	--btn-hover-bg: theme('colors.amber.600');
-	--page-bg: theme('colors.amber.50');
-	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.amber.100');
-	--form-border: theme('colors.amber.300');
-	--form-focus-border: theme('colors.amber.500');
-	--form-bg: theme('colors.white');
-	--link-color: theme('colors.amber.700');
-	--link-hover-color: theme('colors.amber.800');
-	--text-color: theme('colors.gray.900');
-	--placeholder-color: theme('colors.amber.300');
-	--user-bubble-bg: theme('colors.amber.200');
-	--bot-bubble-bg: theme('colors.amber.300');
-	--chat-bar-bg: theme('colors.amber.50');
-	--highlight: theme('colors.amber.300');
-	--highlight-dark: theme('colors.amber.600');
-}
-:root[data-theme='glow'][data-mode='dark'] {
-	--btn-bg: theme('colors.amber.700');
-	--btn-hover-bg: theme('colors.amber.800');
-	--page-bg: theme('colors.gray.900');
-	--primary-card-bg: theme('colors.gray.800');
-	--secondary-card-bg: theme('colors.gray.700');
-	--form-border: theme('colors.amber.600');
-	--form-focus-border: theme('colors.amber.500');
-	--form-bg: theme('colors.gray.800');
-	--link-color: theme('colors.amber.400');
-	--link-hover-color: theme('colors.amber.500');
-	--text-color: theme('colors.gray.100');
-	--placeholder-color: theme('colors.amber.700');
-	--user-bubble-bg: theme('colors.amber.600');
-	--bot-bubble-bg: theme('colors.amber.700');
-	--chat-bar-bg: theme('colors.gray.800');
-	--highlight: theme('colors.amber.600');
-	--highlight-dark: theme('colors.amber.900');
-}
-
-:root[data-theme='blush'] {
-	--btn-bg: theme('colors.pink.400');
-	--btn-hover-bg: theme('colors.pink.500');
+	--btn-bg: theme('colors.eucalyptus.500');
+	--btn-hover-bg: theme('colors.eucalyptus.600');
 	--page-bg: theme('colors.white');
-	--primary-card-bg: theme('colors.pink.300');
-	--secondary-card-bg: theme('colors.gray.100');
-	--form-border: theme('colors.pink.300');
-	--form-focus-border: theme('colors.pink.200');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.eucalyptus.50');
+	--form-border: theme('colors.eucalyptus.300');
+	--form-focus-border: theme('colors.citron.500');
 	--form-bg: theme('colors.white');
-	--link-color: theme('colors.pink.600');
-	--link-hover-color: theme('colors.pink.700');
-	--text-color: theme('colors.gray.800');
-	--placeholder-color: theme('colors.gray.400');
-	--user-bubble-bg: theme('colors.pink.200');
-	--bot-bubble-bg: theme('colors.pink.300');
-	--chat-bar-bg: theme('colors.white');
-	--highlight: theme('colors.pink.300');
-	--highlight-dark: theme('colors.pink.600');
+	--link-color: theme('colors.citron.600');
+	--link-hover-color: theme('colors.citron.700');
+	--text-color: theme('colors.eucalyptus.900');
+	--placeholder-color: theme('colors.eucalyptus.400');
+	--user-bubble-bg: theme('colors.eucalyptus.100');
+	--bot-bubble-bg: theme('colors.citron.100');
+	--chat-bar-bg: theme('colors.eucalyptus.50');
+	--highlight: theme('colors.lightning.400');
+	--highlight-dark: theme('colors.lightning.600');
 }
+
+:root[data-theme='leaf'][data-mode='dark'] {
+	--btn-bg: theme('colors.lightning.500');
+	--btn-hover-bg: theme('colors.lightning.600');
+	--page-bg: theme('colors.eucalyptus.950');
+	--primary-card-bg: theme('colors.eucalyptus.900');
+	--secondary-card-bg: theme('colors.eucalyptus.800');
+	--form-border: theme('colors.eucalyptus.700');
+	--form-focus-border: theme('colors.lightning.400');
+	--form-bg: theme('colors.eucalyptus.900');
+	--link-color: theme('colors.citron.400');
+	--link-hover-color: theme('colors.citron.300');
+	--text-color: theme('colors.eucalyptus.50');
+	--placeholder-color: theme('colors.eucalyptus.600');
+	--user-bubble-bg: theme('colors.eucalyptus.800');
+	--bot-bubble-bg: theme('colors.citron.800');
+	--chat-bar-bg: theme('colors.eucalyptus.900');
+	--highlight: theme('colors.lightning.400');
+	--highlight-dark: theme('colors.lightning.600');
+}
+
+/* Blush Theme */
+:root[data-theme='blush'] {
+	--btn-bg: theme('colors.mandy.500');
+	--btn-hover-bg: theme('colors.mandy.600');
+	--page-bg: theme('colors.white');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.mandy.50');
+	--form-border: theme('colors.mandy.300');
+	--form-focus-border: theme('colors.cornflower.500');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.zest.600');
+	--link-hover-color: theme('colors.zest.700');
+	--text-color: theme('colors.mandy.900');
+	--placeholder-color: theme('colors.mandy.400');
+	--user-bubble-bg: theme('colors.mandy.100');
+	--bot-bubble-bg: theme('colors.zest.100');
+	--chat-bar-bg: theme('colors.mandy.50');
+	--highlight: theme('colors.cornflower.400');
+	--highlight-dark: theme('colors.cornflower.600');
+}
+
 :root[data-theme='blush'][data-mode='dark'] {
-	--btn-bg: theme('colors.pink.500');
-	--btn-hover-bg: theme('colors.pink.600');
-	--page-bg: theme('colors.gray.900');
-	--primary-card-bg: theme('colors.gray.800');
-	--secondary-card-bg: theme('colors.pink.100');
-	--form-border: theme('colors.pink.300');
-	--form-focus-border: theme('colors.pink.500');
-	--form-bg: theme('colors.gray.800');
-	--link-color: theme('colors.pink.600');
-	--link-hover-color: theme('colors.pink.700');
-	--text-color: theme('colors.white');
-	--placeholder-color: theme('colors.pink.300');
-	--user-bubble-bg: theme('colors.pink.400');
-	--bot-bubble-bg: theme('colors.pink.500');
-	--chat-bar-bg: theme('colors.gray.800');
-	--highlight: theme('colors.pink.600');
-	--highlight-dark: theme('colors.pink.900');
+	--btn-bg: theme('colors.cornflower.500');
+	--btn-hover-bg: theme('colors.cornflower.600');
+	--page-bg: theme('colors.mandy.950');
+	--primary-card-bg: theme('colors.mandy.900');
+	--secondary-card-bg: theme('colors.mandy.800');
+	--form-border: theme('colors.mandy.700');
+	--form-focus-border: theme('colors.cornflower.400');
+	--form-bg: theme('colors.mandy.900');
+	--link-color: theme('colors.zest.400');
+	--link-hover-color: theme('colors.zest.300');
+	--text-color: theme('colors.mandy.50');
+	--placeholder-color: theme('colors.mandy.600');
+	--user-bubble-bg: theme('colors.mandy.800');
+	--bot-bubble-bg: theme('colors.zest.800');
+	--chat-bar-bg: theme('colors.mandy.900');
+	--highlight: theme('colors.cornflower.400');
+	--highlight-dark: theme('colors.cornflower.600');
+}
+
+/* Glow Theme */
+:root[data-theme='glow'] {
+	--btn-bg: theme('colors.fern.500');
+	--btn-hover-bg: theme('colors.fern.600');
+	--page-bg: theme('colors.white');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.fern.50');
+	--form-border: theme('colors.fern.300');
+	--form-focus-border: theme('colors.pumpkin.500');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.java.600');
+	--link-hover-color: theme('colors.java.700');
+	--text-color: theme('colors.fern.900');
+	--placeholder-color: theme('colors.fern.400');
+	--user-bubble-bg: theme('colors.fern.100');
+	--bot-bubble-bg: theme('colors.java.100');
+	--chat-bar-bg: theme('colors.fern.50');
+	--highlight: theme('colors.pumpkin.400');
+	--highlight-dark: theme('colors.pumpkin.600');
+}
+
+:root[data-theme='glow'][data-mode='dark'] {
+	--btn-bg: theme('colors.pumpkin.500');
+	--btn-hover-bg: theme('colors.pumpkin.600');
+	--page-bg: theme('colors.fern.950');
+	--primary-card-bg: theme('colors.fern.900');
+	--secondary-card-bg: theme('colors.fern.800');
+	--form-border: theme('colors.fern.700');
+	--form-focus-border: theme('colors.pumpkin.400');
+	--form-bg: theme('colors.fern.900');
+	--link-color: theme('colors.java.400');
+	--link-hover-color: theme('colors.java.300');
+	--text-color: theme('colors.fern.50');
+	--placeholder-color: theme('colors.fern.600');
+	--user-bubble-bg: theme('colors.fern.800');
+	--bot-bubble-bg: theme('colors.java.800');
+	--chat-bar-bg: theme('colors.fern.900');
+	--highlight: theme('colors.pumpkin.400');
+	--highlight-dark: theme('colors.pumpkin.600');
+}
+
+/* Ocean Theme */
+:root[data-theme='ocean'] {
+	--btn-bg: theme('colors.curious.500');
+	--btn-hover-bg: theme('colors.curious.600');
+	--page-bg: theme('colors.white');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.curious.50');
+	--form-border: theme('colors.curious.300');
+	--form-focus-border: theme('colors.magenta.500');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.meadow.600');
+	--link-hover-color: theme('colors.meadow.700');
+	--text-color: theme('colors.curious.900');
+	--placeholder-color: theme('colors.curious.400');
+	--user-bubble-bg: theme('colors.curious.100');
+	--bot-bubble-bg: theme('colors.meadow.100');
+	--chat-bar-bg: theme('colors.curious.50');
+	--highlight: theme('colors.magenta.400');
+	--highlight-dark: theme('colors.magenta.600');
+}
+
+:root[data-theme='ocean'][data-mode='dark'] {
+	--btn-bg: theme('colors.magenta.500');
+	--btn-hover-bg: theme('colors.magenta.600');
+	--page-bg: theme('colors.curious.950');
+	--primary-card-bg: theme('colors.curious.900');
+	--secondary-card-bg: theme('colors.curious.800');
+	--form-border: theme('colors.curious.700');
+	--form-focus-border: theme('colors.magenta.400');
+	--form-bg: theme('colors.curious.900');
+	--link-color: theme('colors.meadow.400');
+	--link-hover-color: theme('colors.meadow.300');
+	--text-color: theme('colors.curious.50');
+	--placeholder-color: theme('colors.curious.600');
+	--user-bubble-bg: theme('colors.curious.800');
+	--bot-bubble-bg: theme('colors.meadow.800');
+	--chat-bar-bg: theme('colors.curious.900');
+	--highlight: theme('colors.magenta.400');
+	--highlight-dark: theme('colors.magenta.600');
 }
