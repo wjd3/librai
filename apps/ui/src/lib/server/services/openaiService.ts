@@ -24,8 +24,10 @@ export class OpenAIService {
 	static async getChatCompletion(messages: Array<ChatCompletionMessageParam>) {
 		const response = await openai.chat.completions.create({
 			model: PRIVATE_OPENAI_CHAT_MODEL,
-			messages
+			messages,
+			stream: true
 		})
-		return response.choices[0].message.content
+
+		return response
 	}
 }

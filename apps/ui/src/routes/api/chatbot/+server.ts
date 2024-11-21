@@ -54,9 +54,33 @@ export const POST = async ({ request }) => {
 			{ role: 'user', content: queryWithContext }
 		]
 
-		// Get OpenAI response
-		const botResponse = await OpenAIService.getChatCompletion(messages)
-		return json({ response: botResponse })
+		// Set up streaming response
+		const stream = new ReadableStream({
+			async start(controller) {
+				const stream = await OpenAIService.getChatCompletion(messages)
+
+				try {
+					for await (const chunk of stream) {
+						const content = chunk.choices[0]?.delta?.content
+						if (content) {
+							controller.enqueue(content)
+						}
+					}
+
+					controller.close()
+				} catch (error) {
+					controller.error(error)
+				}
+			}
+		})
+
+		return new Response(stream, {
+			headers: {
+				'Content-Type': 'text/event-stream',
+				'Cache-Control': 'no-cache',
+				Connection: 'keep-alive'
+			}
+		})
 	} catch (error) {
 		console.error('Error in chatbot route:', error)
 		return json({ error: 'Error processing your request.' }, { status: 500 })
