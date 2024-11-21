@@ -56,16 +56,39 @@
 
 		// Send query to chatbot API
 		try {
-			const res = await fetch('/api/chatbot', {
+			const response = await fetch('/api/chatbot', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ query, history: conversationHistory })
 			})
-			const data = await res.json()
 
-			if (data.response) {
-				// Add bot response to chat history
-				chatHistory.update((history) => [...history, { message: data.response, isUser: false }])
+			if (!response.ok || !response.body) {
+				throw new Error('Network response was not ok')
+			}
+
+			const reader = response.body.getReader()
+			const decoder = new TextDecoder()
+
+			let message = ''
+			let messageAdded = false
+
+			while (true) {
+				const { done, value } = await reader.read()
+				if (done) break
+
+				const text = decoder.decode(value)
+				message += text
+
+				// Update UI with partial message
+				if (!messageAdded) {
+					messageAdded = true
+					chatHistory.update((history) => [...history, { message, isUser: false }])
+				} else {
+					chatHistory.update((history) => {
+						history[history.length - 1].message += text
+						return history
+					})
+				}
 			}
 		} catch (error) {
 			console.error('Error fetching response:', error)
@@ -243,10 +266,10 @@
 						</div>
 					{/each}
 
-					<!-- Thinking... -->
-					{#if isSubmitting}
+					<!-- Waiting for chatbot response from server -->
+					{#if isSubmitting && $chatHistory.length > 0 && $chatHistory[$chatHistory.length - 1].isUser}
 						<div class="rounded-t-lg rounded-br-lg self-start animate-pulse">
-							<span class="opacity-80 text-text-color text-base">Thinking...</span>
+							<span class="opacity-80 text-text-color text-base">Planting seeds...</span>
 						</div>
 					{/if}
 				</div>
