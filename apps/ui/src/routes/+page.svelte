@@ -138,7 +138,9 @@
 	}
 </script>
 
-<section class="min-h-[100dvh] relative z-40 flex flex-col justify-center items-center">
+<section
+	class={`min-h-[100svh] relative z-40 flex flex-col items-center ${$chatHistory.length > 0 ? 'justify-start' : 'justify-center'}`}
+>
 	<div class="container flex flex-col justify-center items-center">
 		<!-- Title -->
 		{#if $chatHistory.length === 0}
@@ -230,11 +232,13 @@
 								{@html marked.parse(DOMPurify.sanitize(message))}
 							{/if}
 
-							{#if !isUser}
+							<!-- Show copy to clipboard button if it's not a user message and the message isn't still being printed -->
+							{#if !isUser && !(isSubmitting && $chatHistory.length - 1 === i)}
 								<button
 									class="w-fit self-end secondary mt-1 md:mt-2 p-2"
 									onclick={() => copyToClipboard(message, i)}
 									aria-label="Copy to clipboard"
+									in:fade={{ duration: 250, easing: cubicInOut }}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
