@@ -15,6 +15,10 @@
 .chat-message:not(.is-user) {
 	@apply flex flex-col space-y-2 rounded-br-lg self-start bg-bot-bubble-bg;
 }
+.chat-message:not(.is-user) :nth-child(2) {
+	@apply !mt-0;
+}
+
 .chat-message h1 {
 	@apply text-4xl font-bold mb-2;
 }
