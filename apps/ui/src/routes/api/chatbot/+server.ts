@@ -11,7 +11,7 @@ export const POST = async ({ request }) => {
 	const { query, history } = await request.json()
 
 	const sanitizedQuery = DOMPurify.sanitize(query)
-	if (!sanitizedQuery || sanitizedQuery.length < 1) {
+	if (!sanitizedQuery || sanitizedQuery.length < 1 || sanitizedQuery.length > 4096) {
 		return json(
 			{
 				response: "I'm sorry, I couldn't understand that! Please try again.",

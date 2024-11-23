@@ -173,7 +173,7 @@
 					<textarea
 						required
 						minlength={minQueryLength}
-						maxlength="200"
+						maxlength="4096"
 						id="chat-input"
 						placeholder="Ask a question..."
 						bind:this={promptInput}
