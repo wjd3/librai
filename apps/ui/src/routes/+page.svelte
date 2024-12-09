@@ -33,9 +33,16 @@
 
 	const minQueryLength = 1
 
+	let honeypot = $state('')
+
 	// Function to send query and get response
 	async function sendMessage() {
 		isSubmitting = true
+
+		if (honeypot) {
+			isSubmitting = false
+			return
+		}
 
 		const query = DOMPurify.sanitize(userInput || '').trim()
 		if (!query || query.length < minQueryLength) {
@@ -190,6 +197,18 @@
 							}
 						}}
 					></textarea>
+				</div>
+
+				<div class="sr-only">
+					<label for="email_2">Leave this empty:</label>
+					<input
+						bind:value={honeypot}
+						type="text"
+						id="email_2"
+						name="email_2"
+						autocomplete="off"
+						tabindex="-1"
+					/>
 				</div>
 
 				<button
