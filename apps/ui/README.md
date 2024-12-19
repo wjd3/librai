@@ -1,6 +1,6 @@
-# Custom AI Chatbot (Qdrant + OpenAI)
+# Custom AI Chatbot (Qdrant + OpenAI + PocketBase)
 
-This is a SvelteKit-based application designed to provide users with an interactive AI chatbot experience trained on whatever data they want. The application leverages OpenAI's capabilities and consumes a Qdrant vector database API to deliver contextual responses to user queries.
+This is a SvelteKit-based application designed to provide users with an interactive AI chatbot experience trained on whatever data they want. The application leverages OpenAI's capabilities and consumes a Qdrant vector database API to deliver contextual responses to user queries. It uses PocketBase for user authentication and conversation storage.
 
 Pairs with [librai-server](https://github.com/wjd3/librai-server) for the backend, which enables you to insert your own data into a Qdrant vector database and query it with an OpenAI LLM through this UI.
 
@@ -8,6 +8,9 @@ Pairs with [librai-server](https://github.com/wjd3/librai-server) for the backen
 
 - **Interactive Chatbot**: Engage with an AI chatbot that provides insightful responses to user inquiries.
 - **Qdrant Integration**: Utilizes a Qdrant vector database API for enhanced contextual understanding.
+- **User Authentication**: Login system to save and manage conversations.
+- **Conversation Management**: Save, continue, and delete conversations.
+- **Sharing**: Share specific conversations via public links.
 - **Responsive Design**: Built with Tailwind CSS for a modern and responsive user interface.
 - **Theme Customization**: Offers a variety of themes with dark mode support.
 
@@ -17,6 +20,7 @@ Before you begin, ensure you have the following installed:
 
 - Node.js (version 16 or higher)
 - npm (Node package manager)
+- PocketBase (version 0.20.0 or higher)
 
 ## Getting Started
 
@@ -35,31 +39,89 @@ Install the required dependencies using npm:
 npm install
 ```
 
+### Set Up PocketBase
+
+1. [Download and install PocketBase](https://pocketbase.io/docs/)
+
+2. Start PocketBase:
+
+```bash
+./pocketbase serve
+```
+
+3. Access the admin UI at `http://127.0.0.1:8090/_/`
+
+4. Create the following collections:
+
+#### Users Collection
+
+- Use the built-in Users collection
+- Add any additional fields you need (optional)
+
+#### Conversations Collection
+
+Create a new collection with the following schema:
+
+| Field Name | Type     | Required | Options                  |
+| ---------- | -------- | -------- | ------------------------ |
+| user       | Relation | Yes      | Users Collection         |
+| title      | Text     | Yes      | Min length: 1            |
+| messages   | JSON     | Yes      | Array of message objects |
+| isPublic   | Boolean  | Yes      | Default: false           |
+| shareId    | Text     | No       | Must be unique           |
+| created    | Date     | Yes      | Auto: Create             |
+| updated    | Date     | Yes      | Auto: Update             |
+
+Message object structure:
+
+```json
+{
+  "message": "string",
+  "isUser": boolean,
+  "created": "ISO date string"
+}
+```
+
+5. Set up the following collection rules:
+
+```javascript
+// Users Collection (default rules are fine)
+
+// Conversations Collection
+{
+  "create": "@request.auth.id != null",
+  "read": "@request.auth.id = user.id || isPublic = true",
+  "update": "@request.auth.id = user.id",
+  "delete": "@request.auth.id = user.id"
+}
+```
+
 ### Environment Variables
 
 Create a `.env` file in the root of your project and add the following variables:
 
 ```bash
-PUBLIC_API_URL=your_api_url
+# OpenAI Configuration
 PRIVATE_OPENAI_API_KEY=YOUR_OPENAI_API_KEY
 PRIVATE_OPENAI_EMBEDDINGS_MODEL=YOUR_EMBEDDINGS_MODEL
 PRIVATE_OPENAI_CHAT_MODEL=YOUR_CHAT_MODEL
+
+# Qdrant Configuration
 PRIVATE_QDRANT_ENDPOINT_URL=YOUR_QDRANT_ENDPOINT_URL
 PRIVATE_QDRANT_COLLECTION_NAME=YOUR_QDRANT_COLLECTION_NAME
 PRIVATE_QDRANT_API_KEY=YOUR_QDRANT_API_KEY
-PUBLIC_THEME=YOUR_THEME_CHOICE # see the available themes (including the default theme) in `src/lib/constants/theme.ts`
+
+# PocketBase Configuration
+PRIVATE_POCKETBASE_URL=http://127.0.0.1:8090
+PUBLIC_APP_URL=http://localhost:5173
+
+# App Configuration
+PUBLIC_THEME=YOUR_THEME_CHOICE # see available themes in src/lib/constants/theme.ts
 PUBLIC_APP_TITLE=YOUR_APP_TITLE
 PRIVATE_SYSTEM_PROMPT=YOUR_SYSTEM_PROMPT
 ```
 
-Use a system prompt that is relevant to your data.
-
-Here is an example template for your system prompt that can be modified for your specific use case. For example:
-
-- {MAIN_ROLE}: "cybersecurity analyst" or "financial advisor"
-- {DOMAIN}: "cybersecurity" or "personal finance"
-- {SCOPE_OF_EXPERIENCE}: "global experience across all industries" or "experience with clients of all income levels"
-- etc.
+Use a system prompt that is relevant to your data. Here is an example template that can be modified for your specific use case:
 
 ---
 

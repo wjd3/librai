@@ -2,11 +2,13 @@
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
 	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
-	import { chatHistory } from '$lib/stores'
+	import { chatHistory, currentConversation, currentUser, isAuthenticated } from '$lib/stores'
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut, cubicOut } from 'svelte/easing'
 	import { tick } from 'svelte'
+	import { pb } from '$lib/clients/pocketbase'
+	import type { Conversation } from '$lib/server/services/pocketbaseService'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
 	onMount(() => {
@@ -34,6 +36,8 @@
 	const minQueryLength = 1
 
 	let honeypot = $state('')
+
+	let conversationId = $state<string | null>(null)
 
 	// Function to send query and get response
 	async function sendMessage() {
@@ -66,11 +70,21 @@
 			const response = await fetch('/api/chatbot', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ query, history: conversationHistory })
+				body: JSON.stringify({
+					query,
+					history: conversationHistory,
+					conversationId: $currentConversation?.id
+				})
 			})
 
 			if (!response.ok || !response.body) {
 				throw new Error('Network response was not ok')
+			}
+
+			// Get conversation ID from response headers if available
+			const newConversationId = response.headers.get('X-Conversation-Id')
+			if (newConversationId && $isAuthenticated) {
+				conversationId = newConversationId
 			}
 
 			const reader = response.body.getReader()
@@ -108,6 +122,24 @@
 		isSubmitting = false
 		isDisabled = false
 	}
+
+	// Load conversation if user is authenticated
+	$effect(() => {
+		;(async () => {
+			if ($isAuthenticated && $currentUser && conversationId) {
+				// Load conversation from PocketBase
+				try {
+					const conversation = await pb
+						.collection<Conversation>('conversations')
+						.getOne(conversationId)
+					currentConversation.set(conversation)
+					chatHistory.set(conversation.messages)
+				} catch (error) {
+					console.error('Error loading conversation:', error)
+				}
+			}
+		})()
+	})
 
 	// Scroll to bottom button logic
 	let isAtBottom = $state(false)
@@ -185,7 +217,7 @@
 						placeholder="Ask a question..."
 						bind:this={promptInput}
 						bind:value={userInput}
-						class="resize-none w-full h-full"
+						class="textarea resize-none w-full h-full"
 						onkeydown={(e) => {
 							if (e.key === 'Enter') {
 								if (e.shiftKey) {
@@ -326,3 +358,12 @@
 		{/if}
 	</div>
 </section>
+
+{#if !$isAuthenticated && $chatHistory.length > 0}
+	<div
+		class="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 bg-chat-bar-bg px-4 py-2 rounded-lg shadow text-sm"
+		transition:fade={{ duration: 250, easing: cubicInOut }}
+	>
+		Login to save your conversations
+	</div>
+{/if}
