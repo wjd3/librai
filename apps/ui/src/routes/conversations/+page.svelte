@@ -14,6 +14,7 @@
 	let showShareDialog = $state(false)
 	let copiedShare = $state(false)
 	let shareTimeout: NodeJS.Timeout
+	let shareHoneypot = $state('')
 
 	onMount(async () => {
 		if (!$isAuthenticated) {
@@ -49,6 +50,11 @@
 	}
 
 	async function shareConversation(conversation: Conversation) {
+		if (shareHoneypot) {
+			showShareDialog = false
+			return
+		}
+
 		try {
 			const updated = await pb.collection<Conversation>('conversations').update(conversation.id, {
 				isPublic: true,
@@ -56,10 +62,7 @@
 				updated: new Date().toISOString()
 			})
 
-			// Update local state
 			conversations = conversations.map((c) => (c.id === updated.id ? updated : c))
-
-			// Show share dialog
 			shareUrl = `${PUBLIC_APP_URL}/share/${updated.shareId}`
 			showShareDialog = true
 		} catch (error) {
@@ -89,6 +92,13 @@
 		shareTimeout = setTimeout(() => {
 			copiedShare = false
 		}, 3000)
+	}
+
+	function preventDefault(fn: (event: Event) => void) {
+		return (event: Event) => {
+			event.preventDefault()
+			fn(event)
+		}
 	}
 </script>
 
@@ -143,16 +153,32 @@
 			>
 				<h2 class="text-xl mb-4">Share Conversation</h2>
 
-				<div class="flex space-x-2 mb-4">
-					<input type="text" readonly value={shareUrl} class="w-full input" />
-					<button class="secondary px-4" onclick={copyShareUrl}>
-						{copiedShare ? 'Copied!' : 'Copy'}
-					</button>
-				</div>
+				<form onsubmit={preventDefault(copyShareUrl)} class="space-y-4">
+					<div class="flex space-x-2">
+						<input type="text" readonly value={shareUrl} class="w-full input" />
+						<button type="submit" class="secondary px-4">
+							{copiedShare ? 'Copied!' : 'Copy'}
+						</button>
+					</div>
 
-				<div class="flex justify-end">
-					<button class="primary px-4" onclick={() => (showShareDialog = false)}> Close </button>
-				</div>
+					<div class="sr-only">
+						<label for="share_website">Leave this empty:</label>
+						<input
+							bind:value={shareHoneypot}
+							type="text"
+							id="share_website"
+							name="share_website"
+							autocomplete="off"
+							tabindex="-1"
+						/>
+					</div>
+
+					<div class="flex justify-end">
+						<button type="button" class="primary px-4" onclick={() => (showShareDialog = false)}>
+							Close
+						</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	{/if}

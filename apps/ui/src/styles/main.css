@@ -41,16 +41,20 @@ footer {
 }
 
 /* Button Styles */
-button {
+button,
+a {
 	@apply text-text-color px-4 py-2 rounded-lg border transition duration-200;
 }
-button.primary {
+button.primary,
+a.primary {
 	@apply bg-btn-bg;
 }
-button.secondary {
+button.secondary,
+a.secondary {
 	@apply bg-btn-bg;
 }
-button:disabled {
+button:disabled,
+a:disabled {
 	@apply opacity-70 cursor-default;
 }
 
@@ -86,9 +90,6 @@ h6 {
 p,
 span {
 	@apply text-base text-text-color;
-}
-a {
-	@apply text-link-color hover:text-link-hover-color;
 }
 
 /* List Styles */
