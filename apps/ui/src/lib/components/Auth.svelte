@@ -3,6 +3,7 @@
 	import { isAuthenticated, currentUser } from '$lib/stores'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
+	import DOMPurify from 'dompurify'
 
 	let showAuth = $state(false)
 	let isRegistering = $state(false)
@@ -24,20 +25,42 @@
 		isLoading = true
 		error = ''
 
+		const cleanName = DOMPurify.sanitize(name)
+		const cleanEmail = DOMPurify.sanitize(email)
+		const cleanPassword = DOMPurify.sanitize(password)
+		const cleanPasswordConfirm = DOMPurify.sanitize(passwordConfirm)
+
 		try {
 			if (isRegistering) {
+				if (!cleanName || !cleanEmail || !cleanPassword || !cleanPasswordConfirm) {
+					isLoading = false
+					return
+				}
+
+				if (cleanPassword !== cleanPasswordConfirm) {
+					error = 'Passwords do not match'
+					isLoading = false
+					return
+				}
+
 				// Create user
 				await pb.collection('users').create({
-					email,
-					password,
-					passwordConfirm,
-					name
+					email: cleanEmail,
+					password: cleanPassword,
+					passwordConfirm: cleanPasswordConfirm,
+					name: cleanName
 				})
+
 				// Login after registration
-				await pb.collection('users').authWithPassword(email, password)
+				await pb.collection('users').authWithPassword(cleanEmail, cleanPassword)
 			} else {
+				if (!cleanEmail || !cleanPassword) {
+					isLoading = false
+					return
+				}
+
 				// Regular login
-				await pb.collection('users').authWithPassword(email, password)
+				await pb.collection('users').authWithPassword(cleanEmail, cleanPassword)
 			}
 
 			isAuthenticated.set(true)
