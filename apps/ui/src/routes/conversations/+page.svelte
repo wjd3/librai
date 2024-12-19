@@ -164,6 +164,7 @@
 					<div class="sr-only">
 						<label for="share_website">Leave this empty:</label>
 						<input
+							maxlength="4096"
 							bind:value={shareHoneypot}
 							type="text"
 							id="share_website"

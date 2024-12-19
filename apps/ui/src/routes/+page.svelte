@@ -238,6 +238,7 @@
 						type="text"
 						id="email_2"
 						name="email_2"
+						maxlength="4096"
 						autocomplete="off"
 						tabindex="-1"
 					/>

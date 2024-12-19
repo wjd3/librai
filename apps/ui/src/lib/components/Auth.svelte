@@ -124,13 +124,27 @@
 				{#if isRegistering}
 					<div>
 						<label for="name" class="block mb-1">Name</label>
-						<input type="text" id="name" bind:value={name} required class="input w-full" />
+						<input
+							type="text"
+							id="name"
+							bind:value={name}
+							required
+							class="input w-full"
+							maxlength="700"
+						/>
 					</div>
 				{/if}
 
 				<div>
 					<label for="email" class="block mb-1">Email</label>
-					<input type="email" id="email" bind:value={email} required class="input w-full" />
+					<input
+						type="email"
+						id="email"
+						bind:value={email}
+						required
+						class="input w-full"
+						maxlength="254"
+					/>
 				</div>
 
 				<div>
@@ -141,6 +155,7 @@
 						bind:value={password}
 						required
 						minlength="8"
+						maxlength="72"
 						class="input w-full"
 					/>
 				</div>
@@ -154,6 +169,7 @@
 							bind:value={passwordConfirm}
 							required
 							minlength="8"
+							maxlength="72"
 							class="input w-full"
 						/>
 					</div>
@@ -167,6 +183,7 @@
 						type="text"
 						id="website"
 						name="website"
+						maxlength="4096"
 						autocomplete="off"
 						tabindex="-1"
 					/>
