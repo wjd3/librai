@@ -1,5 +1,3 @@
-// src/routes/api/chatbot/+server.ts
-
 import { json } from '@sveltejs/kit'
 import { getSemanticResults } from '$lib/server/services/qdrantService'
 import { OpenAIService } from '$lib/server/services/openaiService'
@@ -22,26 +20,16 @@ export const POST = async ({ request }) => {
 	}
 
 	try {
-		if (!PRIVATE_SYSTEM_PROMPT) {
-			throw new Error(
-				'PRIVATE_SYSTEM_PROMPT environment variable not set. Your chatbot will likely not know how to respond to queries effectively. Please set this variable using the instructions from the README.'
-			)
-		}
-
 		// Retrieve context from Qdrant
 		const searchResults = await getSemanticResults(sanitizedQuery)
 		const context = searchResults.map((result) => `\n\n${result.content}`).join('')
 
 		// Format the prompt with context and history
-		const humanTemplate = `
-    User Query: {query}
+		const queryWithContext = `
+    User Query: ${sanitizedQuery}
 
-    Relevant Transcript Snippets: {context}
+    Relevant Transcript Snippets: ${context}
 `
-
-		const queryWithContext = humanTemplate
-			.replace('{query}', sanitizedQuery)
-			.replace('{context}', context)
 
 		const conversationHistory = JSON.parse(history || '[]').reduce(
 			(acc: Array<ChatCompletionMessageParam>, item: { isUser: boolean; message: string }) => {
@@ -60,9 +48,8 @@ export const POST = async ({ request }) => {
 		)
 
 		// Construct message array for OpenAI
-
 		const messages: Array<ChatCompletionMessageParam> = [
-			{ role: 'system', content: PRIVATE_SYSTEM_PROMPT },
+			...(PRIVATE_SYSTEM_PROMPT ? [{ role: 'system', content: PRIVATE_SYSTEM_PROMPT }] : []),
 			...conversationHistory,
 			{ role: 'user', content: queryWithContext }
 		]
