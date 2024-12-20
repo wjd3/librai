@@ -8,12 +8,15 @@ dotenvConfig()
 
 // Define the handle hook
 export const handle: Handle = async ({ event, resolve }) => {
-	// Get the auth cookie
-	const cookie = event.request.headers.get('cookie')
-	if (cookie) {
+	// Get the auth token from Authorization header
+	const authHeader = event.request.headers.get('Authorization')
+	const token = authHeader?.replace('Bearer ', '')
+
+	if (token) {
 		try {
-			// Load the auth store from the cookie
-			pb.authStore.loadFromCookie(cookie)
+			// Load the auth store with the token
+			pb.authStore.save(token)
+
 			// Validate the token
 			if (pb.authStore.isValid) {
 				event.locals.user = {
@@ -23,9 +26,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 				}
 			}
 		} catch (error) {
-			console.error('Error loading auth store:', error)
-
-			// Clear the auth store if validation fails
+			console.error('Error validating token:', error)
 			pb.authStore.clear()
 		}
 	}
@@ -35,9 +36,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 			return html.replace('%DATA_THEME%', process.env.PUBLIC_THEME || defaultTheme)
 		}
 	})
-
-	// Set the auth cookie in the response
-	response.headers.append('set-cookie', pb.authStore.exportToCookie())
 
 	return response
 }

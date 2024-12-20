@@ -83,8 +83,31 @@
 
 			// Get conversation ID from response headers if available
 			const newConversationId = response.headers.get('X-Conversation-Id')
-			if (newConversationId && $isAuthenticated) {
+			if (newConversationId && $isAuthenticated && $currentUser) {
 				conversationId = newConversationId
+
+				// Create or update conversation in PocketBase
+				try {
+					if (!$currentConversation) {
+						const conversation = await pb.collection<Conversation>('conversations').create({
+							user: $currentUser.id,
+							title: query.slice(0, 100) + (query.length > 100 ? '...' : ''),
+							messages: [...$chatHistory],
+							isPublic: false
+						})
+						currentConversation.set(conversation)
+					} else {
+						const conversation = await pb
+							.collection<Conversation>('conversations')
+							.update($currentConversation.id, {
+								messages: [...$chatHistory],
+								updated: new Date().toISOString()
+							})
+						currentConversation.set(conversation)
+					}
+				} catch (error) {
+					console.error('Error saving conversation:', error)
+				}
 			}
 
 			const reader = response.body.getReader()
@@ -232,7 +255,7 @@
 				</div>
 
 				<div class="sr-only">
-					<label for="email_2">Leave this empty:</label>
+					<label for="email_2">Leave this field blank:</label>
 					<input
 						bind:value={honeypot}
 						type="text"
@@ -365,6 +388,6 @@
 		class="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 bg-chat-bar-bg px-4 py-2 rounded-lg shadow text-sm"
 		transition:fade={{ duration: 250, easing: cubicInOut }}
 	>
-		Login to save your conversations
+		Login to save your conversations.
 	</div>
 {/if}

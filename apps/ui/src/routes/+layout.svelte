@@ -24,7 +24,27 @@
 		document.documentElement.setAttribute('data-mode', isDarkMode ? 'dark' : 'light')
 	}
 
-	onMount(() => {
+	let hasConversations = $state(false)
+
+	$effect(() => {
+		if ($isAuthenticated && $currentUser) {
+			pb.collection('conversations')
+				.getList(1, 1, {
+					filter: `user = "${$currentUser.id}"`
+				})
+				.then((result) => {
+					hasConversations = result.totalItems > 0
+				})
+				.catch((error) => {
+					console.error('Error checking conversations:', error)
+					hasConversations = false
+				})
+		} else {
+			hasConversations = false
+		}
+	})
+
+	onMount(async () => {
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 		isDarkMode = mediaQuery.matches
 		mediaQuery.addEventListener('change', (event) => {
@@ -33,19 +53,32 @@
 		})
 
 		setIsDarkMode()
-
 		setTheme()
+
+		// Initialize auth state
+		isAuthenticated.set(pb.authStore.isValid)
+		if (pb.authStore.model) {
+			currentUser.set({
+				id: pb.authStore.model.id,
+				email: pb.authStore.model.email,
+				name: pb.authStore.model.name
+			})
+		}
 
 		// Check if user is already authenticated
 		if (pb.authStore.isValid) {
-			isAuthenticated.set(true)
-			currentUser.set({
-				id: pb.authStore.model?.id,
-				email: pb.authStore.model?.email,
-				name: pb.authStore.model?.name
-			})
+			try {
+				// Try to refresh the token
+				await pb.collection('users').authRefresh()
+			} catch (error) {
+				console.error('Error refreshing auth:', error)
+				pb.authStore.clear()
+				isAuthenticated.set(false)
+				currentUser.set(null)
+			}
 		}
 	})
+
 	const toggleDarkMode = () => {
 		isDarkMode = !isDarkMode
 		setIsDarkMode()
@@ -79,14 +112,8 @@
 		<div
 			class="fixed z-50 top-6 md:top-8 lg:top-10 xl:top-12 right-8 md:right-12 lg:right-16 xl:right-24 flex items-center space-x-4"
 		>
-			{#if $isAuthenticated}
-				<a
-					href="/conversations"
-					class="secondary px-4"
-					transition:fade={{ duration: 200, easing: cubicInOut }}
-				>
-					History
-				</a>
+			{#if $isAuthenticated && hasConversations}
+				<a href="/conversations" class="secondary px-4"> History </a>
 			{/if}
 
 			<Auth />

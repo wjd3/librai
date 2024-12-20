@@ -100,15 +100,24 @@
 			fn(event)
 		}
 	}
+
+	function newMessage() {
+		currentConversation.set(null)
+		chatHistory.set([])
+		goto('/')
+	}
 </script>
 
-<div class="container max-w-2xl mx-auto px-4 py-8">
-	<h1 class="text-2xl mb-6">Your Conversations</h1>
+<section class="container max-w-2xl mx-auto">
+	<div class="flex justify-between items-center mb-6">
+		<h1 class="text-4xl">Your Conversations</h1>
+		<button class="primary px-4" onclick={newMessage}> New Message </button>
+	</div>
 
 	{#if isLoading}
 		<p>Loading conversations...</p>
 	{:else if conversations.length === 0}
-		<p>No conversations yet</p>
+		<p>No conversations yet.</p>
 	{:else}
 		<div class="space-y-4">
 			{#each conversations as conversation}
@@ -183,4 +192,4 @@
 			</div>
 		</div>
 	{/if}
-</div>
+</section>

@@ -52,7 +52,13 @@
 				})
 
 				// Login after registration
-				await pb.collection('users').authWithPassword(cleanEmail, cleanPassword)
+				const auth = await pb.collection('users').authWithPassword(cleanEmail, cleanPassword)
+				isAuthenticated.set(true)
+				currentUser.set({
+					id: auth.record.id,
+					email: auth.record.email,
+					name: auth.record.name
+				})
 			} else {
 				if (!cleanEmail || !cleanPassword) {
 					isLoading = false
@@ -60,17 +66,18 @@
 				}
 
 				// Regular login
-				await pb.collection('users').authWithPassword(cleanEmail, cleanPassword)
+				const auth = await pb.collection('users').authWithPassword(cleanEmail, cleanPassword)
+				isAuthenticated.set(true)
+				currentUser.set({
+					id: auth.record.id,
+					email: auth.record.email,
+					name: auth.record.name
+				})
 			}
 
-			isAuthenticated.set(true)
-			currentUser.set({
-				id: pb.authStore.model?.id,
-				email: pb.authStore.model?.email,
-				name: pb.authStore.model?.name
-			})
 			showAuth = false
 		} catch (e) {
+			console.error('Auth error:', e)
 			error = isRegistering ? 'Registration failed' : 'Invalid credentials'
 		}
 
@@ -94,13 +101,7 @@
 </script>
 
 {#if $isAuthenticated}
-	<button
-		class="secondary px-4"
-		onclick={logout}
-		transition:fade={{ duration: 200, easing: cubicInOut }}
-	>
-		Logout
-	</button>
+	<button class="secondary px-4" onclick={logout}> Logout </button>
 {:else}
 	<button
 		class="secondary px-4"
@@ -109,7 +110,6 @@
 			isRegistering = false
 			resetForm()
 		}}
-		transition:fade={{ duration: 200, easing: cubicInOut }}
 	>
 		Login
 	</button>
@@ -120,7 +120,6 @@
 			isRegistering = true
 			resetForm()
 		}}
-		transition:fade={{ duration: 200, easing: cubicInOut }}
 	>
 		Sign Up
 	</button>
