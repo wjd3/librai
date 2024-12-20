@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
-	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
+	import {
+		PUBLIC_APP_TITLE,
+		PUBLIC_CHATBOT_DESCRIPTION,
+		PUBLIC_CHATBOT_THINKING_TEXT
+	} from '$env/static/public'
 	import {
 		chatHistory,
 		currentConversation,
@@ -309,7 +313,9 @@
 					<!-- Waiting for chatbot response from server -->
 					{#if isSubmitting && $chatHistory.length > 0 && $chatHistory[$chatHistory.length - 1].isUser}
 						<div class="rounded-t-lg rounded-br-lg self-start animate-pulse">
-							<span class="opacity-80 text-text-color text-base">Thinking...</span>
+							<span class="opacity-80 text-text-color text-base">
+								{PUBLIC_CHATBOT_THINKING_TEXT || 'Thinking...'}
+							</span>
 						</div>
 					{/if}
 				</div>
