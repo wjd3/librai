@@ -19,7 +19,7 @@
 	let showShareDialog = $state(false)
 	let showDeleteDialog = $state(false)
 	let conversationToDelete = $state<string | null>(null)
-	let copiedShare = $state(false)
+	let copiedShareIndex = $state<number | null>(null)
 	let shareTimeout: NodeJS.Timeout
 	let shareHoneypot = $state('')
 
@@ -68,13 +68,22 @@
 		}
 	}
 
-	async function shareConversation(conversation: Conversation) {
+	function getShareUrl(shareId: string) {
+		return `${PUBLIC_APP_URL}/share/${shareId}`
+	}
+
+	let isSharing = $state(false)
+	let isSharingIndex = $state<number | null>(null)
+
+	async function shareConversation(conversation: Conversation, index: number) {
 		if (shareHoneypot) {
 			showShareDialog = false
 			return
 		}
 
 		try {
+			isSharing = true
+			isSharingIndex = index
 			const updated = await pb.collection<Conversation>('conversations').update(conversation.id, {
 				isPublic: true,
 				shareId: conversation.shareId || Math.random().toString(36).substring(2, 15),
@@ -82,15 +91,24 @@
 			})
 
 			conversations = conversations.map((c) => (c.id === updated.id ? updated : c))
-			shareUrl = `${PUBLIC_APP_URL}/share/${updated.shareId}`
+			if (!updated.shareId) {
+				throw new Error(`Share ID is missing for conversation: ${updated.id}`)
+			}
+
+			shareUrl = getShareUrl(updated.shareId)
 			showShareDialog = true
+			isSharing = false
+			isSharingIndex = null
 		} catch (error) {
 			console.error('Error sharing conversation:', error)
+			isSharing = false
+			isSharingIndex = null
 		}
 	}
 
 	async function unshareConversation(conversation: Conversation) {
 		try {
+			isSharing = true
 			const updated = await pb.collection<Conversation>('conversations').update(conversation.id, {
 				isPublic: false,
 				shareId: null,
@@ -99,17 +117,19 @@
 
 			// Update local state
 			conversations = conversations.map((c) => (c.id === updated.id ? updated : c))
+			isSharing = false
 		} catch (error) {
 			console.error('Error unsharing conversation:', error)
+			isSharing = false
 		}
 	}
 
-	function copyShareUrl() {
-		navigator.clipboard.writeText(shareUrl)
-		copiedShare = true
+	function copyShareUrl(specificShareUrl?: string, index?: number) {
+		navigator.clipboard.writeText(specificShareUrl || shareUrl)
+		copiedShareIndex = index != null ? index : -1
 		clearTimeout(shareTimeout)
 		shareTimeout = setTimeout(() => {
-			copiedShare = false
+			copiedShareIndex = null
 		}, 3000)
 	}
 
@@ -139,7 +159,7 @@
 		<p>No conversations yet.</p>
 	{:else}
 		<div class="space-y-4">
-			{#each conversations as conversation}
+			{#each conversations as conversation, i}
 				<div
 					class="bg-chat-bg p-4 rounded-lg"
 					transition:fade={{ duration: 200, easing: cubicInOut }}
@@ -173,12 +193,28 @@
 
 						<div class="flex space-x-2">
 							{#if conversation.isPublic}
-								<button class="secondary px-4" onclick={() => unshareConversation(conversation)}>
+								<button
+									disabled={isSharing}
+									class="secondary px-4"
+									onclick={() => unshareConversation(conversation)}
+								>
 									Unshare
 								</button>
+
+								<button
+									class="secondary px-4"
+									onclick={() =>
+										conversation.shareId && copyShareUrl(getShareUrl(conversation.shareId), i)}
+								>
+									{copiedShareIndex === i ? 'Copied!' : 'Copy Link'}
+								</button>
 							{:else}
-								<button class="secondary px-4" onclick={() => shareConversation(conversation)}>
-									Share
+								<button
+									disabled={isSharing}
+									class="secondary px-4"
+									onclick={() => shareConversation(conversation, i)}
+								>
+									{isSharing && isSharingIndex === i ? 'Sharing...' : 'Share'}
 								</button>
 							{/if}
 
@@ -204,16 +240,16 @@
 			></div>
 
 			<div
-				class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative"
+				class="bg-page-bg p-6 rounded-lg max-w-[34rem] w-full mx-4 relative"
 				transition:fade={{ duration: 200, delay: 100 }}
 			>
 				<h2 class="text-xl mb-4">Share Conversation</h2>
 
-				<form onsubmit={preventDefault(copyShareUrl)} class="space-y-4">
+				<form onsubmit={preventDefault(() => copyShareUrl())} class="space-y-4">
 					<div class="flex space-x-2">
 						<input type="text" readonly value={shareUrl} class="w-full input" />
 						<button type="submit" class="secondary px-4">
-							{copiedShare ? 'Copied!' : 'Copy'}
+							{copiedShareIndex === -1 ? 'Copied!' : 'Copy'}
 						</button>
 					</div>
 
