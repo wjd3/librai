@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
 	import { pb } from '$lib/clients/pocketbase'
@@ -24,22 +23,25 @@
 	let shareTimeout: NodeJS.Timeout
 	let shareHoneypot = $state('')
 
-	onMount(async () => {
-		if (!$isAuthenticated && !$isAuthLoading) {
-			goto('/')
-			return
-		}
+	$effect(() => {
+		;(async () => {
+			if (isLoading && !$isAuthLoading) {
+				if ($isAuthenticated) {
+					try {
+						conversations = await pb.collection('conversations').getFullList({
+							filter: `user = "${$currentUser?.id}"`,
+							sort: '-updated'
+						})
+					} catch (error) {
+						console.error('Error loading conversations:', error)
+					}
 
-		try {
-			conversations = await pb.collection('conversations').getFullList({
-				filter: `user = "${$currentUser?.id}"`,
-				sort: '-updated'
-			})
-		} catch (error) {
-			console.error('Error loading conversations:', error)
-		}
-
-		isLoading = false
+					isLoading = false
+				} else {
+					await goto('/')
+				}
+			}
+		})()
 	})
 
 	async function loadConversation(conversation: Conversation) {
