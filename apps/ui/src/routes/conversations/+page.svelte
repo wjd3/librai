@@ -18,6 +18,8 @@
 	let isLoading = $state(true)
 	let shareUrl = $state('')
 	let showShareDialog = $state(false)
+	let showDeleteDialog = $state(false)
+	let conversationToDelete = $state<string | null>(null)
 	let copiedShare = $state(false)
 	let shareTimeout: NodeJS.Timeout
 	let shareHoneypot = $state('')
@@ -46,10 +48,19 @@
 		goto('/')
 	}
 
-	async function deleteConversation(id: string) {
+	function confirmDelete(id: string) {
+		conversationToDelete = id
+		showDeleteDialog = true
+	}
+
+	async function deleteConversation() {
+		if (!conversationToDelete) return
+
 		try {
-			await pb.collection('conversations').delete(id)
-			conversations = conversations.filter((c) => c.id !== id)
+			await pb.collection('conversations').delete(conversationToDelete)
+			conversations = conversations.filter((c) => c.id !== conversationToDelete)
+			showDeleteDialog = false
+			conversationToDelete = null
 		} catch (error) {
 			console.error('Error deleting conversation:', error)
 		}
@@ -135,22 +146,44 @@
 					<p class="text-sm opacity-70 mb-4">
 						{new Date(conversation.updated).toLocaleDateString()}
 					</p>
-					<div class="flex justify-end space-x-2">
-						{#if conversation.isPublic}
-							<button class="secondary px-4" onclick={() => unshareConversation(conversation)}>
-								Unshare
-							</button>
-						{:else}
-							<button class="secondary px-4" onclick={() => shareConversation(conversation)}>
-								Share
-							</button>
-						{/if}
-						<button class="secondary px-4" onclick={() => deleteConversation(conversation.id)}>
-							Delete
+					<div class="flex justify-between space-x-2">
+						<button
+							aria-label="Delete Conversation"
+							class="secondary px-4"
+							onclick={() => confirmDelete(conversation.id)}
+						>
+							<svg
+								class="w-4 h-4"
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								><path
+									fill="none"
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2m-6 5v6m4-6v6"
+								/></svg
+							>
 						</button>
-						<button class="primary px-4" onclick={() => loadConversation(conversation)}>
-							Continue
-						</button>
+
+						<div class="flex space-x-2">
+							{#if conversation.isPublic}
+								<button class="secondary px-4" onclick={() => unshareConversation(conversation)}>
+									Unshare
+								</button>
+							{:else}
+								<button class="secondary px-4" onclick={() => shareConversation(conversation)}>
+									Share
+								</button>
+							{/if}
+
+							<button class="primary px-4" onclick={() => loadConversation(conversation)}>
+								Continue
+							</button>
+						</div>
 					</div>
 				</div>
 			{/each}
@@ -201,6 +234,36 @@
 						</button>
 					</div>
 				</form>
+			</div>
+		</div>
+	{/if}
+
+	{#if showDeleteDialog}
+		<div
+			class="fixed inset-0 flex items-center justify-center z-50 !ml-0"
+			transition:fade={{ duration: 200 }}
+		>
+			<div
+				aria-hidden="true"
+				class="absolute inset-0 bg-black/50 backdrop-blur-sm z-0"
+				onclick={() => (showDeleteDialog = false)}
+			></div>
+
+			<div
+				class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative"
+				transition:fade={{ duration: 200, delay: 100 }}
+			>
+				<h2 class="text-xl mb-4">Delete Conversation</h2>
+				<p class="mb-6">
+					Are you sure you want to delete this conversation? This action cannot be undone.
+				</p>
+
+				<div class="flex justify-end space-x-4">
+					<button class="secondary px-4" onclick={() => (showDeleteDialog = false)}>
+						Cancel
+					</button>
+					<button class="primary px-4" onclick={deleteConversation}> Delete </button>
+				</div>
 			</div>
 		</div>
 	{/if}
