@@ -23,15 +23,15 @@ export const POST = async ({ request, locals }) => {
 
 	try {
 		let conversation: Conversation | null = null
+		let responseMessage = ''
 
 		if (userId) {
-			const messages = [
-				...JSON.parse(history || '[]'),
-				{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }
-			]
-
 			if (conversationId) {
-				conversation = await PocketbaseService.updateConversation(conversationId, messages)
+				// Only update with the user's message initially
+				conversation = await PocketbaseService.updateConversation(conversationId, [
+					...JSON.parse(history || '[]'),
+					{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }
+				])
 			} else {
 				conversation = await PocketbaseService.createConversation(userId, sanitizedQuery)
 			}
@@ -51,14 +51,12 @@ export const POST = async ({ request, locals }) => {
 		const conversationHistory = JSON.parse(history || '[]').reduce(
 			(acc: Array<ChatCompletionMessageParam>, item: { isUser: boolean; message: string }) => {
 				const sanitizedContent = DOMPurify.sanitize(item?.message || '')
-
 				if (sanitizedContent) {
 					acc.push({
 						role: item.isUser ? 'user' : 'assistant',
 						content: sanitizedContent
 					})
 				}
-
 				return acc
 			},
 			[]
@@ -75,7 +73,6 @@ export const POST = async ({ request, locals }) => {
 		const stream = new ReadableStream({
 			async start(controller) {
 				const stream = await OpenAIService.getChatCompletion(messages)
-				let responseMessage = ''
 
 				try {
 					for await (const chunk of stream) {
@@ -86,21 +83,18 @@ export const POST = async ({ request, locals }) => {
 						}
 					}
 
+					// Update conversation with complete response after stream ends
 					if (userId && conversation) {
-						const updatedMessages = [
-							...conversation.messages,
+						await PocketbaseService.updateConversation(conversation.id, [
+							...JSON.parse(history || '[]'),
 							{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() },
 							{ message: responseMessage, isUser: false, created: new Date().toISOString() }
-						]
-
-						conversation = await PocketbaseService.updateConversation(
-							conversation.id,
-							updatedMessages
-						)
+						])
 					}
 
 					controller.close()
 				} catch (error) {
+					console.error('Stream error:', error)
 					controller.error(error)
 				}
 			}

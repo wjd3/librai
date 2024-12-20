@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { pb } from '$lib/clients/pocketbase'
 	import {
 		isAuthenticated,
 		currentUser,
@@ -10,6 +9,8 @@
 	import { fade } from 'svelte/transition'
 	import DOMPurify from 'dompurify'
 	import { get } from 'svelte/store'
+	import { authToken } from '$lib/stores/auth'
+	import { goto } from '$app/navigation'
 
 	let showAuth = $state(false)
 	let isRegistering = $state(false)
@@ -71,24 +72,36 @@
 					return
 				}
 
-				// Create user
-				await pb.collection('users').create({
-					email: cleanEmail,
-					password: cleanPassword,
-					passwordConfirm: cleanPasswordConfirm,
-					name: cleanName
+				// Register API call
+				const response = await fetch('/api/auth/register', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						email: cleanEmail,
+						password: cleanPassword,
+						passwordConfirm: cleanPasswordConfirm,
+						name: cleanName
+					})
 				})
+
+				if (!response.ok) throw new Error('Registration failed')
 
 				// Login after registration
-				const auth = await pb.collection('users').authWithPassword(cleanEmail, cleanPassword)
-				isAuthenticated.set(true)
-				currentUser.set({
-					id: auth.record.id,
-					email: auth.record.email,
-					name: auth.record.name
+				const loginResponse = await fetch('/api/auth/login', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						email: cleanEmail,
+						password: cleanPassword
+					})
 				})
 
-				await savePendingConversation()
+				const auth = await loginResponse.json()
+
+				authToken.set(auth.token)
+				localStorage.setItem('auth_token', auth.token)
+				isAuthenticated.set(true)
+				currentUser.set(auth.user)
 			} else {
 				if (!cleanEmail || !cleanPassword) {
 					isAuthLoading.set(false)
@@ -96,15 +109,23 @@
 				}
 
 				// Regular login
-				const auth = await pb.collection('users').authWithPassword(cleanEmail, cleanPassword)
-				isAuthenticated.set(true)
-				currentUser.set({
-					id: auth.record.id,
-					email: auth.record.email,
-					name: auth.record.name
+				const response = await fetch('/api/auth/login', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						email: cleanEmail,
+						password: cleanPassword
+					})
 				})
 
-				await savePendingConversation()
+				if (!response.ok) throw new Error('Invalid credentials')
+
+				const auth = await response.json()
+
+				authToken.set(auth.token)
+				localStorage.setItem('auth_token', auth.token)
+				isAuthenticated.set(true)
+				currentUser.set(auth.user)
 			}
 
 			showAuth = false
@@ -117,9 +138,12 @@
 	}
 
 	async function logout() {
-		pb.authStore.clear()
+		await fetch('/api/auth/logout', { method: 'POST' })
+		authToken.set(null)
+		localStorage.removeItem('auth_token')
 		isAuthenticated.set(false)
 		currentUser.set(null)
+		await goto('/')
 	}
 
 	function resetForm() {

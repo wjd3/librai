@@ -3,13 +3,13 @@
 	import { onMount } from 'svelte'
 	import { PUBLIC_THEME, PUBLIC_APP_TITLE } from '$env/static/public'
 	import { defaultTheme, themes } from '$lib/constants/theme'
-	import { chatHistory, isAuthenticated, currentUser, isAuthLoading } from '$lib/stores'
+	import { chatHistory } from '$lib/stores'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
 	import Auth from '$lib/components/Auth.svelte'
-	import { pb } from '$lib/clients/pocketbase'
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
 	import { page } from '$app/stores'
+	import { authToken, currentUser, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
 
 	let { children } = $props()
 
@@ -28,13 +28,15 @@
 	let hasConversations = $state(false)
 
 	$effect(() => {
-		if ($isAuthenticated && $currentUser) {
-			pb.collection('conversations')
-				.getList(1, 1, {
-					filter: `user = "${$currentUser.id}"`
-				})
-				.then((result) => {
-					hasConversations = result.totalItems > 0
+		if ($authToken && $currentUser) {
+			fetch('/api/conversations', {
+				headers: {
+					Authorization: `Bearer ${$authToken}`
+				}
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					hasConversations = data.length > 0
 				})
 				.catch((error) => {
 					console.error('Error checking conversations:', error)
@@ -56,26 +58,19 @@
 		setIsDarkMode()
 		setTheme()
 
-		// Initialize auth state
-		isAuthenticated.set(pb.authStore.isValid)
-		if (pb.authStore.model) {
-			currentUser.set({
-				id: pb.authStore.model.id,
-				email: pb.authStore.model.email,
-				name: pb.authStore.model.name
+		// Check auth status on mount
+		const token = localStorage.getItem('auth_token')
+		if (token) {
+			const response = await fetch('/api/auth/status', {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
 			})
-		}
-
-		// Check if user is already authenticated
-		if (pb.authStore.isValid) {
-			try {
-				// Try to refresh the token
-				await pb.collection('users').authRefresh()
-			} catch (error) {
-				console.error('Error refreshing auth:', error)
-				pb.authStore.clear()
-				isAuthenticated.set(false)
-				currentUser.set(null)
+			if (response.ok) {
+				const data = await response.json()
+				authToken.set(data.token)
+				currentUser.set(data.user)
+				isAuthenticated.set(true)
 			}
 		}
 

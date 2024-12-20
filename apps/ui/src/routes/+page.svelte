@@ -13,14 +13,12 @@
 		isAuthenticated,
 		pendingConversation
 	} from '$lib/stores'
+	import { authToken } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut, cubicOut } from 'svelte/easing'
 	import { tick } from 'svelte'
-	import { pb } from '$lib/clients/pocketbase'
 	import CopyButton from '$lib/components/CopyButton.svelte'
-	import PocketBase from 'pocketbase'
-	import type { Conversation } from '$lib/server/services/pocketbaseService'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
 	onMount(() => {
@@ -83,7 +81,7 @@
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${pb.authStore.token}`
+					Authorization: `Bearer ${$authToken}`
 				},
 				body: JSON.stringify({
 					query,
@@ -103,13 +101,13 @@
 
 				if (!$currentConversation) {
 					try {
-						// Create a new instance for this specific request with auto-cancellation disabled
-						const tempPb = new PocketBase(pb.baseUrl)
-						tempPb.autoCancellation(false)
-
-						const conversation = await tempPb
-							.collection<Conversation>('conversations')
-							.getOne(newConversationId)
+						const response = await fetch(`/api/conversations/${newConversationId}`, {
+							headers: {
+								Authorization: `Bearer ${$authToken}`
+							}
+						})
+						if (!response.ok) throw new Error('Failed to load conversation')
+						const conversation = await response.json()
 						currentConversation.set(conversation)
 					} catch (error) {
 						console.error('Error loading conversation:', error)
@@ -123,7 +121,6 @@
 			const decoder = new TextDecoder()
 
 			let message = ''
-			let messageAdded = false
 
 			while (true) {
 				const { done, value } = await reader.read()
@@ -133,19 +130,16 @@
 				message += text
 
 				// Update UI with partial message
-				if (!messageAdded) {
-					messageAdded = true
-					chatHistory.update((history) => [...history, { message, isUser: false }])
-				} else {
-					chatHistory.update((history) => {
-						const lastMessage = history[history.length - 1]
-						// Only update if the last message is from the bot
-						if (!lastMessage.isUser) {
-							lastMessage.message = message
-						}
-						return history
-					})
-				}
+				chatHistory.update((history) => {
+					const lastMessage = history[history.length - 1]
+					if (!lastMessage || lastMessage.isUser) {
+						// Add new bot message if last message was from user
+						return [...history, { message, isUser: false }]
+					} else {
+						// Update existing bot message
+						return history.map((msg, i) => (i === history.length - 1 ? { ...msg, message } : msg))
+					}
+				})
 			}
 		} catch (error) {
 			console.error('Error:', error)
@@ -165,9 +159,13 @@
 			if ($isAuthenticated && $currentUser && conversationId) {
 				// Load conversation from PocketBase
 				try {
-					const conversation = await pb
-						.collection<Conversation>('conversations')
-						.getOne(conversationId)
+					const response = await fetch(`/api/conversations/${conversationId}`, {
+						headers: {
+							Authorization: `Bearer ${$authToken}`
+						}
+					})
+					if (!response.ok) throw new Error('Failed to load conversation')
+					const conversation = await response.json()
 					currentConversation.set(conversation)
 					chatHistory.set(conversation.messages)
 				} catch (error) {

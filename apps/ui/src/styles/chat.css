@@ -38,9 +38,9 @@
 	@apply text-lg font-normal mb-2;
 }
 .chat-message li,
-.chat-message strong,
-.chat-message em,
-.chat-message b,
+.chat-message p strong,
+.chat-message p em,
+.chat-message p b,
 .chat-message span,
 .chat-message p {
 	@apply text-base;

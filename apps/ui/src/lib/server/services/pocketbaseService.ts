@@ -1,5 +1,4 @@
-import { pb } from '../../clients/pocketbase'
-
+import { pb } from '$lib/server/pocketbase'
 export type ChatMessage = {
 	message: string
 	isUser: boolean

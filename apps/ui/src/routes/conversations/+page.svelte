@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
-	import { pb } from '$lib/clients/pocketbase'
 	import {
 		currentUser,
 		isAuthenticated,
@@ -12,6 +11,7 @@
 	import { goto } from '$app/navigation'
 	import { PUBLIC_APP_URL } from '$env/static/public'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
+	import { authToken } from '$lib/stores/auth'
 
 	let conversations = $state<Conversation[]>([])
 	let isLoading = $state(true)
@@ -24,25 +24,26 @@
 	let shareHoneypot = $state('')
 
 	$effect(() => {
-		;(async () => {
-			if (isLoading && !$isAuthLoading) {
-				if ($isAuthenticated) {
-					try {
-						conversations = await pb.collection('conversations').getFullList({
-							filter: `user = "${$currentUser?.id}"`,
-							sort: '-updated'
-						})
-					} catch (error) {
-						console.error('Error loading conversations:', error)
-					}
-
-					isLoading = false
-				} else {
-					await goto('/')
-				}
-			}
-		})()
+		if ($authToken) {
+			loadConversations()
+		}
 	})
+
+	async function loadConversations() {
+		try {
+			const response = await fetch('/api/conversations', {
+				headers: {
+					Authorization: `Bearer ${$authToken}`
+				}
+			})
+			if (response.ok) {
+				conversations = await response.json()
+			}
+		} catch (error) {
+			console.error('Error loading conversations:', error)
+		}
+		isLoading = false
+	}
 
 	async function loadConversation(conversation: Conversation) {
 		currentConversation.set(conversation)
@@ -59,7 +60,15 @@
 		if (!conversationToDelete) return
 
 		try {
-			await pb.collection('conversations').delete(conversationToDelete)
+			const response = await fetch(`/api/conversations/${conversationToDelete}`, {
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${$authToken}`
+				}
+			})
+
+			if (!response.ok) throw new Error('Failed to delete conversation')
+
 			conversations = conversations.filter((c) => c.id !== conversationToDelete)
 			showDeleteDialog = false
 			conversationToDelete = null
@@ -76,52 +85,53 @@
 	let isSharingIndex = $state<number | null>(null)
 
 	async function shareConversation(conversation: Conversation, index: number) {
-		if (shareHoneypot) {
-			showShareDialog = false
-			return
-		}
-
 		try {
 			isSharing = true
 			isSharingIndex = index
-			const updated = await pb.collection<Conversation>('conversations').update(conversation.id, {
-				isPublic: true,
-				shareId: conversation.shareId || Math.random().toString(36).substring(2, 15),
-				updated: new Date().toISOString()
+
+			const response = await fetch(`/api/conversations/${conversation.id}/share`, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${$authToken}`
+				}
 			})
 
+			if (!response.ok) throw new Error('Failed to share conversation')
+
+			const updated = await response.json()
 			conversations = conversations.map((c) => (c.id === updated.id ? updated : c))
+
 			if (!updated.shareId) {
 				throw new Error(`Share ID is missing for conversation: ${updated.id}`)
 			}
 
 			shareUrl = getShareUrl(updated.shareId)
 			showShareDialog = true
-			isSharing = false
-			isSharingIndex = null
 		} catch (error) {
 			console.error('Error sharing conversation:', error)
-			isSharing = false
-			isSharingIndex = null
 		}
+		isSharing = false
+		isSharingIndex = null
 	}
 
 	async function unshareConversation(conversation: Conversation) {
 		try {
 			isSharing = true
-			const updated = await pb.collection<Conversation>('conversations').update(conversation.id, {
-				isPublic: false,
-				shareId: null,
-				updated: new Date().toISOString()
+			const response = await fetch(`/api/conversations/${conversation.id}/share`, {
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${$authToken}`
+				}
 			})
 
-			// Update local state
+			if (!response.ok) throw new Error('Failed to unshare conversation')
+
+			const updated = await response.json()
 			conversations = conversations.map((c) => (c.id === updated.id ? updated : c))
-			isSharing = false
 		} catch (error) {
 			console.error('Error unsharing conversation:', error)
-			isSharing = false
 		}
+		isSharing = false
 	}
 
 	function copyShareUrl(specificShareUrl?: string, index?: number) {

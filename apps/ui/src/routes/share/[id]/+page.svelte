@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
-	import { pb } from '$lib/clients/pocketbase'
 	import { page } from '$app/stores'
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
@@ -23,14 +22,11 @@
 		}
 
 		try {
-			const record = await pb
-				.collection<Conversation>('conversations')
-				.getFirstListItem(`shareId = '${shareId}' && isPublic = true`)
-
-			if (!record) {
+			const response = await fetch(`/api/conversations/shared/${shareId}`)
+			if (!response.ok) {
 				error = 'Conversation not found or no longer shared.'
 			} else {
-				conversation = record
+				conversation = await response.json()
 			}
 		} catch (err) {
 			console.error('Error loading shared conversation:', err)
