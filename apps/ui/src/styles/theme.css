@@ -61,7 +61,7 @@
 }
 
 :root[data-theme='leaf'][data-mode='dark'] {
-	--btn-bg: theme('colors.lightning.500');
+	--btn-bg: theme('colors.lightning.600');
 	--btn-hover-bg: theme('colors.lightning.600');
 	--page-bg: theme('colors.eucalyptus.950');
 	--primary-card-bg: theme('colors.eucalyptus.900');

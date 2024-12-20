@@ -1,12 +1,24 @@
 <script lang="ts">
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
-	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
-	import { chatHistory } from '$lib/stores'
+	import {
+		PUBLIC_APP_TITLE,
+		PUBLIC_CHATBOT_DESCRIPTION,
+		PUBLIC_CHATBOT_THINKING_TEXT
+	} from '$env/static/public'
+	import {
+		chatHistory,
+		currentConversation,
+		currentUser,
+		isAuthenticated,
+		pendingConversation
+	} from '$lib/stores'
+	import { authToken } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut, cubicOut } from 'svelte/easing'
 	import { tick } from 'svelte'
+	import CopyButton from '$lib/components/CopyButton.svelte'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
 	onMount(() => {
@@ -34,6 +46,8 @@
 	const minQueryLength = 1
 
 	let honeypot = $state('')
+
+	let conversationId = $state<string | null>(null)
 
 	// Function to send query and get response
 	async function sendMessage() {
@@ -65,19 +79,48 @@
 		try {
 			const response = await fetch('/api/chatbot', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ query, history: conversationHistory })
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${$authToken}`
+				},
+				body: JSON.stringify({
+					query,
+					history: conversationHistory,
+					conversationId: $currentConversation?.id
+				})
 			})
 
 			if (!response.ok || !response.body) {
 				throw new Error('Network response was not ok')
 			}
 
+			const newConversationId = response.headers.get('X-Conversation-Id')
+
+			if (newConversationId && $isAuthenticated && $currentUser) {
+				conversationId = newConversationId
+
+				if (!$currentConversation) {
+					try {
+						const response = await fetch(`/api/conversations/${newConversationId}`, {
+							headers: {
+								Authorization: `Bearer ${$authToken}`
+							}
+						})
+						if (!response.ok) throw new Error('Failed to load conversation')
+						const conversation = await response.json()
+						currentConversation.set(conversation)
+					} catch (error) {
+						console.error('Error loading conversation:', error)
+					}
+				}
+			} else if (!$isAuthenticated && $chatHistory.length > 0) {
+				pendingConversation.set(true)
+			}
+
 			const reader = response.body.getReader()
 			const decoder = new TextDecoder()
 
 			let message = ''
-			let messageAdded = false
 
 			while (true) {
 				const { done, value } = await reader.read()
@@ -87,18 +130,19 @@
 				message += text
 
 				// Update UI with partial message
-				if (!messageAdded) {
-					messageAdded = true
-					chatHistory.update((history) => [...history, { message, isUser: false }])
-				} else {
-					chatHistory.update((history) => {
-						history[history.length - 1].message += text
-						return history
-					})
-				}
+				chatHistory.update((history) => {
+					const lastMessage = history[history.length - 1]
+					if (!lastMessage || lastMessage.isUser) {
+						// Add new bot message if last message was from user
+						return [...history, { message, isUser: false }]
+					} else {
+						// Update existing bot message
+						return history.map((msg, i) => (i === history.length - 1 ? { ...msg, message } : msg))
+					}
+				})
 			}
 		} catch (error) {
-			console.error('Error fetching response:', error)
+			console.error('Error:', error)
 			chatHistory.update((history) => [
 				...history,
 				{ message: 'Error fetching response', isUser: false }
@@ -108,6 +152,28 @@
 		isSubmitting = false
 		isDisabled = false
 	}
+
+	// Load conversation if user is authenticated
+	$effect(() => {
+		;(async () => {
+			if ($isAuthenticated && $currentUser && conversationId) {
+				// Load conversation from PocketBase
+				try {
+					const response = await fetch(`/api/conversations/${conversationId}`, {
+						headers: {
+							Authorization: `Bearer ${$authToken}`
+						}
+					})
+					if (!response.ok) throw new Error('Failed to load conversation')
+					const conversation = await response.json()
+					currentConversation.set(conversation)
+					chatHistory.set(conversation.messages)
+				} catch (error) {
+					console.error('Error loading conversation:', error)
+				}
+			}
+		})()
+	})
 
 	// Scroll to bottom button logic
 	let isAtBottom = $state(false)
@@ -126,23 +192,6 @@
 			window.removeEventListener('scroll', checkScroll)
 		}
 	})
-
-	// Copy to clipboard logic
-	let copiedIndex = $state(0)
-	let isCopied = $state(false)
-	let copyTimeout: NodeJS.Timeout
-	const copyToClipboard = (text: string, index: number) => {
-		clearTimeout(copyTimeout)
-
-		navigator.clipboard.writeText(text)
-
-		copiedIndex = index
-
-		isCopied = true
-		copyTimeout = setTimeout(() => {
-			isCopied = false
-		}, 3250)
-	}
 </script>
 
 <section
@@ -185,7 +234,7 @@
 						placeholder="Ask a question..."
 						bind:this={promptInput}
 						bind:value={userInput}
-						class="resize-none w-full h-full"
+						class="textarea resize-none w-full h-full"
 						onkeydown={(e) => {
 							if (e.key === 'Enter') {
 								if (e.shiftKey) {
@@ -200,12 +249,13 @@
 				</div>
 
 				<div class="sr-only">
-					<label for="email_2">Leave this empty:</label>
+					<label for="email_2">Leave this field blank:</label>
 					<input
 						bind:value={honeypot}
 						type="text"
 						id="email_2"
 						name="email_2"
+						maxlength="4096"
 						autocomplete="off"
 						tabindex="-1"
 					/>
@@ -235,6 +285,37 @@
 
 		{#if $chatHistory.length > 0}
 			<div class="chat-history" in:fade={{ duration: 500, easing: cubicInOut }}>
+				<button
+					class="secondary px-4 py-2 mr-auto mb-4"
+					onclick={async () => {
+						currentConversation.set(null)
+						chatHistory.set([])
+						if (promptInput) {
+							await tick()
+							promptInput.focus()
+						}
+					}}
+					aria-label="New Conversation"
+				>
+					<svg
+						class="w-4 h-4"
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						><g
+							fill="none"
+							stroke="currentColor"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							><path d="M21 12a9 9 0 0 0-9-9a9.75 9.75 0 0 0-6.74 2.74L3 8" /><path
+								d="M3 3v5h5m-5 4a9 9 0 0 0 9 9a9.75 9.75 0 0 0 6.74-2.74L21 16"
+							/><path d="M16 16h5v5" /></g
+						></svg
+					>
+				</button>
+
 				<!-- Chat display -->
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }, i}
@@ -253,38 +334,7 @@
 
 							<!-- Show copy to clipboard button if it's not a user message and the message isn't still being printed -->
 							{#if !isUser && !(isSubmitting && $chatHistory.length - 1 === i)}
-								<button
-									class="w-fit self-end secondary mt-1 md:mt-2 p-2"
-									onclick={() => copyToClipboard(message, i)}
-									aria-label="Copy to clipboard"
-									in:fade={{ duration: 250, easing: cubicInOut }}
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="1em"
-										height="1em"
-										viewBox="0 0 24 24"
-										class="fill-text-color stroke-text-color w-5 h-5"
-									>
-										{#if isCopied && copiedIndex === i}
-											<path
-												d="M18.577 6.183a1 1 0 0 1 .24 1.394l-5.666 8.02c-.36.508-.665.94-.94 1.269c-.287.34-.61.658-1.038.86a2.83 2.83 0 0 1-2.03.153c-.456-.137-.82-.406-1.149-.702c-.315-.285-.672-.668-1.09-1.116l-1.635-1.753a1 1 0 1 1 1.462-1.364l1.606 1.722c.455.487.754.806.998 1.027c.24.216.344.259.385.271c.196.06.405.045.598-.046c.046-.022.149-.085.36-.338c.216-.257.473-.62.863-1.171l5.642-7.986a1 1 0 0 1 1.394-.24"
-											/>
-										{:else}
-											<g
-												fill="none"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="1.5"
-											>
-												<path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2H9z" />
-												<path
-													d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"
-												/>
-											</g>
-										{/if}
-									</svg>
-								</button>
+								<CopyButton {message} messageIndex={i} />
 							{/if}
 						</div>
 					{/each}
@@ -292,7 +342,9 @@
 					<!-- Waiting for chatbot response from server -->
 					{#if isSubmitting && $chatHistory.length > 0 && $chatHistory[$chatHistory.length - 1].isUser}
 						<div class="rounded-t-lg rounded-br-lg self-start animate-pulse">
-							<span class="opacity-80 text-text-color text-base">Planting seeds...</span>
+							<span class="opacity-80 text-text-color text-base">
+								{PUBLIC_CHATBOT_THINKING_TEXT || 'Thinking...'}
+							</span>
 						</div>
 					{/if}
 				</div>
@@ -301,7 +353,7 @@
 
 		{#if !isAtBottom && $chatHistory.length > 0}
 			<button
-				class="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2"
+				class={`fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2 ${!$isAuthenticated && $chatHistory.length > 0 ? 'bottom-40' : 'bottom-32'}`}
 				in:fade={{ duration: 250, easing: cubicOut }}
 				out:fade={{ duration: 250, easing: cubicOut }}
 				onclick={scrollToBottom}
@@ -326,3 +378,12 @@
 		{/if}
 	</div>
 </section>
+
+{#if !$isAuthenticated && $chatHistory.length > 0}
+	<div
+		class="fixed bottom-28 left-1/2 -translate-x-1/2 z-50 bg-chat-bar-bg px-4 py-2 rounded-lg shadow text-sm text-center"
+		transition:fade={{ duration: 250, easing: cubicInOut }}
+	>
+		<span class="cursor-default select-none">Login to save conversations.</span>
+	</div>
+{/if}

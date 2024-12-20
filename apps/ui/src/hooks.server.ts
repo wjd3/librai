@@ -1,22 +1,35 @@
-// Import necessary types
 import type { Handle } from '@sveltejs/kit'
+import { pb } from '$lib/server/pocketbase'
 import { defaultTheme } from '$lib/constants/theme'
-import { config as dotenvConfig } from 'dotenv'
 
-dotenvConfig()
-
-// Define the handle hook
 export const handle: Handle = async ({ event, resolve }) => {
-	// Your custom logic here (e.g., logging, authentication)
+	const authHeader = event.request.headers.get('Authorization')
+	const token = authHeader?.replace('Bearer ', '')
 
-	// Call resolve to continue processing the request
+	if (token) {
+		try {
+			pb.authStore.save(token)
+			await pb.collection('users').authRefresh()
+
+			if (pb.authStore.isValid) {
+				event.locals.user = {
+					id: pb.authStore.model?.id,
+					email: pb.authStore.model?.email,
+					name: pb.authStore.model?.name
+				}
+				event.locals.token = token
+			}
+		} catch (error) {
+			console.error('Error validating token:', error)
+			pb.authStore.clear()
+		}
+	}
+
 	const response = await resolve(event, {
 		transformPageChunk: ({ html }) => {
 			return html.replace('%DATA_THEME%', process.env.PUBLIC_THEME || defaultTheme)
 		}
 	})
-
-	// Optionally modify the response here
 
 	return response
 }

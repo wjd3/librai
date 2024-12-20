@@ -34,24 +34,27 @@ footer {
 }
 
 /* Form Element Styles */
-input,
-input[type='text'],
-textarea,
-select {
+.input,
+.textarea,
+.select {
 	@apply border-2 bg-form-bg border-form-border focus:border-form-focus-border w-full rounded-lg text-text-color placeholder:text-placeholder-color shadow-sm focus:outline-none focus:ring-0 transition duration-200 text-lg;
 }
 
 /* Button Styles */
-button {
+button,
+a {
 	@apply text-text-color px-4 py-2 rounded-lg border transition duration-200;
 }
-button.primary {
+button.primary,
+a.primary {
 	@apply bg-btn-bg;
 }
-button.secondary {
+button.secondary,
+a.secondary {
 	@apply bg-btn-bg;
 }
-button:disabled {
+button:disabled,
+a:disabled {
 	@apply opacity-70 cursor-default;
 }
 
@@ -87,9 +90,6 @@ h6 {
 p,
 span {
 	@apply text-base text-text-color;
-}
-a {
-	@apply text-link-color hover:text-link-hover-color;
 }
 
 /* List Styles */
