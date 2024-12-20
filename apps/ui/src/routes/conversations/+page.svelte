@@ -56,10 +56,14 @@
 		showDeleteDialog = true
 	}
 
+	let isDeleting = $state(false)
+
 	async function deleteConversation() {
 		if (!conversationToDelete) return
 
 		try {
+			isDeleting = true
+
 			const response = await fetch(`/api/conversations/${conversationToDelete}`, {
 				method: 'DELETE',
 				headers: {
@@ -72,8 +76,10 @@
 			conversations = conversations.filter((c) => c.id !== conversationToDelete)
 			showDeleteDialog = false
 			conversationToDelete = null
+			isDeleting = false
 		} catch (error) {
 			console.error('Error deleting conversation:', error)
+			isDeleting = false
 		}
 	}
 
@@ -310,7 +316,9 @@
 					<button class="secondary px-4" onclick={() => (showDeleteDialog = false)}>
 						Cancel
 					</button>
-					<button class="primary px-4" onclick={deleteConversation}> Delete </button>
+					<button disabled={isDeleting} class="primary px-4" onclick={deleteConversation}>
+						{isDeleting ? 'Deleting...' : 'Delete'}
+					</button>
 				</div>
 			</div>
 		</div>
