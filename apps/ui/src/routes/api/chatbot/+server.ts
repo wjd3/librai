@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit'
 import { getSemanticResults } from '$lib/server/services/qdrantService'
 import { OpenAIService } from '$lib/server/services/openaiService'
-import { PocketbaseService } from '$lib/server/services/pocketbaseService'
+import { PocketbaseService, type Conversation } from '$lib/server/services/pocketbaseService'
 import DOMPurify from 'isomorphic-dompurify'
 import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
@@ -22,14 +22,16 @@ export const POST = async ({ request, locals }) => {
 	}
 
 	try {
-		// Create or update conversation if user is authenticated
-		let conversation = null
+		let conversation: Conversation | null = null
+
 		if (userId) {
+			const messages = [
+				...JSON.parse(history || '[]'),
+				{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }
+			]
+
 			if (conversationId) {
-				conversation = await PocketbaseService.updateConversation(conversationId, [
-					...JSON.parse(history || '[]'),
-					{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }
-				])
+				conversation = await PocketbaseService.updateConversation(conversationId, messages)
 			} else {
 				conversation = await PocketbaseService.createConversation(userId, sanitizedQuery)
 			}
@@ -69,7 +71,7 @@ export const POST = async ({ request, locals }) => {
 			{ role: 'user', content: queryWithContext }
 		]
 
-		// Set up streaming response with conversation ID
+		// Set up streaming response
 		const stream = new ReadableStream({
 			async start(controller) {
 				const stream = await OpenAIService.getChatCompletion(messages)
@@ -84,9 +86,8 @@ export const POST = async ({ request, locals }) => {
 						}
 					}
 
-					// Save the AI response if user is authenticated
 					if (userId && conversation) {
-						await PocketbaseService.updateConversation(conversation.id, [
+						conversation = await PocketbaseService.updateConversation(conversation.id, [
 							...conversation.messages,
 							{ message: responseMessage, isUser: false, created: new Date().toISOString() }
 						])

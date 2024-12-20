@@ -3,7 +3,13 @@
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
 	import { pb } from '$lib/clients/pocketbase'
-	import { currentUser, isAuthenticated, currentConversation, chatHistory } from '$lib/stores'
+	import {
+		currentUser,
+		isAuthenticated,
+		currentConversation,
+		chatHistory,
+		isAuthLoading
+	} from '$lib/stores'
 	import { goto } from '$app/navigation'
 	import { PUBLIC_APP_URL } from '$env/static/public'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
@@ -17,7 +23,7 @@
 	let shareHoneypot = $state('')
 
 	onMount(async () => {
-		if (!$isAuthenticated) {
+		if (!$isAuthenticated && !$isAuthLoading) {
 			goto('/')
 			return
 		}
@@ -153,11 +159,17 @@
 
 	{#if showShareDialog}
 		<div
-			class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+			class="fixed inset-0 flex items-center justify-center z-50 !ml-0"
 			transition:fade={{ duration: 200 }}
 		>
 			<div
-				class="bg-chat-bg p-6 rounded-lg max-w-sm w-full mx-4"
+				aria-hidden="true"
+				class="absolute inset-0 bg-black/50 backdrop-blur-sm z-0"
+				onclick={() => (showShareDialog = false)}
+			></div>
+
+			<div
+				class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative"
 				transition:fade={{ duration: 200, delay: 100 }}
 			>
 				<h2 class="text-xl mb-4">Share Conversation</h2>

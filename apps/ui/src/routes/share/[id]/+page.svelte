@@ -6,6 +6,7 @@
 	import { page } from '$app/stores'
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
+	import CopyButton from '$lib/components/CopyButton.svelte'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
 
 	let conversation = $state<Conversation | null>(null)
@@ -21,25 +22,25 @@
 		}
 
 		try {
-			const records = await pb.collection<Conversation>('conversations').getFullList({
-				filter: `shareId = "${shareId}" && isPublic = true`
-			})
+			const record = await pb
+				.collection<Conversation>('conversations')
+				.getFirstListItem(`shareId = '${shareId}' && isPublic = true`)
 
-			if (records.length === 0) {
-				error = 'Conversation not found or no longer shared'
+			if (!record) {
+				error = 'Conversation not found or no longer shared.'
 			} else {
-				conversation = records[0]
+				conversation = record
 			}
 		} catch (err) {
 			console.error('Error loading shared conversation:', err)
-			error = 'Error loading conversation'
+			error = 'Error loading conversation.'
 		}
 
 		isLoading = false
 	})
 </script>
 
-<div class="container max-w-2xl mx-auto px-4 py-8">
+<section class="container max-w-2xl mx-auto">
 	{#if isLoading}
 		<p>Loading shared conversation...</p>
 	{:else if error}
@@ -49,8 +50,8 @@
 	{:else if conversation}
 		<div class="space-y-6">
 			<h1 class="text-2xl">{conversation.title}</h1>
-			<div class="space-y-6">
-				{#each conversation.messages as message}
+			<div class="space-y-6 flex flex-col">
+				{#each conversation.messages as message, i}
 					<div
 						class={`chat-message ${message.isUser ? 'is-user' : ''}`}
 						transition:fade={{ duration: 200, easing: cubicInOut }}
@@ -61,10 +62,11 @@
 						{:else}
 							<h2 class="sr-only">AI said:</h2>
 							{@html marked.parse(DOMPurify.sanitize(message.message))}
+							<CopyButton {message} messageIndex={i} />
 						{/if}
 					</div>
 				{/each}
 			</div>
 		</div>
 	{/if}
-</div>
+</section>

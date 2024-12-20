@@ -2,12 +2,19 @@
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
 	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
-	import { chatHistory, currentConversation, currentUser, isAuthenticated } from '$lib/stores'
+	import {
+		chatHistory,
+		currentConversation,
+		currentUser,
+		isAuthenticated,
+		pendingConversation
+	} from '$lib/stores'
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut, cubicOut } from 'svelte/easing'
 	import { tick } from 'svelte'
 	import { pb } from '$lib/clients/pocketbase'
+	import CopyButton from '$lib/components/CopyButton.svelte'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
@@ -69,7 +76,10 @@
 		try {
 			const response = await fetch('/api/chatbot', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${pb.authStore.token}`
+				},
 				body: JSON.stringify({
 					query,
 					history: conversationHistory,
@@ -81,33 +91,23 @@
 				throw new Error('Network response was not ok')
 			}
 
-			// Get conversation ID from response headers if available
 			const newConversationId = response.headers.get('X-Conversation-Id')
+
 			if (newConversationId && $isAuthenticated && $currentUser) {
 				conversationId = newConversationId
 
-				// Create or update conversation in PocketBase
-				try {
-					if (!$currentConversation) {
-						const conversation = await pb.collection<Conversation>('conversations').create({
-							user: $currentUser.id,
-							title: query.slice(0, 100) + (query.length > 100 ? '...' : ''),
-							messages: [...$chatHistory],
-							isPublic: false
-						})
-						currentConversation.set(conversation)
-					} else {
+				if (!$currentConversation) {
+					try {
 						const conversation = await pb
 							.collection<Conversation>('conversations')
-							.update($currentConversation.id, {
-								messages: [...$chatHistory],
-								updated: new Date().toISOString()
-							})
+							.getOne(newConversationId)
 						currentConversation.set(conversation)
+					} catch (error) {
+						console.error('Error loading conversation:', error)
 					}
-				} catch (error) {
-					console.error('Error saving conversation:', error)
 				}
+			} else if (!$isAuthenticated && $chatHistory.length > 0) {
+				pendingConversation.set(true)
 			}
 
 			const reader = response.body.getReader()
@@ -135,7 +135,7 @@
 				}
 			}
 		} catch (error) {
-			console.error('Error fetching response:', error)
+			console.error('Error:', error)
 			chatHistory.update((history) => [
 				...history,
 				{ message: 'Error fetching response', isUser: false }
@@ -181,23 +181,6 @@
 			window.removeEventListener('scroll', checkScroll)
 		}
 	})
-
-	// Copy to clipboard logic
-	let copiedIndex = $state(0)
-	let isCopied = $state(false)
-	let copyTimeout: NodeJS.Timeout
-	const copyToClipboard = (text: string, index: number) => {
-		clearTimeout(copyTimeout)
-
-		navigator.clipboard.writeText(text)
-
-		copiedIndex = index
-
-		isCopied = true
-		copyTimeout = setTimeout(() => {
-			isCopied = false
-		}, 3250)
-	}
 </script>
 
 <section
@@ -309,38 +292,7 @@
 
 							<!-- Show copy to clipboard button if it's not a user message and the message isn't still being printed -->
 							{#if !isUser && !(isSubmitting && $chatHistory.length - 1 === i)}
-								<button
-									class="w-fit self-end secondary mt-1 md:mt-2 p-2"
-									onclick={() => copyToClipboard(message, i)}
-									aria-label="Copy to clipboard"
-									in:fade={{ duration: 250, easing: cubicInOut }}
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="1em"
-										height="1em"
-										viewBox="0 0 24 24"
-										class="fill-text-color stroke-text-color w-5 h-5"
-									>
-										{#if isCopied && copiedIndex === i}
-											<path
-												d="M18.577 6.183a1 1 0 0 1 .24 1.394l-5.666 8.02c-.36.508-.665.94-.94 1.269c-.287.34-.61.658-1.038.86a2.83 2.83 0 0 1-2.03.153c-.456-.137-.82-.406-1.149-.702c-.315-.285-.672-.668-1.09-1.116l-1.635-1.753a1 1 0 1 1 1.462-1.364l1.606 1.722c.455.487.754.806.998 1.027c.24.216.344.259.385.271c.196.06.405.045.598-.046c.046-.022.149-.085.36-.338c.216-.257.473-.62.863-1.171l5.642-7.986a1 1 0 0 1 1.394-.24"
-											/>
-										{:else}
-											<g
-												fill="none"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="1.5"
-											>
-												<path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2H9z" />
-												<path
-													d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"
-												/>
-											</g>
-										{/if}
-									</svg>
-								</button>
+								<CopyButton {message} messageIndex={i} />
 							{/if}
 						</div>
 					{/each}
@@ -348,7 +300,7 @@
 					<!-- Waiting for chatbot response from server -->
 					{#if isSubmitting && $chatHistory.length > 0 && $chatHistory[$chatHistory.length - 1].isUser}
 						<div class="rounded-t-lg rounded-br-lg self-start animate-pulse">
-							<span class="opacity-80 text-text-color text-base">Planting seeds...</span>
+							<span class="opacity-80 text-text-color text-base">Thinking...</span>
 						</div>
 					{/if}
 				</div>
@@ -357,7 +309,7 @@
 
 		{#if !isAtBottom && $chatHistory.length > 0}
 			<button
-				class="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2"
+				class={`fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2 ${!$isAuthenticated && $chatHistory.length > 0 ? 'bottom-40' : 'bottom-32'}`}
 				in:fade={{ duration: 250, easing: cubicOut }}
 				out:fade={{ duration: 250, easing: cubicOut }}
 				onclick={scrollToBottom}
@@ -385,9 +337,9 @@
 
 {#if !$isAuthenticated && $chatHistory.length > 0}
 	<div
-		class="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 bg-chat-bar-bg px-4 py-2 rounded-lg shadow text-sm"
+		class="fixed bottom-28 left-1/2 -translate-x-1/2 z-50 bg-chat-bar-bg px-4 py-2 rounded-lg shadow text-sm"
 		transition:fade={{ duration: 250, easing: cubicInOut }}
 	>
-		Login to save your conversations.
+		<span class="cursor-default select-none">Login to save your conversations.</span>
 	</div>
 {/if}

@@ -16,6 +16,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		try {
 			// Load the auth store with the token
 			pb.authStore.save(token)
+			await pb.collection('users').authRefresh()
 
 			// Validate the token
 			if (pb.authStore.isValid) {

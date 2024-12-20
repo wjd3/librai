@@ -3,12 +3,13 @@
 	import { onMount } from 'svelte'
 	import { PUBLIC_THEME, PUBLIC_APP_TITLE } from '$env/static/public'
 	import { defaultTheme, themes } from '$lib/constants/theme'
-	import { chatHistory, isAuthenticated, currentUser } from '$lib/stores'
+	import { chatHistory, isAuthenticated, currentUser, isAuthLoading } from '$lib/stores'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
 	import Auth from '$lib/components/Auth.svelte'
 	import { pb } from '$lib/clients/pocketbase'
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
+	import { page } from '$app/stores'
 
 	let { children } = $props()
 
@@ -77,6 +78,8 @@
 				currentUser.set(null)
 			}
 		}
+
+		isAuthLoading.set(false)
 	})
 
 	const toggleDarkMode = () => {
@@ -98,8 +101,8 @@
 		<div
 			class="hidden md:block fixed top-6 md:top-8 lg:top-10 xl:top-12 left-8 md:left-12 lg:left-16 xl:left-24 z-50"
 		>
-			{#if $chatHistory.length > 0}
-				<h1 class="text-xl" in:fade={{ duration: 500, easing: cubicInOut }}>
+			{#if $chatHistory.length > 0 || !($page.url.pathname === '/')}
+				<h1 class="text-xl select-none" in:fade={{ duration: 500, easing: cubicInOut }}>
 					{#if PUBLIC_APP_TITLE}
 						{PUBLIC_APP_TITLE}
 					{:else}

@@ -19,7 +19,7 @@ export type Conversation = {
 
 export class PocketbaseService {
 	static async createConversation(userId: string, firstMessage: string): Promise<Conversation> {
-		return await pb.collection('conversations').create({
+		const conversation = await pb.collection<Conversation>('conversations').create({
 			user: userId,
 			title: firstMessage.slice(0, 100) + (firstMessage.length > 100 ? '...' : ''),
 			messages: [
@@ -31,13 +31,17 @@ export class PocketbaseService {
 			],
 			isPublic: false
 		})
+		console.log('Created conversation:', conversation.id)
+		return conversation
 	}
 
 	static async updateConversation(id: string, messages: ChatMessage[]): Promise<Conversation> {
-		return await pb.collection('conversations').update(id, {
+		const conversation = await pb.collection<Conversation>('conversations').update(id, {
 			messages,
 			updated: new Date().toISOString()
 		})
+		console.log('Updated conversation:', conversation.id)
+		return conversation
 	}
 
 	static async getConversations(userId: string): Promise<Conversation[]> {

@@ -1,9 +1,15 @@
 <script lang="ts">
 	import { pb } from '$lib/clients/pocketbase'
-	import { isAuthenticated, currentUser } from '$lib/stores'
+	import {
+		isAuthenticated,
+		currentUser,
+		chatHistory,
+		pendingConversation,
+		isAuthLoading
+	} from '$lib/stores'
 	import { fade } from 'svelte/transition'
-	import { cubicInOut } from 'svelte/easing'
 	import DOMPurify from 'dompurify'
+	import { get } from 'svelte/store'
 
 	let showAuth = $state(false)
 	let isRegistering = $state(false)
@@ -11,9 +17,31 @@
 	let password = $state('')
 	let passwordConfirm = $state('')
 	let name = $state('')
-	let isLoading = $state(false)
 	let error = $state('')
 	let honeypot = $state('')
+
+	async function savePendingConversation() {
+		if (get(pendingConversation) && get(chatHistory).length > 0) {
+			try {
+				const response = await fetch('/api/conversations', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						messages: get(chatHistory),
+						title: get(chatHistory)[0].message
+					})
+				})
+
+				if (response.ok) {
+					pendingConversation.set(false)
+				}
+			} catch (error) {
+				console.error('Error saving pending conversation:', error)
+			}
+		}
+	}
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault()
@@ -22,7 +50,7 @@
 			return
 		}
 
-		isLoading = true
+		isAuthLoading.set(true)
 		error = ''
 
 		const cleanName = DOMPurify.sanitize(name)
@@ -33,13 +61,13 @@
 		try {
 			if (isRegistering) {
 				if (!cleanName || !cleanEmail || !cleanPassword || !cleanPasswordConfirm) {
-					isLoading = false
+					isAuthLoading.set(false)
 					return
 				}
 
 				if (cleanPassword !== cleanPasswordConfirm) {
 					error = 'Passwords do not match'
-					isLoading = false
+					isAuthLoading.set(false)
 					return
 				}
 
@@ -59,9 +87,11 @@
 					email: auth.record.email,
 					name: auth.record.name
 				})
+
+				await savePendingConversation()
 			} else {
 				if (!cleanEmail || !cleanPassword) {
-					isLoading = false
+					isAuthLoading.set(false)
 					return
 				}
 
@@ -73,6 +103,8 @@
 					email: auth.record.email,
 					name: auth.record.name
 				})
+
+				await savePendingConversation()
 			}
 
 			showAuth = false
@@ -81,7 +113,7 @@
 			error = isRegistering ? 'Registration failed' : 'Invalid credentials'
 		}
 
-		isLoading = false
+		isAuthLoading.set(false)
 	}
 
 	async function logout() {
@@ -220,12 +252,12 @@
 						type="button"
 						class="secondary"
 						onclick={() => (showAuth = false)}
-						disabled={isLoading}
+						disabled={$isAuthLoading}
 					>
 						Cancel
 					</button>
-					<button type="submit" class="primary" disabled={isLoading}>
-						{isLoading ? 'Loading...' : isRegistering ? 'Sign Up' : 'Login'}
+					<button type="submit" class="primary" disabled={$isAuthLoading}>
+						{$isAuthLoading ? 'Loading...' : isRegistering ? 'Sign Up' : 'Login'}
 					</button>
 				</div>
 
