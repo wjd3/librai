@@ -45,7 +45,7 @@ npm install
 | user       | Relation | Yes      | Users Collection         |
 | title      | Text     | Yes      | Min length: 1            |
 | messages   | JSON     | Yes      | Array of message objects |
-| isPublic   | Boolean  | Yes      | Default: false           |
+| isPublic   | Boolean  | Auto     | Default: false           |
 | shareId    | Text     | No       | Must be unique           |
 | created    | Date     | Yes      | Auto: Create             |
 | updated    | Date     | Yes      | Auto: Update             |
@@ -66,7 +66,7 @@ PRIVATE_QDRANT_COLLECTION_NAME=your_collection
 PRIVATE_QDRANT_API_KEY=your_qdrant_key
 
 # PocketBase Configuration
-POCKETBASE_URL=http://127.0.0.1:8090
+VITE_POCKETBASE_URL=http://127.0.0.1:8090
 PUBLIC_APP_URL=http://localhost:5173
 
 # App Configuration
