@@ -96,7 +96,7 @@
 		<div
 			class="hidden md:block fixed top-6 md:top-8 lg:top-10 xl:top-12 left-8 md:left-12 lg:left-16 xl:left-24 z-50"
 		>
-			{#if $chatHistory.length > 0 || !($page.url.pathname === '/')}
+			{#if $chatHistory.length > 0 || $page.url.pathname !== '/'}
 				<a class="inline-block p-0 border-none" href="/">
 					<h1 class="text-xl" in:fade={{ duration: 500, easing: cubicInOut }}>
 						{#if PUBLIC_APP_TITLE}

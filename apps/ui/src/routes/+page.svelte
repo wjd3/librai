@@ -285,6 +285,37 @@
 
 		{#if $chatHistory.length > 0}
 			<div class="chat-history" in:fade={{ duration: 500, easing: cubicInOut }}>
+				<button
+					class="secondary px-4 py-2 mr-auto mb-4"
+					onclick={async () => {
+						currentConversation.set(null)
+						chatHistory.set([])
+						if (promptInput) {
+							await tick()
+							promptInput.focus()
+						}
+					}}
+					aria-label="New Conversation"
+				>
+					<svg
+						class="w-4 h-4"
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						><g
+							fill="none"
+							stroke="currentColor"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							><path d="M21 12a9 9 0 0 0-9-9a9.75 9.75 0 0 0-6.74 2.74L3 8" /><path
+								d="M3 3v5h5m-5 4a9 9 0 0 0 9 9a9.75 9.75 0 0 0 6.74-2.74L21 16"
+							/><path d="M16 16h5v5" /></g
+						></svg
+					>
+				</button>
+
 				<!-- Chat display -->
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }, i}
@@ -350,9 +381,9 @@
 
 {#if !$isAuthenticated && $chatHistory.length > 0}
 	<div
-		class="fixed bottom-28 left-1/2 -translate-x-1/2 z-50 bg-chat-bar-bg px-4 py-2 rounded-lg shadow text-sm"
+		class="fixed bottom-28 left-1/2 -translate-x-1/2 z-50 bg-chat-bar-bg px-4 py-2 rounded-lg shadow text-sm text-center"
 		transition:fade={{ duration: 250, easing: cubicInOut }}
 	>
-		<span class="cursor-default select-none">Login to save your conversations.</span>
+		<span class="cursor-default select-none">Login to save conversations.</span>
 	</div>
 {/if}

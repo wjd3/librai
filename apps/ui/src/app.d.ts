@@ -9,6 +9,7 @@ declare global {
 				email: string
 				name?: string
 			}
+			token?: string
 		}
 		// interface PageData {}
 		// interface PageState {}

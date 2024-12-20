@@ -25,9 +25,11 @@ The server application processes documents and manages the vector database:
 The user interface for chatting with AI about processed documents:
 
 - Interactive AI chatbot interface
-- Qdrant integration for context-aware responses
+- Authentication system with PocketBase
+- Conversation management (save, continue, delete)
+- Public sharing capabilities
 - Responsive design with Tailwind CSS
-- Customizable themes with dark mode support
+- Dark mode and theme support
 - Configurable system prompts
 
 ## Getting Started
@@ -35,8 +37,8 @@ The user interface for chatting with AI about processed documents:
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd <repository-directory>
+git clone https://github.com/yourusername/librai.git
+cd librai
 ```
 
 2. Install dependencies:
@@ -45,10 +47,10 @@ cd <repository-directory>
 npm install
 ```
 
-3. Set up environment variables for both applications following their respective README files:
+3. Set up environment variables:
 
-- [Server Environment Setup](apps/server/README.md#installation)
-- [UI Environment Setup](apps/ui/README.md#environment-variables)
+   - Copy `.env.example` to `.env` in both apps/server and apps/ui
+   - Configure the environment variables according to each app's README
 
 4. Start the development servers:
 
@@ -59,7 +61,8 @@ npm run dev
 ## Technology Stack
 
 - **Backend**: Node.js, Express
-- **Frontend**: SvelteKit, Alpine.js
+- **Frontend**: SvelteKit
+- **Authentication**: PocketBase
 - **Styling**: Tailwind CSS
 - **Vector Database**: Qdrant
 - **AI Integration**: OpenAI API
@@ -73,7 +76,7 @@ Contributions are welcome! Please read the contributing guidelines in each appli
 
 This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See the LICENSE.txt file for more details.
 
-## Related Links
+## Documentation
 
 - [librai-server Documentation](apps/server/README.md)
 - [librai-ui Documentation](apps/ui/README.md)
