@@ -15,6 +15,7 @@
 	import { tick } from 'svelte'
 	import { pb } from '$lib/clients/pocketbase'
 	import CopyButton from '$lib/components/CopyButton.svelte'
+	import PocketBase from 'pocketbase'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
@@ -98,7 +99,11 @@
 
 				if (!$currentConversation) {
 					try {
-						const conversation = await pb
+						// Create a new instance for this specific request with auto-cancellation disabled
+						const tempPb = new PocketBase(pb.baseUrl)
+						tempPb.autoCancellation(false)
+
+						const conversation = await tempPb
 							.collection<Conversation>('conversations')
 							.getOne(newConversationId)
 						currentConversation.set(conversation)
@@ -129,7 +134,11 @@
 					chatHistory.update((history) => [...history, { message, isUser: false }])
 				} else {
 					chatHistory.update((history) => {
-						history[history.length - 1].message += text
+						const lastMessage = history[history.length - 1]
+						// Only update if the last message is from the bot
+						if (!lastMessage.isUser) {
+							lastMessage.message = message
+						}
 						return history
 					})
 				}

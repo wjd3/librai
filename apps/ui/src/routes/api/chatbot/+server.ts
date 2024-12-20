@@ -87,10 +87,16 @@ export const POST = async ({ request, locals }) => {
 					}
 
 					if (userId && conversation) {
-						conversation = await PocketbaseService.updateConversation(conversation.id, [
+						const updatedMessages = [
 							...conversation.messages,
+							{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() },
 							{ message: responseMessage, isUser: false, created: new Date().toISOString() }
-						])
+						]
+
+						conversation = await PocketbaseService.updateConversation(
+							conversation.id,
+							updatedMessages
+						)
 					}
 
 					controller.close()

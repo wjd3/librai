@@ -107,10 +107,10 @@
 		}
 	}
 
-	function newMessage() {
+	async function newMessage() {
 		currentConversation.set(null)
 		chatHistory.set([])
-		goto('/')
+		await goto('/')
 	}
 </script>
 

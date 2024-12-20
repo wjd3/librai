@@ -8,6 +8,7 @@
 	import DOMPurify from 'dompurify'
 	import CopyButton from '$lib/components/CopyButton.svelte'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
+	import { goto } from '$app/navigation'
 
 	let conversation = $state<Conversation | null>(null)
 	let isLoading = $state(true)
@@ -38,9 +39,18 @@
 
 		isLoading = false
 	})
+
+	async function newMessage() {
+		await goto('/')
+	}
 </script>
 
 <section class="container max-w-2xl mx-auto">
+	<div class="flex justify-between items-center mb-6">
+		<h1 class="text-4xl">Shared Conversation</h1>
+		<button class="primary px-4" onclick={newMessage}> New Message </button>
+	</div>
+
 	{#if isLoading}
 		<p>Loading shared conversation...</p>
 	{:else if error}
