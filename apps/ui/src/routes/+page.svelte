@@ -49,6 +49,9 @@
 
 	let conversationId = $state<string | null>(null)
 
+	let remainingMessages = $state<number | null>(null)
+	let rateLimitResetAt = $state<Date | null>(null)
+
 	// Function to send query and get response
 	async function sendMessage() {
 		isSubmitting = true
@@ -89,6 +92,20 @@
 					conversationId: $currentConversation?.id
 				})
 			})
+
+			// Handle rate limit error
+			if (response.status === 429) {
+				const data = await response.json()
+				chatHistory.update((history) => [
+					...history,
+					{
+						message: `⚠️ ${data.error}`,
+						isUser: false
+					}
+				])
+				isSubmitting = false
+				return
+			}
 
 			if (!response.ok || !response.body) {
 				throw new Error('Network response was not ok')
@@ -141,6 +158,9 @@
 					}
 				})
 			}
+
+			remainingMessages = parseInt(response.headers.get('X-RateLimit-Remaining') || '0')
+			rateLimitResetAt = new Date(response.headers.get('X-RateLimit-Reset') || '')
 		} catch (error) {
 			console.error('Error:', error)
 			chatHistory.update((history) => [
@@ -386,4 +406,13 @@
 	>
 		<span class="cursor-default select-none">Login to save conversations.</span>
 	</div>
+{/if}
+
+{#if typeof remainingMessages === 'number'}
+	<p class="text-xs text-center opacity-70">
+		{remainingMessages} message{remainingMessages === 1 ? '' : 's'} remaining
+		{#if remainingMessages < 5}
+			(resets at {rateLimitResetAt?.toLocaleTimeString()})
+		{/if}
+	</p>
 {/if}
