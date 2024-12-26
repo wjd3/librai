@@ -25,10 +25,13 @@
 		document.documentElement.setAttribute('data-mode', isDarkMode ? 'dark' : 'light')
 	}
 
+	let isCheckingConversations = $state(false)
 	let hasConversations = $state(false)
 
 	$effect(() => {
 		if ($authToken && $currentUser) {
+			isCheckingConversations = true
+
 			fetch('/api/conversations', {
 				headers: {
 					Authorization: `Bearer ${$authToken}`
@@ -41,6 +44,9 @@
 				.catch((error) => {
 					console.error('Error checking conversations:', error)
 					hasConversations = false
+				})
+				.finally(() => {
+					isCheckingConversations = false
 				})
 		} else {
 			hasConversations = false
@@ -113,11 +119,13 @@
 		<div
 			class="fixed z-50 top-6 md:top-8 lg:top-10 xl:top-12 right-8 md:right-12 lg:right-16 xl:right-24 flex items-center space-x-4"
 		>
-			{#if $isAuthenticated && hasConversations}
-				<a href="/conversations" class="secondary px-4"> History </a>
-			{/if}
+			{#if !$isAuthLoading && !isCheckingConversations}
+				{#if $isAuthenticated && hasConversations}
+					<a href="/conversations" class="secondary px-4"> History </a>
+				{/if}
 
-			<Auth />
+				<Auth />
+			{/if}
 
 			<DarkModeToggle {isDarkMode} {toggleDarkMode} />
 		</div>

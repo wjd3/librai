@@ -21,29 +21,6 @@
 	let error = $state('')
 	let honeypot = $state('')
 
-	async function savePendingConversation() {
-		if (get(pendingConversation) && get(chatHistory).length > 0) {
-			try {
-				const response = await fetch('/api/conversations', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						messages: get(chatHistory),
-						title: get(chatHistory)[0].message
-					})
-				})
-
-				if (response.ok) {
-					pendingConversation.set(false)
-				}
-			} catch (error) {
-				console.error('Error saving pending conversation:', error)
-			}
-		}
-	}
-
 	async function handleSubmit(e: Event) {
 		e.preventDefault()
 		if (honeypot) {
