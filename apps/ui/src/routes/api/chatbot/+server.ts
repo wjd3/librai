@@ -56,13 +56,13 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 
 		if (userId) {
 			if (conversationId) {
-				// Only update with the user's message initially
+				// Update existing conversation
 				conversation = await PocketbaseService.updateConversation(conversationId, [
 					...JSON.parse(history || '[]'),
 					{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }
 				])
 			} else {
-				// Create new conversation with AI-generated title
+				// Create new conversation and redirect
 				const title = await OpenAIService.generateAITitle(sanitizedQuery)
 				conversation = await PocketbaseService.createConversation(userId, sanitizedQuery, title)
 			}

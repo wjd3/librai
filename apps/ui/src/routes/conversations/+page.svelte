@@ -6,6 +6,7 @@
 	import { PUBLIC_APP_URL } from '$env/static/public'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
 	import { authToken } from '$lib/stores/auth'
+	import { preventDefault } from '$lib/utils'
 
 	let conversations = $state<Conversation[]>([])
 	let isLoading = $state(true)
@@ -43,9 +44,7 @@
 	}
 
 	async function loadConversation(conversation: Conversation) {
-		currentConversation.set(conversation)
-		chatHistory.set(conversation.messages)
-		goto('/')
+		goto(`/conversations/${conversation.id}`)
 	}
 
 	function confirmDelete(id: string) {
@@ -144,13 +143,6 @@
 		shareTimeout = setTimeout(() => {
 			copiedShareIndex = null
 		}, 3000)
-	}
-
-	function preventDefault(fn: (event: Event) => void) {
-		return (event: Event) => {
-			event.preventDefault()
-			fn(event)
-		}
 	}
 
 	async function newMessage() {
