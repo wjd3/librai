@@ -229,15 +229,16 @@
 								<input
 									type="text"
 									bind:value={editedTitle}
-									class="w-full px-2 py-1 text-lg bg-chat-hover rounded"
+									class="input w-full"
 									placeholder="Enter title..."
+									maxlength="150"
 									onkeydown={(e) => handleTitleKeydown(e, conversation)}
 								/>
 							</form>
 							<div class="flex space-x-2 ml-2">
 								<button
 									class="secondary p-1"
-									disabled={isSavingTitle}
+									disabled={editedTitle === conversation.title || isSavingTitle}
 									onclick={() => updateConversationTitle(conversation)}
 									title="Save"
 									aria-label="Save"

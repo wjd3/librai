@@ -6,7 +6,7 @@
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
 	import CopyButton from '$lib/components/CopyButton.svelte'
-	import { PUBLIC_APP_URL } from '$env/static/public'
+	import { PUBLIC_APP_TITLE, PUBLIC_APP_URL } from '$env/static/public'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
 	import { goto } from '$app/navigation'
 
@@ -14,15 +14,57 @@
 	let isLoading = $state(true)
 	let error = $state('')
 
-	// Add metadata for the page
-	const shareId = $page.params.id
-	export const metadata = {
-		alternates: {
-			types: {
-				'application/xml': `${PUBLIC_APP_URL}/api/conversations/shared/${shareId}/meta`
-			}
-		}
+	// Generate OG image URL
+	function generateOgImageUrl(title: string, userMessage: string, aiMessage: string) {
+		const ogImageUrl = new URL('https://og.tailgraph.com/og')
+		ogImageUrl.searchParams.set('fontFamily', 'Inter')
+		ogImageUrl.searchParams.set('title', `${PUBLIC_APP_TITLE || 'Librai UI'} - ${title}`)
+		ogImageUrl.searchParams.set('titleTailwind', 'text-4xl font-bold text-text-color mb-4')
+		ogImageUrl.searchParams.set(
+			'text',
+			userMessage.slice(0, 100) + (userMessage.length > 100 ? '...' : '')
+		)
+		ogImageUrl.searchParams.set('textTailwind', 'text-lg text-text-color/80 mb-2')
+		ogImageUrl.searchParams.set(
+			'footer',
+			aiMessage.slice(0, 150) + (aiMessage.length > 150 ? '...' : '')
+		)
+		ogImageUrl.searchParams.set('footerTailwind', 'text-sm text-text-color/70')
+		ogImageUrl.searchParams.set('bgTailwind', 'bg-page-bg')
+		ogImageUrl.searchParams.set(
+			'containerTailwind',
+			'flex flex-col items-start justify-center p-16 bg-primary-card-bg rounded-lg border border-form-border'
+		)
+		return ogImageUrl.toString()
 	}
+
+	$effect(() => {
+		if (conversation) {
+			const userMessage = conversation.messages.find((m) => m.isUser)?.message || ''
+			const aiMessage = conversation.messages.find((m) => !m.isUser)?.message || ''
+			const ogImageUrl = generateOgImageUrl(conversation.title, userMessage, aiMessage)
+
+			// Update meta tags dynamically
+			document.title = conversation.title
+			document
+				.querySelector('meta[property="og:title"]')
+				?.setAttribute('content', conversation.title)
+			document
+				.querySelector('meta[property="og:description"]')
+				?.setAttribute('content', `${userMessage.slice(0, 200)}...`)
+			document.querySelector('meta[property="og:image"]')?.setAttribute('content', ogImageUrl)
+			document
+				.querySelector('meta[property="og:url"]')
+				?.setAttribute('content', `${PUBLIC_APP_URL}/share/${$page.params.id}`)
+			document
+				.querySelector('meta[name="twitter:title"]')
+				?.setAttribute('content', conversation.title)
+			document
+				.querySelector('meta[name="twitter:description"]')
+				?.setAttribute('content', `${userMessage.slice(0, 200)}...`)
+			document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', ogImageUrl)
+		}
+	})
 
 	onMount(async () => {
 		const shareId = $page.params.id
@@ -51,6 +93,19 @@
 		await goto('/')
 	}
 </script>
+
+<svelte:head>
+	<title>{conversation?.title || 'Shared Conversation'}</title>
+	<meta property="og:title" content="" />
+	<meta property="og:description" content="" />
+	<meta property="og:image" content="" />
+	<meta property="og:url" content="" />
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="" />
+	<meta name="twitter:description" content="" />
+	<meta name="twitter:image" content="" />
+</svelte:head>
 
 <section class="container max-w-2xl mx-auto">
 	<div class="flex justify-between items-center mb-6">
