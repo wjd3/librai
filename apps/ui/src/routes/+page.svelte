@@ -19,6 +19,7 @@
 	import { cubicInOut, cubicOut } from 'svelte/easing'
 	import { tick } from 'svelte'
 	import CopyButton from '$lib/components/CopyButton.svelte'
+	import { getContext } from 'svelte'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
 	onMount(() => {
@@ -51,6 +52,8 @@
 
 	let remainingMessages = $state<number | null>(null)
 	let rateLimitResetAt = $state<Date | null>(null)
+
+	const checkConversations = getContext<() => Promise<void>>('checkConversations')
 
 	// Function to send query and get response
 	async function sendMessage() {
@@ -126,6 +129,8 @@
 						if (!response.ok) throw new Error('Failed to load conversation')
 						const conversation = await response.json()
 						currentConversation.set(conversation)
+
+						await checkConversations()
 					} catch (error) {
 						console.error('Error loading conversation:', error)
 					}
