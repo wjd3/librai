@@ -10,6 +10,7 @@
 	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
 	import { page } from '$app/stores'
 	import { authToken, currentUser, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
+	import { setContext } from 'svelte'
 
 	let { children } = $props()
 
@@ -27,25 +28,30 @@
 
 	let hasConversations = $state(false)
 
-	$effect(() => {
+	let checkConversations = async () => {
 		if ($authToken && $currentUser) {
-			fetch('/api/conversations', {
-				headers: {
-					Authorization: `Bearer ${$authToken}`
-				}
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					hasConversations = data.length > 0
+			try {
+				const response = await fetch('/api/conversations', {
+					headers: {
+						Authorization: `Bearer ${$authToken}`
+					}
 				})
-				.catch((error) => {
-					console.error('Error checking conversations:', error)
-					hasConversations = false
-				})
+				const data = await response.json()
+				hasConversations = data.length > 0
+			} catch (error) {
+				console.error('Error checking conversations:', error)
+				hasConversations = false
+			}
 		} else {
 			hasConversations = false
 		}
+	}
+
+	$effect(() => {
+		checkConversations()
 	})
+
+	setContext('checkConversations', checkConversations)
 
 	onMount(async () => {
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
