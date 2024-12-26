@@ -6,12 +6,23 @@
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
 	import CopyButton from '$lib/components/CopyButton.svelte'
+	import { PUBLIC_APP_URL } from '$env/static/public'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
 	import { goto } from '$app/navigation'
 
 	let conversation = $state<Conversation | null>(null)
 	let isLoading = $state(true)
 	let error = $state('')
+
+	// Add metadata for the page
+	const shareId = $page.params.id
+	export const metadata = {
+		alternates: {
+			types: {
+				'application/xml': `${PUBLIC_APP_URL}/api/conversations/shared/${shareId}/meta`
+			}
+		}
+	}
 
 	onMount(async () => {
 		const shareId = $page.params.id
