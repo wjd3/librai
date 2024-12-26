@@ -30,4 +30,37 @@ export class OpenAIService {
 
 		return response
 	}
+
+	static async generateAITitle(message: string): Promise<string> {
+		try {
+			const messages: Array<ChatCompletionMessageParam> = [
+				{
+					role: 'system',
+					content:
+						'You are a helpful assistant that generates short, descriptive titles. Generate a concise title (4-6 words) that captures the main topic or question. Respond with only the title, no quotes or punctuation.'
+				},
+				{
+					role: 'user',
+					content: `Generate a short title for this message: ${message}`
+				}
+			]
+
+			const stream = await this.getChatCompletion(messages)
+			let title = ''
+
+			for await (const chunk of stream) {
+				const content = chunk.choices[0]?.delta?.content
+				if (content) {
+					title += content
+				}
+			}
+
+			// Cleanup and validate the title
+			title = title.trim()
+			return title || 'New Conversation'
+		} catch (error) {
+			console.error('Error generating title:', error)
+			return message.slice(0, 50).trim() + '...'
+		}
+	}
 }

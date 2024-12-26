@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { PocketbaseService } from '$lib/server/services/pocketbaseService'
+import { OpenAIService } from '$lib/server/services/openaiService'
 
 export const GET = async ({ locals }) => {
 	const userId = locals.user?.id
@@ -24,7 +25,18 @@ export const POST = async ({ request, locals }) => {
 
 	try {
 		const { messages, title } = await request.json()
-		const conversation = await PocketbaseService.createConversation(userId, title)
+		let generatedTitle = title
+
+		if (!generatedTitle && messages[0]?.message) {
+			// Generate title using OpenAI if not provided
+			generatedTitle = await OpenAIService.generateAITitle(messages[0].message)
+		}
+
+		const conversation = await PocketbaseService.createConversation(
+			userId,
+			messages[0]?.message || '',
+			generatedTitle || 'New Conversation'
+		)
 		await PocketbaseService.updateConversation(conversation.id, messages)
 		return json({ success: true })
 	} catch (error) {
