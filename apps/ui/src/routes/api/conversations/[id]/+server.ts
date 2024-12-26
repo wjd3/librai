@@ -31,3 +31,22 @@ export const DELETE: RequestHandler = async ({ params, locals }) => {
 		return json({ error: 'Error deleting conversation' }, { status: 500 })
 	}
 }
+
+export const PATCH: RequestHandler = async ({ params, request, locals }) => {
+	const userId = locals.user?.id
+	if (!userId) {
+		return json({ error: 'Unauthorized' }, { status: 401 })
+	}
+
+	try {
+		const { title } = await request.json()
+		const conversation = await pb.collection('conversations').update(params.id, {
+			title,
+			updated: new Date().toISOString()
+		})
+		return json(conversation)
+	} catch (error) {
+		console.error('Error updating conversation:', error)
+		return json({ error: 'Error updating conversation' }, { status: 500 })
+	}
+}
