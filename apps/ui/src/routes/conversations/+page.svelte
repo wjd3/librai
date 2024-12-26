@@ -1,13 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
-	import {
-		currentUser,
-		isAuthenticated,
-		currentConversation,
-		chatHistory,
-		isAuthLoading
-	} from '$lib/stores'
+	import { currentConversation, chatHistory } from '$lib/stores'
 	import { goto } from '$app/navigation'
 	import { PUBLIC_APP_URL } from '$env/static/public'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
@@ -22,6 +16,9 @@
 	let copiedShareIndex = $state<number | null>(null)
 	let shareTimeout: NodeJS.Timeout
 	let shareHoneypot = $state('')
+	let editingTitleId = $state<string | null>(null)
+	let editedTitle = $state('')
+	let isSavingTitle = $state(false)
 
 	$effect(() => {
 		if ($authToken) {
@@ -161,6 +158,49 @@
 		chatHistory.set([])
 		await goto('/')
 	}
+
+	async function updateConversationTitle(conversation: Conversation) {
+		if (!editedTitle.trim()) {
+			editingTitleId = null
+			return
+		}
+
+		try {
+			isSavingTitle = true
+			const response = await fetch(`/api/conversations/${conversation.id}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${$authToken}`
+				},
+				body: JSON.stringify({ title: editedTitle.trim() })
+			})
+
+			if (!response.ok) throw new Error('Failed to update title')
+
+			const updated = await response.json()
+			conversations = conversations.map((c) => (c.id === updated.id ? updated : c))
+			editingTitleId = null
+		} catch (error) {
+			console.error('Error updating title:', error)
+		} finally {
+			isSavingTitle = false
+		}
+	}
+
+	function startEditing(conversation: Conversation) {
+		editingTitleId = conversation.id
+		editedTitle = conversation.title
+	}
+
+	function handleTitleKeydown(event: KeyboardEvent, conversation: Conversation) {
+		if (event.key === 'Enter') {
+			event.preventDefault()
+			updateConversationTitle(conversation)
+		} else if (event.key === 'Escape') {
+			editingTitleId = null
+		}
+	}
 </script>
 
 <section class="container max-w-2xl mx-auto">
@@ -177,10 +217,91 @@
 		<div class="space-y-4">
 			{#each conversations as conversation, i}
 				<div
-					class="bg-chat-bg p-4 rounded-lg"
+					class="bg-chat-bg p-4 rounded-lg group"
 					transition:fade={{ duration: 200, easing: cubicInOut }}
 				>
-					<h2 class="text-lg mb-2">{conversation.title}</h2>
+					<div class="flex items-center mb-2">
+						{#if editingTitleId === conversation.id}
+							<form
+								class="flex-1"
+								onsubmit={preventDefault(() => updateConversationTitle(conversation))}
+							>
+								<input
+									type="text"
+									bind:value={editedTitle}
+									class="input w-full"
+									placeholder="Enter title..."
+									maxlength="150"
+									onkeydown={(e) => handleTitleKeydown(e, conversation)}
+								/>
+							</form>
+							<div class="flex space-x-2 ml-2">
+								<button
+									class="secondary p-1"
+									disabled={editedTitle === conversation.title || isSavingTitle}
+									onclick={() => updateConversationTitle(conversation)}
+									title="Save"
+									aria-label="Save"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+										<path
+											fill="none"
+											stroke="currentColor"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M5 13l4 4L19 7"
+										/>
+									</svg>
+								</button>
+								<button
+									class="secondary p-1"
+									disabled={isSavingTitle}
+									onclick={() => (editingTitleId = null)}
+									title="Cancel"
+									aria-label="Cancel"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+										<path
+											fill="none"
+											stroke="currentColor"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M18 6L6 18M6 6l12 12"
+										/>
+									</svg>
+								</button>
+							</div>
+						{:else}
+							<h2 class="text-lg flex-1">{conversation.title}</h2>
+							<button
+								class="secondary p-1 opacity-50 hover:opacity-100 transition-opacity ml-2"
+								onclick={() => startEditing(conversation)}
+								title="Edit title"
+								aria-label="Edit title"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+									<path
+										fill="none"
+										stroke="currentColor"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+									/>
+									<path
+										fill="none"
+										stroke="currentColor"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+									/>
+								</svg>
+							</button>
+						{/if}
+					</div>
 					<p class="text-sm opacity-70 mb-4">
 						{new Date(conversation.updated).toLocaleDateString()}
 					</p>

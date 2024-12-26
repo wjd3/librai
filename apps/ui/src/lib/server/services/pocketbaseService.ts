@@ -17,21 +17,20 @@ export type Conversation = {
 }
 
 export class PocketbaseService {
-	static async createConversation(userId: string, firstMessage: string): Promise<Conversation> {
-		const conversation = await pb.collection<Conversation>('conversations').create({
+	static async createConversation(
+		userId: string,
+		firstMessage: string,
+		title?: string
+	): Promise<Conversation> {
+		return await pb.collection('conversations').create({
 			user: userId,
-			title: firstMessage.slice(0, 100) + (firstMessage.length > 100 ? '...' : ''),
-			messages: [
-				{
-					message: firstMessage,
-					isUser: true,
-					created: new Date().toISOString()
-				}
-			],
-			isPublic: false
+			messages: JSON.stringify([
+				{ message: firstMessage, isUser: true, created: new Date().toISOString() }
+			]),
+			title: title || firstMessage.slice(0, 100).trim().replace(/\n/g, ' '),
+			created: new Date().toISOString(),
+			updated: new Date().toISOString()
 		})
-		console.log('Created conversation:', conversation.id)
-		return conversation
 	}
 
 	static async updateConversation(id: string, messages: ChatMessage[]): Promise<Conversation> {

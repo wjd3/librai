@@ -62,7 +62,9 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 					{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }
 				])
 			} else {
-				conversation = await PocketbaseService.createConversation(userId, sanitizedQuery)
+				// Create new conversation with AI-generated title
+				const title = await OpenAIService.generateAITitle(sanitizedQuery)
+				conversation = await PocketbaseService.createConversation(userId, sanitizedQuery, title)
 			}
 		}
 
