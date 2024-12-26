@@ -5,10 +5,39 @@ import { PocketbaseService, type Conversation } from '$lib/server/services/pocke
 import DOMPurify from 'isomorphic-dompurify'
 import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
+import { RateLimitService } from '$lib/server/services/rateLimitService'
 
-export const POST = async ({ request, locals }) => {
+export const POST = async ({ request, locals, getClientAddress }) => {
 	const { query, history, conversationId } = await request.json()
 	const userId = locals.user?.id
+	const identifier = userId || getClientAddress()
+
+	// Check rate limit
+	const rateLimit = await RateLimitService.checkRateLimit(identifier, !!userId)
+
+	if (!rateLimit.allowed) {
+		const resetAt = rateLimit.resetAt.toLocaleTimeString()
+		return json(
+			{
+				error: `Rate limit exceeded. Please try again after ${resetAt}.`,
+				remaining: rateLimit.remaining,
+				resetAt: rateLimit.resetAt
+			},
+			{
+				status: 429,
+				headers: {
+					'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+					'X-RateLimit-Reset': rateLimit.resetAt.toISOString()
+				}
+			}
+		)
+	}
+
+	// Add rate limit headers to response
+	const headers = {
+		'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+		'X-RateLimit-Reset': rateLimit.resetAt.toISOString()
+	}
 
 	const sanitizedQuery = DOMPurify.sanitize(query)
 	if (!sanitizedQuery || sanitizedQuery.length < 1 || sanitizedQuery.length > 4096) {
@@ -105,11 +134,18 @@ export const POST = async ({ request, locals }) => {
 				'Content-Type': 'text/event-stream',
 				'Cache-Control': 'no-cache',
 				Connection: 'keep-alive',
-				'X-Conversation-Id': conversation?.id || ''
+				'X-Conversation-Id': conversation?.id || '',
+				...headers
 			}
 		})
 	} catch (error) {
 		console.error('Error in chatbot route:', error)
-		return json({ error: 'Error processing your request.' }, { status: 500 })
+		return json(
+			{ error: 'Error processing your request.' },
+			{
+				status: 500,
+				headers
+			}
+		)
 	}
 }
