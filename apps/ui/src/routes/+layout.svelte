@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '$styles/main.css'
 	import { onMount } from 'svelte'
-	import { PUBLIC_THEME, PUBLIC_APP_TITLE } from '$env/static/public'
+	import { PUBLIC_THEME, PUBLIC_APP_TITLE, PUBLIC_APP_DESCRIPTION } from '$env/static/public'
 	import { defaultTheme, themes } from '$lib/constants/theme'
 	import { chatHistory } from '$lib/stores'
 	import { fade } from 'svelte/transition'
@@ -87,7 +87,8 @@
 	<title>{PUBLIC_APP_TITLE || 'Librai UI'}</title>
 	<meta
 		name="description"
-		content="A chatbot UI for interacting with an OpenAI chatbot trained on your data."
+		content={PUBLIC_APP_DESCRIPTION ||
+			'A chatbot UI for interacting with an OpenAI chatbot trained on your data.'}
 	/>
 </svelte:head>
 
