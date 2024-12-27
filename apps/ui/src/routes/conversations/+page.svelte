@@ -202,14 +202,32 @@
 	</div>
 
 	{#if isLoading}
-		<p>Loading conversations...</p>
+		<svg
+			class="w-6 h-6 animate-spin mx-auto mt-8"
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" fill="transparent" /><path
+				d="M21 3v5h-5"
+			/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" fill="transparent" /><path
+				d="M8 16H3v5"
+			/>
+			<path d="M8 16H3v5" />
+		</svg>
 	{:else if conversations.length === 0}
 		<p>No conversations yet.</p>
 	{:else}
 		<div class="space-y-4">
 			{#each conversations as conversation, i}
 				<div
-					class="bg-chat-bg p-4 rounded-lg group"
+					class="bg-chat-bg px-4 py-2 rounded-lg group"
 					transition:fade={{ duration: 200, easing: cubicInOut }}
 				>
 					<div class="flex items-center mb-2">
@@ -230,24 +248,6 @@
 							<div class="flex space-x-2 ml-2">
 								<button
 									class="secondary p-1"
-									disabled={editedTitle === conversation.title || isSavingTitle}
-									onclick={() => updateConversationTitle(conversation)}
-									title="Save"
-									aria-label="Save"
-								>
-									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
-										<path
-											fill="none"
-											stroke="currentColor"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M5 13l4 4L19 7"
-										/>
-									</svg>
-								</button>
-								<button
-									class="secondary p-1"
 									disabled={isSavingTitle}
 									onclick={() => (editingTitleId = null)}
 									title="Cancel"
@@ -264,11 +264,33 @@
 										/>
 									</svg>
 								</button>
+
+								<button
+									class="secondary p-1"
+									disabled={editedTitle === conversation.title || isSavingTitle}
+									onclick={() => updateConversationTitle(conversation)}
+									title="Save"
+									aria-label="Save"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+										<path
+											fill="none"
+											stroke="currentColor"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M5 13l4 4L19 7"
+										/>
+									</svg>
+								</button>
 							</div>
 						{:else}
-							<h2 class="text-lg flex-1">{conversation.title}</h2>
+							<div class="min-h-[48px] flex items-center">
+								<h2 class="text-xl flex-1">{conversation.title}</h2>
+							</div>
+
 							<button
-								class="secondary p-1 opacity-50 hover:opacity-100 transition-opacity ml-2"
+								class="secondary p-1 ml-2"
 								onclick={() => startEditing(conversation)}
 								title="Edit title"
 								aria-label="Edit title"
@@ -294,9 +316,11 @@
 							</button>
 						{/if}
 					</div>
+
 					<p class="text-sm opacity-70 mb-4">
 						{new Date(conversation.updated).toLocaleDateString()}
 					</p>
+
 					<div class="flex justify-between space-x-2">
 						<button
 							aria-label="Delete Conversation"

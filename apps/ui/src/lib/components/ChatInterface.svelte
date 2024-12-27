@@ -2,7 +2,12 @@
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
 	import { PUBLIC_CHATBOT_THINKING_TEXT } from '$env/static/public'
-	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
+	import {
+		chatHistory,
+		currentConversation,
+		shouldStartChat,
+		isAuthLoading
+	} from '$lib/stores/index'
 	import { authToken } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
@@ -10,6 +15,8 @@
 	import { tick } from 'svelte'
 	import CopyButton from './CopyButton.svelte'
 	import { goto } from '$app/navigation'
+
+	onMount(() => promptInput?.focus())
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
 	let isDisabled = $state(true)
@@ -133,31 +140,24 @@
 		isAtBottom = document.body.scrollHeight - window.scrollY <= window.innerHeight
 	}
 
-	onMount(() => {
-		if (promptInput) {
-			promptInput.focus()
-		}
-	})
-
 	$effect(() => {
 		if ($shouldStartChat && !isSubmitting) {
 			;(async () => {
+				shouldStartChat.set(false)
+
 				const lastMessage = $chatHistory[$chatHistory.length - 1]
 				if (lastMessage?.isUser) {
 					await sendMessage(lastMessage.message, { skipPush: true })
 				}
-
-				shouldStartChat.set(false)
 			})()
 		}
 	})
 
 	onMount(() => {
-		window.addEventListener('scroll', checkScroll)
 		checkScroll()
-		return () => {
-			window.removeEventListener('scroll', checkScroll)
-		}
+
+		window.addEventListener('scroll', checkScroll)
+		return () => window.removeEventListener('scroll', checkScroll)
 	})
 </script>
 
@@ -268,7 +268,7 @@
 			{/if}
 		</div>
 
-		{#if !isAtBottom && $chatHistory.length > 0}
+		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat}
 			<button
 				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2 bottom-32"
 				in:fade={{ duration: 250, easing: cubicOut }}

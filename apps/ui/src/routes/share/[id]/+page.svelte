@@ -178,7 +178,25 @@
 	</div>
 
 	{#if isLoading}
-		<p>Loading shared conversation...</p>
+		<svg
+			class="w-6 h-6 animate-spin mx-auto mt-8"
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" fill="transparent" /><path
+				d="M21 3v5h-5"
+			/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" fill="transparent" /><path
+				d="M8 16H3v5"
+			/>
+			<path d="M8 16H3v5" />
+		</svg>
 	{:else if error}
 		<div class="bg-red-500/10 p-4 rounded-lg">
 			<p class="text-red-500">{error}</p>

@@ -116,7 +116,7 @@
 		</div>
 
 		<div
-			class="fixed z-50 top-6 md:top-8 lg:top-10 xl:top-12 right-8 md:right-12 lg:right-16 xl:right-24 flex items-center space-x-4"
+			class="fixed z-50 top-6 md:top-8 lg:top-10 xl:top-12 right-8 md:right-12 lg:right-16 xl:right-24 flex items-center space-x-4 min-h-[42px]"
 		>
 			{#if !$isAuthLoading && !isCheckingConversations}
 				{#if $isAuthenticated && hasConversations}

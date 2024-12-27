@@ -95,7 +95,7 @@
 			{/if}
 		</h1>
 
-		<p class="text-center text-sm mb-4 max-w-xs sm:max-w-[500px]">
+		<p class="text-center text-base mb-4 max-w-[500px]">
 			{PUBLIC_CHATBOT_DESCRIPTION ||
 				'This is a chatbot trained on custom data. Check answers for accuracy.'}
 		</p>

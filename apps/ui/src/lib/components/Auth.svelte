@@ -251,7 +251,7 @@
 						Cancel
 					</button>
 					<button type="submit" class="primary" disabled={$isAuthLoading}>
-						{$isAuthLoading ? 'Loading...' : isRegistering ? 'Sign Up' : 'Login'}
+						{$isAuthLoading ? 'Hang tight...' : isRegistering ? 'Sign Up' : 'Login'}
 					</button>
 				</div>
 
