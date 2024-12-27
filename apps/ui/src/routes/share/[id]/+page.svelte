@@ -5,7 +5,7 @@
 	import { page } from '$app/stores'
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
-	import CopyButton from '$lib/components/CopyButton.svelte'
+	import CopyButton from '$components/CopyButton.svelte'
 	import { PUBLIC_APP_TITLE, PUBLIC_APP_URL } from '$env/static/public'
 	import { goto } from '$app/navigation'
 	import { isAuthenticated, authToken } from '$lib/stores/auth'
@@ -169,9 +169,15 @@
 	<meta name="twitter:image" content="" />
 </svelte:head>
 
-<section class="container max-w-2xl mx-auto">
+<section class="container max-w-2xl mx-auto !pb-16">
 	<div class="flex justify-between items-center mb-6">
-		<h1 class="text-4xl">Shared Conversation</h1>
+		<h1 class={`text-3xl ${isLoading ? 'animate-pulse' : ''}`}>
+			{#if isLoading}
+				Loading Conversation...
+			{:else if conversation}
+				{conversation.title}
+			{/if}
+		</h1>
 		<button disabled={isLoading} class="primary px-4" onclick={forkConversation}>
 			Continue Chat
 		</button>
@@ -203,7 +209,6 @@
 		</div>
 	{:else if conversation}
 		<div class="space-y-6">
-			<h1 class="text-2xl">{conversation.title}</h1>
 			<div class="space-y-6 flex flex-col">
 				{#each conversation.messages as message, i}
 					<div

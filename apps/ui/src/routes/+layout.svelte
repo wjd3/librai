@@ -5,8 +5,8 @@
 	import { themes, type Theme } from '$lib/constants/theme'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
-	import Auth from '$lib/components/Auth.svelte'
-	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
+	import Auth from '$components/Auth.svelte'
+	import DarkModeToggle from '$components/DarkModeToggle.svelte'
 	import { page } from '$app/stores'
 	import { authToken, currentUser, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
 

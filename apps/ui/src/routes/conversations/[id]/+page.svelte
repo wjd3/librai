@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation'
 	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken, isAuthLoading, isAuthenticated } from '$lib/stores/auth'
-	import ChatInterface from '$lib/components/ChatInterface.svelte'
+	import ChatInterface from '$components/ChatInterface.svelte'
 
 	let isLoading = $state(true)
 

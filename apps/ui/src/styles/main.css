@@ -46,12 +46,22 @@ a {
 	@apply text-text-color px-4 py-2 rounded-lg border transition duration-200;
 }
 button.primary,
-a.primary {
-	@apply bg-btn-bg;
-}
+a.primary,
 button.secondary,
 a.secondary {
-	@apply bg-btn-bg;
+	@apply bg-btn-bg transition-colors duration-200 text-btn-text;
+}
+button.primary svg,
+a.primary svg,
+button.secondary svg,
+a.secondary svg {
+	@apply fill-btn-text stroke-btn-text;
+}
+button.primary:not(:disabled):hover,
+a.primary:not(:disabled):hover,
+button.secondary:not(:disabled):hover,
+a.secondary:not(:disabled):hover {
+	@apply bg-btn-hover-bg;
 }
 button:disabled,
 a:disabled {

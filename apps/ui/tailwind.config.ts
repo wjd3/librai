@@ -217,6 +217,7 @@ export default {
 				// CSS Variable mappings remain unchanged
 				'btn-bg': 'var(--btn-bg)',
 				'btn-hover-bg': 'var(--btn-hover-bg)',
+				'btn-text': 'var(--btn-text)',
 				'page-bg': 'var(--page-bg)',
 				'primary-card-bg': 'var(--primary-card-bg)',
 				'secondary-card-bg': 'var(--secondary-card-bg)',

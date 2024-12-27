@@ -2,6 +2,7 @@
 :root[data-theme='charcoal'] {
 	--btn-bg: theme('colors.mine-shaft.600');
 	--btn-hover-bg: theme('colors.mine-shaft.700');
+	--btn-text: theme('colors.wild-sand.50');
 	--page-bg: theme('colors.wild-sand.50');
 	--primary-card-bg: theme('colors.white');
 	--secondary-card-bg: theme('colors.iron.50');
@@ -22,6 +23,7 @@
 :root[data-theme='charcoal'][data-mode='dark'] {
 	--btn-bg: theme('colors.mine-shaft.500');
 	--btn-hover-bg: theme('colors.mine-shaft.600');
+	--btn-text: theme('colors.wild-sand.50');
 	--page-bg: theme('colors.mine-shaft.950');
 	--primary-card-bg: theme('colors.mine-shaft.900');
 	--secondary-card-bg: theme('colors.mine-shaft.800');
@@ -41,6 +43,7 @@
 :root[data-theme='leaf'] {
 	--btn-bg: theme('colors.sage.500');
 	--btn-hover-bg: theme('colors.sage.600');
+	--btn-text: theme('colors.sage.50');
 	--page-bg: theme('colors.tea-rose.50');
 	--primary-card-bg: theme('colors.white');
 	--secondary-card-bg: theme('colors.sage.50');
@@ -61,6 +64,7 @@
 :root[data-theme='leaf'][data-mode='dark'] {
 	--btn-bg: theme('colors.asparagus.500');
 	--btn-hover-bg: theme('colors.asparagus.600');
+	--btn-text: theme('colors.sage.50');
 	--page-bg: theme('colors.sage.950');
 	--primary-card-bg: theme('colors.sage.900');
 	--secondary-card-bg: theme('colors.sage.800');
@@ -80,6 +84,7 @@
 :root[data-theme='ocean'] {
 	--btn-bg: theme('colors.matisse.500');
 	--btn-hover-bg: theme('colors.matisse.600');
+	--btn-text: theme('colors.matisse.50');
 	--page-bg: theme('colors.mystic.50');
 	--primary-card-bg: theme('colors.white');
 	--secondary-card-bg: theme('colors.matisse.50');
@@ -100,6 +105,7 @@
 :root[data-theme='ocean'][data-mode='dark'] {
 	--btn-bg: theme('colors.blue-dianne.500');
 	--btn-hover-bg: theme('colors.blue-dianne.600');
+	--btn-text: theme('colors.matisse.50');
 	--page-bg: theme('colors.matisse.950');
 	--primary-card-bg: theme('colors.matisse.900');
 	--secondary-card-bg: theme('colors.matisse.800');
@@ -119,6 +125,7 @@
 :root[data-theme='sunset'] {
 	--btn-bg: theme('colors.coral.500');
 	--btn-hover-bg: theme('colors.coral.600');
+	--btn-text: theme('colors.coral.50');
 	--page-bg: theme('colors.sundown.50');
 	--primary-card-bg: theme('colors.white');
 	--secondary-card-bg: theme('colors.coral.50');
@@ -139,6 +146,7 @@
 :root[data-theme='sunset'][data-mode='dark'] {
 	--btn-bg: theme('colors.mulled-wine.500');
 	--btn-hover-bg: theme('colors.mulled-wine.600');
+	--btn-text: theme('colors.coral.50');
 	--page-bg: theme('colors.coral.950');
 	--primary-card-bg: theme('colors.coral.900');
 	--secondary-card-bg: theme('colors.coral.800');
@@ -158,6 +166,7 @@
 :root[data-theme='volcano'] {
 	--btn-bg: theme('colors.cinnabar.500');
 	--btn-hover-bg: theme('colors.cinnabar.600');
+	--btn-text: theme('colors.cocoa-brown.50');
 	--page-bg: theme('colors.cocoa-brown.50');
 	--primary-card-bg: theme('colors.white');
 	--secondary-card-bg: theme('colors.almond-frost.50');
@@ -178,6 +187,7 @@
 :root[data-theme='volcano'][data-mode='dark'] {
 	--btn-bg: theme('colors.cinnabar.600');
 	--btn-hover-bg: theme('colors.cinnabar.700');
+	--btn-text: theme('colors.cocoa-brown.50');
 	--page-bg: theme('colors.cocoa-brown.950');
 	--primary-card-bg: theme('colors.cocoa-brown.900');
 	--secondary-card-bg: theme('colors.cocoa-brown.800');
