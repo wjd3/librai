@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte'
 	import { PUBLIC_THEME, PUBLIC_APP_TITLE, PUBLIC_APP_DESCRIPTION } from '$env/static/public'
 	import { defaultTheme, themes } from '$lib/constants/theme'
-	import { chatHistory } from '$lib/stores'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
 	import Auth from '$lib/components/Auth.svelte'
@@ -103,7 +102,7 @@
 		<div
 			class="hidden md:block fixed top-6 md:top-8 lg:top-10 xl:top-12 left-8 md:left-12 lg:left-16 xl:left-24 z-50"
 		>
-			{#if $chatHistory.length > 0 || $page.url.pathname !== '/'}
+			{#if $page.url.pathname !== '/'}
 				<a class="inline-block p-0 border-none" href="/">
 					<h1 class="text-xl" in:fade={{ duration: 500, easing: cubicInOut }}>
 						{#if PUBLIC_APP_TITLE}

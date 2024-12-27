@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import ChatInterface from '$lib/components/ChatInterface.svelte'
-	import { currentConversation, chatHistory } from '$lib/stores'
+	import HomeChatInterface from '$lib/components/HomeChatInterface.svelte'
+	import { currentConversation, chatHistory } from '$lib/stores/index'
 
 	onMount(() => {
 		// Clear any existing conversation data when starting fresh
@@ -10,4 +10,4 @@
 	})
 </script>
 
-<ChatInterface />
+<HomeChatInterface />

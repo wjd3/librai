@@ -1,12 +1,8 @@
 <script lang="ts">
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
-	import {
-		PUBLIC_APP_TITLE,
-		PUBLIC_CHATBOT_DESCRIPTION,
-		PUBLIC_CHATBOT_THINKING_TEXT
-	} from '$env/static/public'
-	import { chatHistory, currentConversation, isAuthenticated, currentUser } from '$lib/stores'
+	import { PUBLIC_CHATBOT_THINKING_TEXT } from '$env/static/public'
+	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
@@ -14,7 +10,6 @@
 	import { tick } from 'svelte'
 	import CopyButton from './CopyButton.svelte'
 	import { goto } from '$app/navigation'
-	import { preventDefault } from '$lib/utils'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
 	let isDisabled = $state(true)
@@ -24,27 +19,15 @@
 	let remainingMessages = $state<number | null>(null)
 	let rateLimitResetAt = $state<Date | null>(null)
 
-	onMount(() => {
-		if (promptInput) {
-			promptInput.focus()
-		}
-	})
-
 	$effect(() => {
 		if (isSubmitting) {
 			isDisabled = true
-		}
-	})
-
-	$effect(() => {
-		if (!isSubmitting) {
+		} else {
 			isDisabled = userInput.length < 1
 		}
 	})
 
-	const minQueryLength = 1
-
-	async function sendMessage() {
+	async function sendMessage(message?: string, { skipPush }: { skipPush?: boolean } = {}) {
 		isSubmitting = true
 
 		if (honeypot) {
@@ -52,14 +35,18 @@
 			return
 		}
 
-		const query = DOMPurify.sanitize(userInput || '').trim()
-		if (!query || query.length < minQueryLength) {
+		const query = message || DOMPurify.sanitize(userInput || '').trim()
+		if (!query || query.length < 1) {
 			isSubmitting = false
 			return
 		}
 
 		const conversationHistory = JSON.stringify([...$chatHistory])
-		chatHistory.update((history) => [...history, { message: query, isUser: true }])
+
+		if (!skipPush) {
+			chatHistory.update((history) => [...history, { message: query, isUser: true }])
+		}
+
 		userInput = ''
 
 		await tick()
@@ -147,6 +134,25 @@
 	}
 
 	onMount(() => {
+		if (promptInput) {
+			promptInput.focus()
+		}
+	})
+
+	$effect(() => {
+		if ($shouldStartChat && !isSubmitting) {
+			;(async () => {
+				const lastMessage = $chatHistory[$chatHistory.length - 1]
+				if (lastMessage?.isUser) {
+					await sendMessage(lastMessage.message, { skipPush: true })
+				}
+
+				shouldStartChat.set(false)
+			})()
+		}
+	})
+
+	onMount(() => {
 		window.addEventListener('scroll', checkScroll)
 		checkScroll()
 		return () => {
@@ -155,26 +161,8 @@
 	})
 </script>
 
-<section
-	class={`min-h-[100svh] relative z-40 flex flex-col items-center ${$chatHistory.length > 0 ? 'justify-start' : 'justify-center'}`}
->
+<section class="min-h-[100svh] relative z-40 flex flex-col items-center justify-start">
 	<div class="container flex flex-col justify-center items-center">
-		<!-- Title -->
-		{#if $chatHistory.length === 0}
-			<h1 class="mb-2 max-w-sm">
-				{#if PUBLIC_APP_TITLE}
-					{PUBLIC_APP_TITLE}
-				{:else}
-					Librai UI
-				{/if}
-			</h1>
-
-			<p class="text-center text-sm mb-4 max-w-xs sm:max-w-[500px]">
-				{PUBLIC_CHATBOT_DESCRIPTION ||
-					'This is a chatbot trained on custom data. Check answers for accuracy.'}
-			</p>
-		{/if}
-
 		<!-- Chat History -->
 		{#if $chatHistory.length > 0}
 			<div class="chat-history" in:fade={{ duration: 500, easing: cubicInOut }}>
@@ -216,7 +204,10 @@
 		>
 			<form
 				class="flex flex-row items-center justify-center space-x-4 w-full h-12"
-				onsubmit={preventDefault(sendMessage)}
+				onsubmit={async (e) => {
+					e.preventDefault()
+					await sendMessage()
+				}}
 			>
 				<div
 					class={`w-full h-full ${$chatHistory.length > 0 ? 'max-w-[280px] sm:max-w-xs md:max-w-lg lg:max-w-xl xl:max-w-2xl' : ''}`}
@@ -224,17 +215,17 @@
 					<label for="chat-input" class="sr-only">Query the custom Librai AI chatbot.</label>
 					<textarea
 						required
-						minlength={minQueryLength}
+						minlength={1}
 						maxlength="4096"
 						id="chat-input"
 						placeholder="Ask a question..."
 						bind:this={promptInput}
 						bind:value={userInput}
 						class="textarea resize-none w-full h-full"
-						onkeydown={(e) => {
+						onkeydown={async (e) => {
 							if (e.key === 'Enter' && !e.shiftKey) {
 								e.preventDefault()
-								sendMessage()
+								await sendMessage()
 							}
 						}}
 					></textarea>

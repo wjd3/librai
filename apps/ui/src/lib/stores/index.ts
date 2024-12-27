@@ -5,5 +5,7 @@ export const chatHistory = writable<{ message: string; isUser: boolean; created?
 export const currentConversation = writable<Conversation | null>(null)
 export const pendingConversation = writable(false)
 
+export const shouldStartChat = writable(false)
+
 // Re-export auth stores for backward compatibility
-export { currentUser, isAuthenticated, isAuthLoading } from './stores/auth'
+export { currentUser, isAuthenticated, isAuthLoading } from './auth'

@@ -32,13 +32,19 @@ export const POST = async ({ request, locals }) => {
 			generatedTitle = await OpenAIService.generateAITitle(messages[0].message)
 		}
 
+		// Create new conversation
 		const conversation = await PocketbaseService.createConversation(
 			userId,
 			messages[0]?.message || '',
 			generatedTitle || 'New Conversation'
 		)
-		await PocketbaseService.updateConversation(conversation.id, messages)
-		return json({ success: true })
+
+		// If messages were provided (forking case), add them to the conversation
+		if (messages && messages.length > 0) {
+			await PocketbaseService.updateConversation(conversation.id, messages)
+		}
+
+		return json(conversation)
 	} catch (error) {
 		console.error('Error saving conversation:', error)
 		return json({ error: 'Error saving conversation' }, { status: 500 })
