@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition'
 	import DOMPurify from 'dompurify'
 	import { goto } from '$app/navigation'
+	import { quartInOut } from 'svelte/easing'
 
 	let showAuth = $state(false)
 	let isRegistering = $state(false)
@@ -154,7 +155,7 @@
 {#if showAuth}
 	<div
 		class="fixed inset-0 flex items-center justify-center z-50 !ml-0"
-		transition:fade={{ duration: 200 }}
+		transition:fade={{ duration: 200, easing: quartInOut }}
 	>
 		<div
 			aria-hidden="true"
@@ -164,7 +165,7 @@
 
 		<div
 			class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative z-10"
-			transition:fade={{ duration: 200, delay: 100 }}
+			transition:fade={{ duration: 200, delay: 100, easing: quartInOut }}
 		>
 			<h2 class="text-xl mb-4">{isRegistering ? 'Sign Up' : 'Login'}</h2>
 

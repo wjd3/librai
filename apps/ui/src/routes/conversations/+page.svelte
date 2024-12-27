@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
-	import { cubicInOut } from 'svelte/easing'
+	import { quartInOut } from 'svelte/easing'
 	import { currentConversation, chatHistory } from '$lib/stores/index'
 	import { goto } from '$app/navigation'
 	import { PUBLIC_APP_URL } from '$env/static/public'
@@ -228,7 +228,7 @@
 			{#each conversations as conversation, i}
 				<div
 					class="bg-chat-bg px-4 py-2 rounded-lg group"
-					transition:fade={{ duration: 200, easing: cubicInOut }}
+					transition:fade={{ duration: 200, easing: quartInOut }}
 				>
 					<div class="flex items-center mb-2">
 						{#if editingTitleId === conversation.id}

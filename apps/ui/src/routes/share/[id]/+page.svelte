@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
-	import { cubicInOut } from 'svelte/easing'
+	import { quartInOut } from 'svelte/easing'
 	import { page } from '$app/stores'
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
@@ -90,10 +90,6 @@
 
 		isLoading = false
 	})
-
-	async function newMessage() {
-		await goto('/')
-	}
 
 	async function forkConversation() {
 		if (!conversation) return
@@ -214,7 +210,7 @@
 					<div
 						class="chat-message"
 						class:is-user={message.isUser}
-						transition:fade={{ duration: 200, easing: cubicInOut }}
+						transition:fade={{ duration: 200, easing: quartInOut }}
 					>
 						{#if message.isUser}
 							<h2 class="sr-only">User said:</h2>

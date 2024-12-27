@@ -1,10 +1,11 @@
 <script lang="ts">
 	import '$styles/main.css'
+	import { createScrollSpy } from '$lib/scroll'
 	import { onMount } from 'svelte'
 	import { PUBLIC_THEME, PUBLIC_APP_TITLE, PUBLIC_APP_DESCRIPTION } from '$env/static/public'
 	import { themes, type Theme } from '$lib/constants/theme'
 	import { fade } from 'svelte/transition'
-	import { cubicInOut } from 'svelte/easing'
+	import { quadInOut } from 'svelte/easing'
 	import Auth from '$components/Auth.svelte'
 	import DarkModeToggle from '$components/DarkModeToggle.svelte'
 	import { page } from '$app/stores'
@@ -86,6 +87,16 @@
 		isDarkMode = !isDarkMode
 		setIsDarkMode()
 	}
+
+	const sectionIds = ['scroll-spy']
+	const { isVisible } = createScrollSpy({
+		sections: sectionIds,
+		offset: 64
+	})
+
+	$effect(() => {
+		console.log('isVisible', $isVisible)
+	})
 </script>
 
 <svelte:head>
@@ -97,40 +108,48 @@
 	/>
 </svelte:head>
 
-<header>
-	<div class="container relative">
-		<div
-			class="hidden md:block fixed top-6 md:top-8 lg:top-10 xl:top-12 left-8 md:left-12 lg:left-16 xl:left-24 z-50"
-		>
-			{#if $page.url.pathname !== '/'}
-				<a class="inline-block p-0 border-none" href="/">
-					<h1 class="text-xl" in:fade={{ duration: 500, easing: cubicInOut }}>
-						{#if PUBLIC_APP_TITLE}
-							{PUBLIC_APP_TITLE}
-						{:else}
-							Librai UI
-						{/if}
-					</h1>
-				</a>
+<div
+	id="scroll-spy"
+	aria-hidden="true"
+	class="absolute top-0 left-0 right-0 w-0 h-16 bg-transparent z-[-1]"
+></div>
+
+<header
+	class={`fixed flex items-center justify-between top-0 left-0 w-screen bg-chat-bar-bg border-b border-form-border transition-all duration-200 ease-out will-change-transform z-50 ${
+		!$isVisible ? 'h-14 translate-y-0' : 'h-20 bg-transparent border-transparent translate-y-0'
+	}`}
+>
+	<div class="px-8">
+		{#if $page.url.pathname !== '/'}
+			<a
+				class="inline-block p-0 border-none"
+				href="/"
+				transition:fade={{ duration: 200, easing: quadInOut }}
+			>
+				<h1 class={`transition-all duration-200 ${!$isVisible ? 'text-lg' : 'text-xl'}`}>
+					{#if PUBLIC_APP_TITLE}
+						{PUBLIC_APP_TITLE}
+					{:else}
+						Librai UI
+					{/if}
+				</h1>
+			</a>
+		{/if}
+	</div>
+
+	<div class="flex items-center space-x-4 px-8">
+		{#if !$isAuthLoading && !isCheckingConversations}
+			{#if $isAuthenticated && hasConversations}
+				<a href="/conversations" class="secondary px-4"> History </a>
 			{/if}
-		</div>
 
-		<div
-			class="fixed z-50 top-6 md:top-8 lg:top-10 xl:top-12 right-8 md:right-12 lg:right-16 xl:right-24 flex items-center space-x-4 min-h-[42px]"
-		>
-			{#if !$isAuthLoading && !isCheckingConversations}
-				{#if $isAuthenticated && hasConversations}
-					<a href="/conversations" class="secondary px-4"> History </a>
-				{/if}
+			<Auth />
+		{/if}
 
-				<Auth />
-			{/if}
-
-			<DarkModeToggle {isDarkMode} {toggleDarkMode} />
-		</div>
+		<DarkModeToggle {isDarkMode} {toggleDarkMode} />
 	</div>
 </header>
 
-<main>
+<main class="relative z-40">
 	{@render children()}
 </main>

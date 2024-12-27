@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cubicInOut } from 'svelte/easing'
+	import { quartInOut } from 'svelte/easing'
 	import { fade } from 'svelte/transition'
 
 	let { message, messageIndex } = $props()
@@ -26,7 +26,7 @@
 	class="w-fit self-end secondary mt-1 md:mt-2 p-2"
 	onclick={() => copyToClipboard(message, messageIndex)}
 	aria-label="Copy to clipboard"
-	in:fade={{ duration: 250, easing: cubicInOut }}
+	in:fade={{ duration: 200, easing: quartInOut }}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
