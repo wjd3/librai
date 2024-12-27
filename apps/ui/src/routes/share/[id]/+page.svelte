@@ -189,7 +189,8 @@
 			<div class="space-y-6 flex flex-col">
 				{#each conversation.messages as message, i}
 					<div
-						class={`chat-message ${message.isUser ? 'is-user' : ''}`}
+						class="chat-message"
+						class:is-user={message.isUser}
 						transition:fade={{ duration: 200, easing: cubicInOut }}
 					>
 						{#if message.isUser}

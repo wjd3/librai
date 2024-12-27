@@ -2,7 +2,7 @@
 	import '$styles/main.css'
 	import { onMount } from 'svelte'
 	import { PUBLIC_THEME, PUBLIC_APP_TITLE, PUBLIC_APP_DESCRIPTION } from '$env/static/public'
-	import { defaultTheme, themes } from '$lib/constants/theme'
+	import { themes, type Theme } from '$lib/constants/theme'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
 	import Auth from '$lib/components/Auth.svelte'
@@ -13,7 +13,7 @@
 	let { children } = $props()
 
 	// Themes
-	const theme = themes.includes(PUBLIC_THEME) ? PUBLIC_THEME : defaultTheme
+	const theme = themes.includes(PUBLIC_THEME as Theme) ? PUBLIC_THEME : themes[0]
 	const setTheme = () => {
 		document.documentElement.setAttribute('data-theme', theme)
 	}

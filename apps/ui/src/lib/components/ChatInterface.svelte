@@ -168,7 +168,7 @@
 			<div class="chat-history" in:fade={{ duration: 500, easing: cubicInOut }}>
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }, i}
-						<div class={`chat-message ${isUser ? 'is-user' : ''}`}>
+						<div class="chat-message" class:is-user={isUser}>
 							{#if isUser}
 								<h2 class="sr-only">You said:</h2>
 							{:else}
@@ -247,7 +247,9 @@
 				<button
 					disabled={isDisabled}
 					type="submit"
-					class={`primary w-16 h-full flex items-center justify-center ${$chatHistory.length > 0 ? '' : 'self-end'} ${isSubmitting ? 'animate-pulse' : ''}`}
+					class="primary w-16 h-full flex items-center justify-center"
+					class:self-end={!$chatHistory.length}
+					class:animate-pulse={isSubmitting}
 				>
 					{#if isSubmitting}
 						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256">

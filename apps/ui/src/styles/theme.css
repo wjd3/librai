@@ -1,204 +1,196 @@
-/* Simple Theme */
-:root[data-theme='simple'] {
-	--btn-bg: theme('colors.mamba.500');
-	--btn-hover-bg: theme('colors.mamba.600');
-	--page-bg: theme('colors.white');
+/* Charcoal Theme - Clean, minimalist design */
+:root[data-theme='charcoal'] {
+	--btn-bg: theme('colors.mine-shaft.600');
+	--btn-hover-bg: theme('colors.mine-shaft.700');
+	--page-bg: theme('colors.wild-sand.50');
 	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.mamba.100');
-	--form-border: theme('colors.mamba.300');
-	--form-focus-border: theme('colors.fuchsia.500');
+	--secondary-card-bg: theme('colors.iron.50');
+	--form-border: theme('colors.iron.200');
+	--form-focus-border: theme('colors.mine-shaft.400');
 	--form-bg: theme('colors.white');
-	--link-color: theme('colors.kashmir.600');
-	--link-hover-color: theme('colors.kashmir.700');
-	--text-color: theme('colors.mamba.900');
-	--placeholder-color: theme('colors.mamba.400');
-	--user-bubble-bg: theme('colors.mamba.200');
-	--bot-bubble-bg: theme('colors.kashmir.200');
-	--chat-bar-bg: theme('colors.mamba.50');
-	--highlight: theme('colors.fuchsia.400');
-	--highlight-dark: theme('colors.fuchsia.600');
+	--link-color: theme('colors.mine-shaft.600');
+	--link-hover-color: theme('colors.mine-shaft.700');
+	--text-color: theme('colors.mine-shaft.900');
+	--placeholder-color: theme('colors.iron.400');
+	--user-bubble-bg: theme('colors.iron.100');
+	--bot-bubble-bg: theme('colors.mine-shaft.100');
+	--chat-bar-bg: theme('colors.iron.50');
+	--highlight: theme('colors.mine-shaft.400');
+	--highlight-dark: theme('colors.mine-shaft.600');
 }
 
-:root[data-theme='simple'][data-mode='dark'] {
-	--btn-bg: theme('colors.fuchsia.500');
-	--btn-hover-bg: theme('colors.fuchsia.600');
-	--page-bg: theme('colors.mamba.950');
-	--primary-card-bg: theme('colors.mamba.900');
-	--secondary-card-bg: theme('colors.mamba.800');
-	--form-border: theme('colors.mamba.700');
-	--form-focus-border: theme('colors.fuchsia.400');
-	--form-bg: theme('colors.mamba.900');
-	--link-color: theme('colors.kashmir.400');
-	--link-hover-color: theme('colors.kashmir.300');
-	--text-color: theme('colors.mamba.50');
-	--placeholder-color: theme('colors.mamba.600');
-	--user-bubble-bg: theme('colors.mamba.800');
-	--bot-bubble-bg: theme('colors.kashmir.800');
-	--chat-bar-bg: theme('colors.mamba.900');
-	--highlight: theme('colors.fuchsia.500');
-	--highlight-dark: theme('colors.fuchsia.700');
+:root[data-theme='charcoal'][data-mode='dark'] {
+	--btn-bg: theme('colors.mine-shaft.500');
+	--btn-hover-bg: theme('colors.mine-shaft.600');
+	--page-bg: theme('colors.mine-shaft.950');
+	--primary-card-bg: theme('colors.mine-shaft.900');
+	--secondary-card-bg: theme('colors.mine-shaft.800');
+	--form-border: theme('colors.iron.700');
+	--form-focus-border: theme('colors.iron.400');
+	--form-bg: theme('colors.mine-shaft.900');
+	--link-color: theme('colors.iron.400');
+	--link-hover-color: theme('colors.iron.300');
+	--text-color: theme('colors.wild-sand.50');
+	--placeholder-color: theme('colors.iron.600');
+	--user-bubble-bg: theme('colors.mine-shaft.800');
+	--bot-bubble-bg: theme('colors.iron.800');
+	--chat-bar-bg: theme('colors.mine-shaft.900');
 }
 
-/* Leaf Theme */
+/* Leaf Theme - Natural, organic */
 :root[data-theme='leaf'] {
-	--btn-bg: theme('colors.eucalyptus.500');
-	--btn-hover-bg: theme('colors.eucalyptus.600');
-	--page-bg: theme('colors.white');
+	--btn-bg: theme('colors.sage.500');
+	--btn-hover-bg: theme('colors.sage.600');
+	--page-bg: theme('colors.tea-rose.50');
 	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.eucalyptus.50');
-	--form-border: theme('colors.eucalyptus.300');
-	--form-focus-border: theme('colors.wisteria.500');
+	--secondary-card-bg: theme('colors.sage.50');
+	--form-border: theme('colors.sage.200');
+	--form-focus-border: theme('colors.asparagus.400');
 	--form-bg: theme('colors.white');
-	--link-color: theme('colors.wisteria.600');
-	--link-hover-color: theme('colors.wisteria.700');
-	--text-color: theme('colors.eucalyptus.900');
-	--placeholder-color: theme('colors.eucalyptus.400');
-	--user-bubble-bg: theme('colors.eucalyptus.100');
-	--bot-bubble-bg: theme('colors.wisteria.100');
-	--chat-bar-bg: theme('colors.eucalyptus.50');
-	--highlight: theme('colors.lightning.400');
-	--highlight-dark: theme('colors.lightning.600');
+	--link-color: theme('colors.sage.600');
+	--link-hover-color: theme('colors.sage.700');
+	--text-color: theme('colors.sage.900');
+	--placeholder-color: theme('colors.sage.400');
+	--user-bubble-bg: theme('colors.tea-rose.200');
+	--bot-bubble-bg: theme('colors.sage.100');
+	--chat-bar-bg: theme('colors.sage.50');
+	--highlight: theme('colors.asparagus.400');
+	--highlight-dark: theme('colors.asparagus.600');
 }
 
 :root[data-theme='leaf'][data-mode='dark'] {
-	--btn-bg: theme('colors.lightning.600');
-	--btn-hover-bg: theme('colors.lightning.600');
-	--page-bg: theme('colors.eucalyptus.950');
-	--primary-card-bg: theme('colors.eucalyptus.900');
-	--secondary-card-bg: theme('colors.eucalyptus.800');
-	--form-border: theme('colors.eucalyptus.700');
-	--form-focus-border: theme('colors.lightning.400');
-	--form-bg: theme('colors.eucalyptus.900');
-	--link-color: theme('colors.wisteria.400');
-	--link-hover-color: theme('colors.wisteria.300');
-	--text-color: theme('colors.eucalyptus.50');
-	--placeholder-color: theme('colors.eucalyptus.600');
-	--user-bubble-bg: theme('colors.eucalyptus.800');
-	--bot-bubble-bg: theme('colors.wisteria.700');
-	--chat-bar-bg: theme('colors.eucalyptus.900');
-	--highlight: theme('colors.lightning.400');
-	--highlight-dark: theme('colors.lightning.600');
+	--btn-bg: theme('colors.asparagus.500');
+	--btn-hover-bg: theme('colors.asparagus.600');
+	--page-bg: theme('colors.sage.950');
+	--primary-card-bg: theme('colors.sage.900');
+	--secondary-card-bg: theme('colors.sage.800');
+	--form-border: theme('colors.sage.700');
+	--form-focus-border: theme('colors.tea-rose.400');
+	--form-bg: theme('colors.sage.900');
+	--link-color: theme('colors.tea-rose.300');
+	--link-hover-color: theme('colors.tea-rose.200');
+	--text-color: theme('colors.sage.50');
+	--placeholder-color: theme('colors.sage.600');
+	--user-bubble-bg: theme('colors.sage.800');
+	--bot-bubble-bg: theme('colors.tea-rose.900');
+	--chat-bar-bg: theme('colors.sage.900');
 }
 
-/* Blush Theme */
-:root[data-theme='blush'] {
-	--btn-bg: theme('colors.mandy.500');
-	--btn-hover-bg: theme('colors.mandy.600');
-	--page-bg: theme('colors.white');
-	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.mandy.50');
-	--form-border: theme('colors.mandy.300');
-	--form-focus-border: theme('colors.cornflower.500');
-	--form-bg: theme('colors.white');
-	--link-color: theme('colors.zest.600');
-	--link-hover-color: theme('colors.zest.700');
-	--text-color: theme('colors.mandy.900');
-	--placeholder-color: theme('colors.mandy.400');
-	--user-bubble-bg: theme('colors.mandy.100');
-	--bot-bubble-bg: theme('colors.zest.100');
-	--chat-bar-bg: theme('colors.mandy.50');
-	--highlight: theme('colors.cornflower.400');
-	--highlight-dark: theme('colors.cornflower.600');
-}
-
-:root[data-theme='blush'][data-mode='dark'] {
-	--btn-bg: theme('colors.cornflower.500');
-	--btn-hover-bg: theme('colors.cornflower.600');
-	--page-bg: theme('colors.mandy.950');
-	--primary-card-bg: theme('colors.mandy.900');
-	--secondary-card-bg: theme('colors.mandy.800');
-	--form-border: theme('colors.mandy.700');
-	--form-focus-border: theme('colors.cornflower.400');
-	--form-bg: theme('colors.mandy.900');
-	--link-color: theme('colors.zest.400');
-	--link-hover-color: theme('colors.zest.300');
-	--text-color: theme('colors.mandy.50');
-	--placeholder-color: theme('colors.mandy.600');
-	--user-bubble-bg: theme('colors.mandy.800');
-	--bot-bubble-bg: theme('colors.zest.800');
-	--chat-bar-bg: theme('colors.mandy.900');
-	--highlight: theme('colors.cornflower.400');
-	--highlight-dark: theme('colors.cornflower.600');
-}
-
-/* Glow Theme */
-:root[data-theme='glow'] {
-	--btn-bg: theme('colors.fern.500');
-	--btn-hover-bg: theme('colors.fern.600');
-	--page-bg: theme('colors.white');
-	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.fern.50');
-	--form-border: theme('colors.fern.300');
-	--form-focus-border: theme('colors.pumpkin.500');
-	--form-bg: theme('colors.white');
-	--link-color: theme('colors.java.600');
-	--link-hover-color: theme('colors.java.700');
-	--text-color: theme('colors.fern.900');
-	--placeholder-color: theme('colors.fern.400');
-	--user-bubble-bg: theme('colors.fern.100');
-	--bot-bubble-bg: theme('colors.java.100');
-	--chat-bar-bg: theme('colors.fern.50');
-	--highlight: theme('colors.pumpkin.400');
-	--highlight-dark: theme('colors.pumpkin.600');
-}
-
-:root[data-theme='glow'][data-mode='dark'] {
-	--btn-bg: theme('colors.pumpkin.500');
-	--btn-hover-bg: theme('colors.pumpkin.600');
-	--page-bg: theme('colors.fern.950');
-	--primary-card-bg: theme('colors.fern.900');
-	--secondary-card-bg: theme('colors.fern.800');
-	--form-border: theme('colors.fern.700');
-	--form-focus-border: theme('colors.pumpkin.400');
-	--form-bg: theme('colors.fern.900');
-	--link-color: theme('colors.java.400');
-	--link-hover-color: theme('colors.java.300');
-	--text-color: theme('colors.fern.50');
-	--placeholder-color: theme('colors.fern.600');
-	--user-bubble-bg: theme('colors.fern.800');
-	--bot-bubble-bg: theme('colors.java.800');
-	--chat-bar-bg: theme('colors.fern.900');
-	--highlight: theme('colors.pumpkin.400');
-	--highlight-dark: theme('colors.pumpkin.600');
-}
-
-/* Ocean Theme */
+/* Ocean Theme - Cool, calming */
 :root[data-theme='ocean'] {
-	--btn-bg: theme('colors.curious.500');
-	--btn-hover-bg: theme('colors.curious.600');
-	--page-bg: theme('colors.white');
+	--btn-bg: theme('colors.matisse.500');
+	--btn-hover-bg: theme('colors.matisse.600');
+	--page-bg: theme('colors.mystic.50');
 	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.curious.50');
-	--form-border: theme('colors.curious.300');
-	--form-focus-border: theme('colors.magenta.500');
+	--secondary-card-bg: theme('colors.matisse.50');
+	--form-border: theme('colors.matisse.200');
+	--form-focus-border: theme('colors.blue-dianne.400');
 	--form-bg: theme('colors.white');
-	--link-color: theme('colors.meadow.600');
-	--link-hover-color: theme('colors.meadow.700');
-	--text-color: theme('colors.curious.900');
-	--placeholder-color: theme('colors.curious.400');
-	--user-bubble-bg: theme('colors.curious.100');
-	--bot-bubble-bg: theme('colors.meadow.100');
-	--chat-bar-bg: theme('colors.curious.50');
-	--highlight: theme('colors.magenta.400');
-	--highlight-dark: theme('colors.magenta.600');
+	--link-color: theme('colors.matisse.600');
+	--link-hover-color: theme('colors.matisse.700');
+	--text-color: theme('colors.matisse.900');
+	--placeholder-color: theme('colors.matisse.400');
+	--user-bubble-bg: theme('colors.mystic.200');
+	--bot-bubble-bg: theme('colors.matisse.100');
+	--chat-bar-bg: theme('colors.mystic.100');
+	--highlight: theme('colors.blue-dianne.400');
+	--highlight-dark: theme('colors.blue-dianne.600');
 }
 
 :root[data-theme='ocean'][data-mode='dark'] {
-	--btn-bg: theme('colors.magenta.500');
-	--btn-hover-bg: theme('colors.magenta.600');
-	--page-bg: theme('colors.curious.950');
-	--primary-card-bg: theme('colors.curious.900');
-	--secondary-card-bg: theme('colors.curious.800');
-	--form-border: theme('colors.curious.700');
-	--form-focus-border: theme('colors.magenta.400');
-	--form-bg: theme('colors.curious.900');
-	--link-color: theme('colors.meadow.400');
-	--link-hover-color: theme('colors.meadow.300');
-	--text-color: theme('colors.curious.50');
-	--placeholder-color: theme('colors.curious.600');
-	--user-bubble-bg: theme('colors.curious.800');
-	--bot-bubble-bg: theme('colors.meadow.800');
-	--chat-bar-bg: theme('colors.curious.900');
-	--highlight: theme('colors.magenta.400');
-	--highlight-dark: theme('colors.magenta.600');
+	--btn-bg: theme('colors.blue-dianne.500');
+	--btn-hover-bg: theme('colors.blue-dianne.600');
+	--page-bg: theme('colors.matisse.950');
+	--primary-card-bg: theme('colors.matisse.900');
+	--secondary-card-bg: theme('colors.matisse.800');
+	--form-border: theme('colors.matisse.700');
+	--form-focus-border: theme('colors.mystic.400');
+	--form-bg: theme('colors.matisse.900');
+	--link-color: theme('colors.mystic.400');
+	--link-hover-color: theme('colors.mystic.300');
+	--text-color: theme('colors.matisse.50');
+	--placeholder-color: theme('colors.matisse.600');
+	--user-bubble-bg: theme('colors.matisse.800');
+	--bot-bubble-bg: theme('colors.mystic.900');
+	--chat-bar-bg: theme('colors.matisse.900');
+}
+
+/* Sunset Theme */
+:root[data-theme='sunset'] {
+	--btn-bg: theme('colors.coral.500');
+	--btn-hover-bg: theme('colors.coral.600');
+	--page-bg: theme('colors.sundown.50');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.coral.50');
+	--form-border: theme('colors.coral.200');
+	--form-focus-border: theme('colors.mulled-wine.400');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.coral.600');
+	--link-hover-color: theme('colors.coral.700');
+	--text-color: theme('colors.coral.900');
+	--placeholder-color: theme('colors.coral.400');
+	--user-bubble-bg: theme('colors.sundown.200');
+	--bot-bubble-bg: theme('colors.coral.100');
+	--chat-bar-bg: theme('colors.sundown.100');
+	--highlight: theme('colors.mulled-wine.400');
+	--highlight-dark: theme('colors.mulled-wine.600');
+}
+
+:root[data-theme='sunset'][data-mode='dark'] {
+	--btn-bg: theme('colors.mulled-wine.500');
+	--btn-hover-bg: theme('colors.mulled-wine.600');
+	--page-bg: theme('colors.coral.950');
+	--primary-card-bg: theme('colors.coral.900');
+	--secondary-card-bg: theme('colors.coral.800');
+	--form-border: theme('colors.coral.700');
+	--form-focus-border: theme('colors.sundown.400');
+	--form-bg: theme('colors.coral.900');
+	--link-color: theme('colors.sundown.400');
+	--link-hover-color: theme('colors.sundown.300');
+	--text-color: theme('colors.coral.50');
+	--placeholder-color: theme('colors.coral.600');
+	--user-bubble-bg: theme('colors.coral.800');
+	--bot-bubble-bg: theme('colors.sundown.900');
+	--chat-bar-bg: theme('colors.coral.900');
+}
+
+/* Volcano Theme - Dramatic, intense, earthy */
+:root[data-theme='volcano'] {
+	--btn-bg: theme('colors.cinnabar.500');
+	--btn-hover-bg: theme('colors.cinnabar.600');
+	--page-bg: theme('colors.cocoa-brown.50');
+	--primary-card-bg: theme('colors.white');
+	--secondary-card-bg: theme('colors.almond-frost.50');
+	--form-border: theme('colors.almond-frost.200');
+	--form-focus-border: theme('colors.cinnabar.400');
+	--form-bg: theme('colors.white');
+	--link-color: theme('colors.cinnabar.600');
+	--link-hover-color: theme('colors.cinnabar.700');
+	--text-color: theme('colors.cocoa-brown.900');
+	--placeholder-color: theme('colors.almond-frost.400');
+	--user-bubble-bg: theme('colors.almond-frost.100');
+	--bot-bubble-bg: theme('colors.cinnabar.100');
+	--chat-bar-bg: theme('colors.cocoa-brown.100');
+	--highlight: theme('colors.cinnabar.400');
+	--highlight-dark: theme('colors.cinnabar.600');
+}
+
+:root[data-theme='volcano'][data-mode='dark'] {
+	--btn-bg: theme('colors.cinnabar.600');
+	--btn-hover-bg: theme('colors.cinnabar.700');
+	--page-bg: theme('colors.cocoa-brown.950');
+	--primary-card-bg: theme('colors.cocoa-brown.900');
+	--secondary-card-bg: theme('colors.cocoa-brown.800');
+	--form-border: theme('colors.almond-frost.700');
+	--form-focus-border: theme('colors.cinnabar.500');
+	--form-bg: theme('colors.cocoa-brown.900');
+	--link-color: theme('colors.cinnabar.400');
+	--link-hover-color: theme('colors.cinnabar.300');
+	--text-color: theme('colors.cocoa-brown.50');
+	--placeholder-color: theme('colors.almond-frost.600');
+	--user-bubble-bg: theme('colors.cocoa-brown.800');
+	--bot-bubble-bg: theme('colors.cinnabar.900');
+	--chat-bar-bg: theme('colors.cocoa-brown.900');
+	--highlight: theme('colors.cinnabar.500');
+	--highlight-dark: theme('colors.cinnabar.700');
 }
