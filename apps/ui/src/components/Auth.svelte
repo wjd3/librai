@@ -128,7 +128,7 @@
 </script>
 
 {#if $isAuthenticated}
-	<button class="secondary px-4" onclick={logout} aria-label="Logout">
+	<button class="secondary px-4 py-2" onclick={logout} aria-label="Logout">
 		<svg
 			class="!fill-none"
 			xmlns="http://www.w3.org/2000/svg"

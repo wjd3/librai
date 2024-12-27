@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
-	import { quartInOut } from 'svelte/easing'
+	import { quadOut, quartInOut } from 'svelte/easing'
 	import { currentConversation, chatHistory } from '$lib/stores/index'
 	import { goto } from '$app/navigation'
 	import { PUBLIC_APP_URL } from '$env/static/public'
@@ -405,28 +405,51 @@
 									onclick={() => unshareConversation(conversation)}
 									aria-label="Unshare Conversation"
 								>
-									<svg
-										class="!fill-none"
-										xmlns="http://www.w3.org/2000/svg"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										><path
-											d="m18.84 12.25 1.72-1.71h-.02a5.004 5.004 0 0 0-.12-7.07 5.006 5.006 0 0 0-6.95 0l-1.72 1.71"
-										/><path
-											d="m5.17 11.75-1.71 1.71a5.004 5.004 0 0 0 .12 7.07 5.006 5.006 0 0 0 6.95 0l1.71-1.71"
-										/><line x1="8" x2="8" y1="2" y2="5" /><line x1="2" x2="5" y1="8" y2="8" /><line
-											x1="16"
-											x2="16"
-											y1="19"
-											y2="22"
-										/><line x1="19" x2="22" y1="16" y2="16" /></svg
-									>
+									{#if isSharing}
+										<svg
+											class="!fill-none"
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path
+												d="M21 3v5h-5"
+											/></svg
+										>
+									{:else}
+										<svg
+											class="!fill-none"
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><path
+												d="m18.84 12.25 1.72-1.71h-.02a5.004 5.004 0 0 0-.12-7.07 5.006 5.006 0 0 0-6.95 0l-1.72 1.71"
+											/><path
+												d="m5.17 11.75-1.71 1.71a5.004 5.004 0 0 0 .12 7.07 5.006 5.006 0 0 0 6.95 0l1.71-1.71"
+											/><line x1="8" x2="8" y1="2" y2="5" /><line
+												x1="2"
+												x2="5"
+												y1="8"
+												y2="8"
+											/><line x1="16" x2="16" y1="19" y2="22" /><line
+												x1="19"
+												x2="22"
+												y1="16"
+												y2="16"
+											/></svg
+										>
+									{/if}
 								</button>
 
 								<button
@@ -558,7 +581,36 @@
 					<div class="flex space-x-2">
 						<input type="text" readonly value={shareUrl} class="w-full input" />
 						<button type="submit" class="secondary px-4">
-							{copiedShareIndex === -1 ? 'Copied!' : 'Copy'}
+							{#if copiedShareIndex === -1}
+								<svg
+									class="!fill-none"
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg
+								>
+							{:else}
+								<svg
+									class="!fill-none"
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path
+										d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+									/></svg
+								>
+							{/if}
 						</button>
 					</div>
 
@@ -588,7 +640,7 @@
 	{#if showDeleteDialog}
 		<div
 			class="fixed inset-0 flex items-center justify-center z-50 !ml-0"
-			transition:fade={{ duration: 200 }}
+			transition:fade={{ duration: 200, easing: quadOut }}
 		>
 			<div
 				aria-hidden="true"
@@ -598,7 +650,8 @@
 
 			<div
 				class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative"
-				transition:fade={{ duration: 200, delay: 100 }}
+				in:fade={{ duration: 200, delay: 100, easing: quadOut }}
+				out:fade={{ duration: 200, easing: quadOut }}
 			>
 				<h2 class="text-xl mb-4">Delete Conversation</h2>
 				<p class="mb-6">

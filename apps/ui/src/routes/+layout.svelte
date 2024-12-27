@@ -133,7 +133,7 @@
 		<div class="flex items-center space-x-2 md:space-x-4">
 			{#if !$isAuthLoading && !isCheckingConversations}
 				{#if $isAuthenticated && hasConversations}
-					<a href="/conversations" class="secondary p-2" aria-label="History">
+					<a href="/conversations" class="secondary px-4 py-2" aria-label="History">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="24"
