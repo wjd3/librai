@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DOMPurify from 'dompurify'
 	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
-	import { chatHistory, currentConversation } from '$lib/stores'
+	import { chatHistory, currentConversation } from '$lib/stores/index'
 	import { authToken, isAuthenticated } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'

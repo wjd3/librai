@@ -7,10 +7,10 @@
 	import DOMPurify from 'dompurify'
 	import CopyButton from '$lib/components/CopyButton.svelte'
 	import { PUBLIC_APP_TITLE, PUBLIC_APP_URL } from '$env/static/public'
-	import type { Conversation } from '$lib/server/services/pocketbaseService'
 	import { goto } from '$app/navigation'
 	import { isAuthenticated, authToken } from '$lib/stores/auth'
-	import { currentConversation, chatHistory } from '$lib/stores'
+	import { currentConversation, chatHistory } from '$lib/stores/index'
+	import type { Conversation } from '$lib/server/services/pocketbaseService'
 
 	let conversation = $state<Conversation | null>(null)
 	let isLoading = $state(true)

@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte'
 	import { PUBLIC_THEME, PUBLIC_APP_TITLE, PUBLIC_APP_DESCRIPTION } from '$env/static/public'
 	import { defaultTheme, themes } from '$lib/constants/theme'
-	import { chatHistory } from '$lib/stores'
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
 	import Auth from '$lib/components/Auth.svelte'

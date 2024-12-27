@@ -2,7 +2,7 @@
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
 	import { PUBLIC_CHATBOT_THINKING_TEXT } from '$env/static/public'
-	import { chatHistory, currentConversation } from '$lib/stores'
+	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
@@ -27,7 +27,7 @@
 		}
 	})
 
-	async function sendMessage(message?: string) {
+	async function sendMessage(message?: string, { skipPush }: { skipPush?: boolean } = {}) {
 		isSubmitting = true
 
 		if (honeypot) {
@@ -42,7 +42,11 @@
 		}
 
 		const conversationHistory = JSON.stringify([...$chatHistory])
-		chatHistory.update((history) => [...history, { message: query, isUser: true }])
+
+		if (!skipPush) {
+			chatHistory.update((history) => [...history, { message: query, isUser: true }])
+		}
+
 		userInput = ''
 
 		await tick()
@@ -135,19 +139,17 @@
 		}
 	})
 
-	onMount(() => {
-		// Listen for start-chat event
-		const startChatHandler = () => {
-			const lastMessage = $chatHistory[$chatHistory.length - 1]
-			if (lastMessage?.isUser) {
-				;(async () => {
-					await sendMessage(lastMessage.message)
-				})()
-			}
-		}
+	$effect(() => {
+		if ($shouldStartChat && !isSubmitting) {
+			;(async () => {
+				const lastMessage = $chatHistory[$chatHistory.length - 1]
+				if (lastMessage?.isUser) {
+					await sendMessage(lastMessage.message, { skipPush: true })
+				}
 
-		window.addEventListener('start-chat', startChatHandler)
-		return () => window.removeEventListener('start-chat', startChatHandler)
+				shouldStartChat.set(false)
+			})()
+		}
 	})
 
 	onMount(() => {
@@ -202,9 +204,9 @@
 		>
 			<form
 				class="flex flex-row items-center justify-center space-x-4 w-full h-12"
-				onsubmit={(e) => {
+				onsubmit={async (e) => {
 					e.preventDefault()
-					sendMessage()
+					await sendMessage()
 				}}
 			>
 				<div
@@ -220,10 +222,10 @@
 						bind:this={promptInput}
 						bind:value={userInput}
 						class="textarea resize-none w-full h-full"
-						onkeydown={(e) => {
+						onkeydown={async (e) => {
 							if (e.key === 'Enter' && !e.shiftKey) {
 								e.preventDefault()
-								sendMessage()
+								await sendMessage()
 							}
 						}}
 					></textarea>

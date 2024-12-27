@@ -1,15 +1,8 @@
 <script lang="ts">
-	import {
-		isAuthenticated,
-		currentUser,
-		chatHistory,
-		pendingConversation,
-		isAuthLoading
-	} from '$lib/stores'
+	import { isAuthenticated, currentUser, isAuthLoading } from '$lib/stores/index'
+	import { authToken } from '$lib/stores/auth'
 	import { fade } from 'svelte/transition'
 	import DOMPurify from 'dompurify'
-	import { get } from 'svelte/store'
-	import { authToken } from '$lib/stores/auth'
 	import { goto } from '$app/navigation'
 
 	let showAuth = $state(false)

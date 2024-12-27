@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
 	import { cubicInOut } from 'svelte/easing'
-	import { currentConversation, chatHistory } from '$lib/stores'
+	import { currentConversation, chatHistory } from '$lib/stores/index'
 	import { goto } from '$app/navigation'
 	import { PUBLIC_APP_URL } from '$env/static/public'
-	import type { Conversation } from '$lib/server/services/pocketbaseService'
 	import { authToken } from '$lib/stores/auth'
 	import { preventDefault } from '$lib/utils'
+	import type { Conversation } from '$lib/server/services/pocketbaseService'
 
 	let conversations = $state<Conversation[]>([])
 	let isLoading = $state(true)

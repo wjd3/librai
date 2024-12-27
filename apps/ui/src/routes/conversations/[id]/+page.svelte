@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores'
 	import { goto } from '$app/navigation'
-	import { chatHistory, currentConversation } from '$lib/stores'
+	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken, isAuthLoading, isAuthenticated } from '$lib/stores/auth'
 	import ChatInterface from '$lib/components/ChatInterface.svelte'
 
@@ -15,9 +15,7 @@
 					const tempConversation = $currentConversation
 					if (tempConversation && tempConversation.id === $page.params.id) {
 						isLoading = false
-						// Trigger initial chat response
-						const event = new CustomEvent('start-chat')
-						window.dispatchEvent(event)
+						shouldStartChat.set(true)
 						return
 					}
 					await goto('/')
@@ -41,9 +39,7 @@
 
 						// Trigger initial chat response if this is a new conversation
 						if (conversation.messages?.length === 1 && conversation.messages[0].isUser) {
-							const event = new CustomEvent('start-chat')
-							window.dispatchEvent(event)
-							console.log('event dispatchedx')
+							shouldStartChat.set(true)
 						}
 					} catch (err) {
 						console.error('Error loading conversation:', err)

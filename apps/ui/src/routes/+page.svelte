@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import HomeChatInterface from '$lib/components/HomeChatInterface.svelte'
-	import { currentConversation, chatHistory } from '$lib/stores'
+	import { currentConversation, chatHistory } from '$lib/stores/index'
 
 	onMount(() => {
 		// Clear any existing conversation data when starting fresh
