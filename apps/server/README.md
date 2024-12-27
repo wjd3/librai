@@ -2,89 +2,80 @@
 
 ## Description
 
-This project is a Node.js application that processes documents into embeddings using the OpenAI API and stores them in a Qdrant vector database. It features a modern web interface for file uploads and provides a backend service that can be consumed by chatbot front-ends for enhanced document-based interactions.
-
-Pairs with [librai-ui](https://github.com/wjd3/librai-ui).
+A Node.js application that processes documents into embeddings using the OpenAI API and stores them in a Qdrant vector database. Features a modern web interface for file uploads and provides a backend service that can be consumed by chatbot front-ends.
 
 ## Features
 
-- Modern, responsive web interface built with Alpine.js and Tailwind CSS
+- Modern web interface with Alpine.js and Tailwind CSS
 - Drag-and-drop file upload support
 - Progress tracking for file uploads
 - Optional page range exclusion for PDF and EPUB files
 - Supports PDF, EPUB, TXT, and MD file formats
-- Extracts and processes text content from uploaded files
-- Generates embeddings using OpenAI's API
-- Stores embeddings in Qdrant for efficient retrieval
-- RESTful API endpoints for programmatic access
+- OpenAI embeddings generation
+- Qdrant vector database integration
+- RESTful API endpoints
 
 ## Installation
 
-1. Clone the repository:
+1. Clone the repository and navigate to the server directory:
 
-   ```bash
-   git clone <repository-url>
-   cd <repository-directory>
-   ```
+```bash
+cd apps/server
+```
 
 2. Install dependencies:
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
-3. Create a `.env` file in the root directory and add the following environment variables:
+3. Create a `.env` file:
 
-   ```plaintext
-   PORT=3000
-   OPENAI_API_KEY=<your-openai-api-key>
-   OPENAI_EMBEDDINGS_MODEL=<your-openai-embeddings-model>
-   QDRANT_API_URL=<your-qdrant-api-url>
-   QDRANT_API_KEY=<your-qdrant-api-key>
-   QDRANT_COLLECTION=<your-qdrant-collection-name>
-   ```
-
-## Usage
-
-1. **Build the project**:
-
-   ```bash
-   npm run build
-   ```
-
-2. **Start the server**:
-
-   ```bash
-   npm start
-   ```
-
-3. **Access the web interface**:
-   Open your browser and navigate to `http://localhost:3000`
-
-   Or use the API programmatically:
-
-   ```bash
-   curl -X POST http://localhost:3000/api/files/upload -F 'file=@/path/to/your/file.pdf'
-   ```
+```plaintext
+PORT=3000
+OPENAI_API_KEY=your_api_key
+OPENAI_EMBEDDINGS_MODEL=text-embedding-3-small
+QDRANT_API_URL=your_qdrant_url
+QDRANT_API_KEY=your_qdrant_key
+QDRANT_COLLECTION=your_collection_name
+```
 
 ## Development
 
-For development purposes, you can run the server in watch mode:
+Start the development server with hot reloading:
 
 ```bash
 npm run dev
 ```
 
-To enable hot reloading of CSS, run this command in a separate terminal:
+Build CSS separately (optional):
 
 ```bash
 npm run dev:css
 ```
 
-## Contributing
+## Production
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+Build and start the server:
+
+```bash
+npm run build
+npm start
+```
+
+## API Endpoints
+
+### File Upload
+
+```bash
+POST /api/files/upload
+Content-Type: multipart/form-data
+
+Parameters:
+- file: File (required)
+- excludePages: JSON string (optional, for PDF/EPUB)
+```
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See the LICENSE.txt file for more details.
+GNU Affero General Public License v3.0 (AGPL-3.0)

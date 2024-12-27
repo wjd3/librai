@@ -7,30 +7,25 @@ Librai is a monorepo containing a full-stack application that enables users to p
 - **librai-server**: A document processing service that handles file uploads, text extraction, and vector embeddings
 - **librai-ui**: A modern chat interface for interacting with processed documents using AI
 
-## Applications
+## Key Features
 
-### [librai-server](apps/server)
+### Document Processing (librai-server)
 
-The server application processes documents and manages the vector database:
+- Modern web interface with drag-and-drop file uploads
+- Support for PDF, EPUB, TXT, and MD files
+- Page range exclusion for PDF and EPUB files
+- OpenAI embeddings generation
+- Qdrant vector database integration
+- Progress tracking and real-time feedback
 
-- Modern web interface for file uploads with drag-and-drop support
-- Supports PDF, EPUB, TXT, and MD file formats
-- Generates embeddings using OpenAI's API
-- Stores embeddings in Qdrant vector database
-- Progress tracking for file processing
-- RESTful API endpoints
+### Chat Interface (librai-ui)
 
-### [librai-ui](apps/ui)
-
-The user interface for chatting with AI about processed documents:
-
-- Interactive AI chatbot interface
-- Authentication system with PocketBase
-- Conversation management (save, continue, delete)
-- Public sharing capabilities
+- Interactive AI chatbot with context-aware responses
+- Multiple theme support with dark mode
+- User authentication via PocketBase
+- Conversation management (save, resume, delete)
+- Public conversation sharing
 - Responsive design with Tailwind CSS
-- Dark mode and theme support
-- Configurable system prompts
 
 ## Getting Started
 
@@ -41,16 +36,14 @@ git clone https://github.com/yourusername/librai.git
 cd librai
 ```
 
-2. Install dependencies:
+2. Set up environment variables:
+   Create `.env` files in both apps/server and apps/ui directories using their respective `.env.example` files as templates.
+
+3. Install dependencies:
 
 ```bash
 npm install
 ```
-
-3. Set up environment variables:
-
-   - Copy `.env.example` to `.env` in both apps/server and apps/ui
-   - Configure the environment variables according to each app's README
 
 4. Start the development servers:
 
@@ -58,25 +51,36 @@ npm install
 npm run dev
 ```
 
-## Technology Stack
+## Environment Variables
 
-- **Backend**: Node.js, Express
-- **Frontend**: SvelteKit
-- **Authentication**: PocketBase
-- **Styling**: Tailwind CSS
-- **Vector Database**: Qdrant
-- **AI Integration**: OpenAI API
-- **Build System**: Turborepo
+### Server (.env)
 
-## Contributing
+```plaintext
+PORT=3000
+OPENAI_API_KEY=your_api_key
+OPENAI_EMBEDDINGS_MODEL=text-embedding-3-small
+QDRANT_API_URL=your_qdrant_url
+QDRANT_API_KEY=your_qdrant_key
+QDRANT_COLLECTION=your_collection_name
+```
 
-Contributions are welcome! Please read the contributing guidelines in each application's README for specific details.
+### UI (.env)
 
-## License
-
-This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See the LICENSE.txt file for more details.
+```plaintext
+PRIVATE_OPENAI_API_KEY=your_api_key
+PRIVATE_OPENAI_CHAT_MODEL=gpt-4-turbo-preview
+PRIVATE_QDRANT_ENDPOINT_URL=your_qdrant_url
+PRIVATE_QDRANT_API_KEY=your_qdrant_key
+VITE_POCKETBASE_URL=http://127.0.0.1:8090
+PUBLIC_APP_TITLE=Librai
+PUBLIC_THEME=default
+```
 
 ## Documentation
 
-- [librai-server Documentation](apps/server/README.md)
-- [librai-ui Documentation](apps/ui/README.md)
+- [Server Documentation](apps/server/README.md)
+- [UI Documentation](apps/ui/README.md)
+
+## License
+
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
