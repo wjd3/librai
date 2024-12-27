@@ -141,7 +141,7 @@
 				shouldStartChat.set(false)
 
 				const lastMessage = $chatHistory[$chatHistory.length - 1]
-				if (lastMessage?.isUser) {
+				if (lastMessage?.isUser && !$chatHistory.some((m) => !m.isUser)) {
 					await sendMessage(lastMessage.message, { skipPush: true })
 				}
 			})()

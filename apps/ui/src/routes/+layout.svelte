@@ -115,14 +115,14 @@
 		!$isVisible
 			? 'h-24 md:h-14 translate-y-0'
 			: 'h-24 md:h-20 bg-transparent border-transparent translate-y-0'
-	} ${$page.url.pathname !== '/' ? '' : '!h-fit'}`}
+	} ${$page.url.pathname !== '/' ? '' : 'max-sm:!h-fit'}`}
 >
 	<div>
 		{#if $page.url.pathname !== '/'}
 			<a
 				class="inline-block p-0 border-none"
 				href="/"
-				transition:fade={{ duration: 200, easing: quadInOut }}
+				in:fade={{ duration: 200, easing: quadInOut }}
 			>
 				<h1 class="text-xl">
 					{#if PUBLIC_APP_TITLE}

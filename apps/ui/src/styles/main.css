@@ -17,13 +17,13 @@
 body {
 	@apply bg-page-bg; /* Changed to a cleaner white */
 }
-body * {
+body *:not(svg, path) {
 	@apply font-sans text-text-color;
 }
 
 /* Section Styles */
 section {
-	@apply px-4 md:px-6 lg:px-8 pt-32 md:pt-20 lg:pt-24 pb-32;
+	@apply px-4 md:px-6 lg:px-8 pt-28 md:pt-20 lg:pt-24 pb-32;
 }
 header,
 footer {

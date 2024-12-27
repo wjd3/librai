@@ -5,6 +5,12 @@
 	import { authToken, isAuthLoading, isAuthenticated } from '$lib/stores/auth'
 	import ChatInterface from '$components/ChatInterface.svelte'
 
+	type Message = {
+		content: string
+		isUser: boolean
+		created: string
+	}
+
 	let isLoading = $state(true)
 
 	$effect(() => {
@@ -34,11 +40,19 @@
 
 						const conversation = await response.json()
 						currentConversation.set(conversation)
-						chatHistory.set(conversation.messages || [])
+						const messages =
+							conversation.messages?.map((message: Message) =>
+								message.created ? message : { ...message, created: conversation.created }
+							) || []
+						chatHistory.set(messages)
 						isLoading = false
 
-						// Trigger initial chat response if this is a new conversation
-						if (conversation.messages?.length === 1 && conversation.messages[0].isUser) {
+						// Only trigger chat if there are no AI responses yet
+						if (
+							messages.length === 1 &&
+							messages[0].isUser &&
+							!messages.some((message: Message) => !message.isUser)
+						) {
 							shouldStartChat.set(true)
 						}
 					} catch (err) {

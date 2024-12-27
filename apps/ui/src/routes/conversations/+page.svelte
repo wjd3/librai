@@ -195,10 +195,34 @@
 	}
 </script>
 
-<section class="container max-w-2xl mx-auto">
+<section class="container max-w-2xl mx-auto !pb-12">
 	<div class="flex justify-between items-center mb-6">
-		<h1 class="text-4xl">Your Conversations</h1>
-		<button class="primary px-4" onclick={newMessage}> New Message </button>
+		<h1 class="text-3xl" class:animate-pulse={isLoading}>
+			{#if isLoading}
+				Loading...
+			{:else if conversations && !conversations.length}
+				No Conversations
+			{:else}
+				Your Conversations
+			{/if}
+		</h1>
+		<button class="primary px-4" onclick={newMessage} aria-label="New Message">
+			<svg
+				class="!fill-none"
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path
+					d="M12 7v6"
+				/><path d="M9 10h6" /></svg
+			>
+		</button>
 	</div>
 
 	{#if isLoading}
@@ -227,10 +251,10 @@
 		<div class="space-y-4">
 			{#each conversations as conversation, i}
 				<div
-					class="bg-chat-bg px-4 py-2 rounded-lg group"
+					class="bg-primary-card-bg px-4 pt-2 pb-4 rounded-lg group"
 					transition:fade={{ duration: 200, easing: quartInOut }}
 				>
-					<div class="flex items-center mb-2">
+					<div class="flex items-center justify-between mb-2">
 						{#if editingTitleId === conversation.id}
 							<form
 								class="flex-1"
@@ -247,13 +271,13 @@
 							</form>
 							<div class="flex space-x-2 ml-2">
 								<button
-									class="secondary p-1"
+									class="secondary py-1"
 									disabled={isSavingTitle}
 									onclick={() => (editingTitleId = null)}
 									title="Cancel"
 									aria-label="Cancel"
 								>
-									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
 										<path
 											fill="none"
 											stroke="currentColor"
@@ -272,30 +296,59 @@
 									title="Save"
 									aria-label="Save"
 								>
-									<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
-										<path
+									{#if isSavingTitle}
+										<svg
+											class="!fill-none"
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
 											fill="none"
 											stroke="currentColor"
+											stroke-width="2"
 											stroke-linecap="round"
 											stroke-linejoin="round"
-											stroke-width="2"
-											d="M5 13l4 4L19 7"
-										/>
-									</svg>
+											><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path
+												d="M21 3v5h-5"
+											/></svg
+										>
+									{:else}
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+										>
+											<path
+												fill="none"
+												stroke="currentColor"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									{/if}
 								</button>
 							</div>
 						{:else}
 							<div class="min-h-[48px] flex items-center">
-								<h2 class="text-xl flex-1">{conversation.title}</h2>
+								<h2 class="text-xl flex-1 truncate w-[310px]">{conversation.title}</h2>
 							</div>
 
 							<button
-								class="secondary p-1 ml-2"
+								class="secondary px-2 py-1 ml-4"
 								onclick={() => startEditing(conversation)}
 								title="Edit title"
 								aria-label="Edit title"
 							>
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+								<svg
+									class="!fill-none"
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+								>
 									<path
 										fill="none"
 										stroke="currentColor"
@@ -328,7 +381,7 @@
 							onclick={() => confirmDelete(conversation.id)}
 						>
 							<svg
-								class="w-4 h-4"
+								class="stroke-btn-text text-btn-text"
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -350,8 +403,30 @@
 									disabled={isSharing}
 									class="secondary px-4"
 									onclick={() => unshareConversation(conversation)}
+									aria-label="Unshare Conversation"
 								>
-									Unshare
+									<svg
+										class="!fill-none"
+										xmlns="http://www.w3.org/2000/svg"
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										><path
+											d="m18.84 12.25 1.72-1.71h-.02a5.004 5.004 0 0 0-.12-7.07 5.006 5.006 0 0 0-6.95 0l-1.72 1.71"
+										/><path
+											d="m5.17 11.75-1.71 1.71a5.004 5.004 0 0 0 .12 7.07 5.006 5.006 0 0 0 6.95 0l1.71-1.71"
+										/><line x1="8" x2="8" y1="2" y2="5" /><line x1="2" x2="5" y1="8" y2="8" /><line
+											x1="16"
+											x2="16"
+											y1="19"
+											y2="22"
+										/><line x1="19" x2="22" y1="16" y2="16" /></svg
+									>
 								</button>
 
 								<button
@@ -359,7 +434,36 @@
 									onclick={() =>
 										conversation.shareId && copyShareUrl(getShareUrl(conversation.shareId), i)}
 								>
-									{copiedShareIndex === i ? 'Copied!' : 'Copy Link'}
+									{#if copiedShareIndex === i}
+										<svg
+											class="!fill-none"
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg
+										>
+									{:else}
+										<svg
+											class="!fill-none"
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path
+												d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+											/></svg
+										>
+									{/if}
 								</button>
 							{:else}
 								<button
@@ -367,12 +471,64 @@
 									class="secondary px-4"
 									onclick={() => shareConversation(conversation, i)}
 								>
-									{isSharing && isSharingIndex === i ? 'Sharing...' : 'Share'}
+									{#if isSharing && isSharingIndex === i}
+										<svg
+											class="!fill-none"
+											class:animate-spin={isSharing && isSharingIndex === i}
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										>
+											<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path
+												d="M21 3v5h-5"
+											/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path
+												d="M8 16H3v5"
+											/></svg
+										>
+									{:else}
+										<svg
+											class="!fill-none"
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path
+												d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+											/></svg
+										>
+									{/if}
 								</button>
 							{/if}
 
-							<button class="primary px-4" onclick={() => loadConversation(conversation)}>
-								Continue
+							<button
+								aria-label="Continue Conversation"
+								class="primary px-4"
+								onclick={() => loadConversation(conversation)}
+							>
+								<svg
+									class="!fill-none"
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									><line x1="6" x2="6" y1="4" y2="20" /><polygon points="10,4 20,12 10,20" /></svg
+								>
 							</button>
 						</div>
 					</div>
