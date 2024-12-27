@@ -111,60 +111,52 @@
 ></div>
 
 <header
-	class={`fixed flex flex-col md:flex-row md:items-center md:justify-between justify-between top-0 left-0 w-screen bg-chat-bar-bg border-b border-form-border transition-[height,transform,background-color,border-color] duration-200 ease-out will-change-transform z-50 px-8 py-2 ${
-		!$isVisible
-			? 'h-24 md:h-14 translate-y-0'
-			: 'h-24 md:h-20 bg-transparent border-transparent translate-y-0'
-	} ${$page.url.pathname !== '/' ? '' : 'max-sm:!h-fit'}`}
+	class={`fixed top-0 left-0 w-screen bg-chat-bar-bg border-b border-form-border transition-colors duration-200 ease-out will-change-transform z-50 h-16 ${
+		$isVisible ? 'bg-transparent border-transparent' : ''
+	}`}
 >
-	<div>
-		{#if $page.url.pathname !== '/'}
-			<a
-				class="inline-block p-0 border-none"
-				href="/"
-				in:fade={{ duration: 200, easing: quadInOut }}
-			>
-				<h1 class="text-xl">
-					{#if PUBLIC_APP_TITLE}
-						{PUBLIC_APP_TITLE}
-					{:else}
-						Librai UI
-					{/if}
-				</h1>
-			</a>
-		{/if}
-	</div>
-
-	<div
-		class={`flex items-center max-md:justify-end space-x-4 transition-[height] duration-200 ease-in-out ${
-			$page.url.pathname !== '/' ? 'h-11' : 'h-[61px]'
-		}`}
-	>
-		{#if !$isAuthLoading && !isCheckingConversations}
-			{#if $isAuthenticated && hasConversations}
-				<a href="/conversations" class="secondary px-4" aria-label="History">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="!fill-none"
-						><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path
-							d="M3 3v5h5"
-						/><path d="M12 7v5l4 2" /></svg
-					>
+	<div class="px-4 md:px-8 h-full flex items-center justify-between">
+		<div class="flex-shrink-0">
+			{#if $page.url.pathname !== '/'}
+				<a
+					class="inline-block p-0 border-none"
+					href="/"
+					in:fade={{ duration: 200, easing: quadInOut }}
+				>
+					<h1 class="text-xl">
+						{PUBLIC_APP_TITLE || 'Librai UI'}
+					</h1>
 				</a>
 			{/if}
+		</div>
 
-			<Auth />
-		{/if}
+		<div class="flex items-center space-x-2 md:space-x-4">
+			{#if !$isAuthLoading && !isCheckingConversations}
+				{#if $isAuthenticated && hasConversations}
+					<a href="/conversations" class="secondary p-2" aria-label="History">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="!fill-none"
+							><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path
+								d="M3 3v5h5"
+							/><path d="M12 7v5l4 2" /></svg
+						>
+					</a>
+				{/if}
 
-		<DarkModeToggle {isDarkMode} {toggleDarkMode} />
+				<Auth />
+			{/if}
+
+			<DarkModeToggle {isDarkMode} {toggleDarkMode} />
+		</div>
 	</div>
 </header>
 
