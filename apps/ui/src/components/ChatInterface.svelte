@@ -6,10 +6,12 @@
 	import { authToken } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
-	import { cubicInOut, cubicOut } from 'svelte/easing'
+	import { quartInOut, quartOut } from 'svelte/easing'
 	import { tick } from 'svelte'
 	import CopyButton from './CopyButton.svelte'
 	import { goto } from '$app/navigation'
+
+	onMount(() => promptInput?.focus())
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
 	let isDisabled = $state(true)
@@ -133,31 +135,24 @@
 		isAtBottom = document.body.scrollHeight - window.scrollY <= window.innerHeight
 	}
 
-	onMount(() => {
-		if (promptInput) {
-			promptInput.focus()
-		}
-	})
-
 	$effect(() => {
 		if ($shouldStartChat && !isSubmitting) {
 			;(async () => {
+				shouldStartChat.set(false)
+
 				const lastMessage = $chatHistory[$chatHistory.length - 1]
-				if (lastMessage?.isUser) {
+				if (lastMessage?.isUser && !$chatHistory.some((m) => !m.isUser)) {
 					await sendMessage(lastMessage.message, { skipPush: true })
 				}
-
-				shouldStartChat.set(false)
 			})()
 		}
 	})
 
 	onMount(() => {
-		window.addEventListener('scroll', checkScroll)
 		checkScroll()
-		return () => {
-			window.removeEventListener('scroll', checkScroll)
-		}
+
+		window.addEventListener('scroll', checkScroll)
+		return () => window.removeEventListener('scroll', checkScroll)
 	})
 </script>
 
@@ -165,10 +160,10 @@
 	<div class="container flex flex-col justify-center items-center">
 		<!-- Chat History -->
 		{#if $chatHistory.length > 0}
-			<div class="chat-history" in:fade={{ duration: 500, easing: cubicInOut }}>
+			<div class="chat-history" in:fade={{ duration: 400, easing: quartInOut }}>
 				<div class="flex flex-col space-y-6">
 					{#each $chatHistory as { message, isUser }, i}
-						<div class={`chat-message ${isUser ? 'is-user' : ''}`}>
+						<div class="chat-message" class:is-user={isUser}>
 							{#if isUser}
 								<h2 class="sr-only">You said:</h2>
 							{:else}
@@ -247,7 +242,9 @@
 				<button
 					disabled={isDisabled}
 					type="submit"
-					class={`primary w-16 h-full flex items-center justify-center ${$chatHistory.length > 0 ? '' : 'self-end'} ${isSubmitting ? 'animate-pulse' : ''}`}
+					class="primary w-16 h-full flex items-center justify-center"
+					class:self-end={!$chatHistory.length}
+					class:animate-pulse={isSubmitting}
 				>
 					{#if isSubmitting}
 						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256">
@@ -266,16 +263,16 @@
 			{/if}
 		</div>
 
-		{#if !isAtBottom && $chatHistory.length > 0}
+		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat}
 			<button
 				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2 bottom-32"
-				in:fade={{ duration: 250, easing: cubicOut }}
-				out:fade={{ duration: 250, easing: cubicOut }}
+				in:fade={{ duration: 200, easing: quartOut }}
+				out:fade={{ duration: 200, easing: quartOut }}
 				onclick={scrollToBottom}
 				aria-label="Scroll to bottom"
 			>
 				<svg
-					class="fill-text-color stroke-text-color w-5 h-5"
+					class="fill-btn-text stroke-btn-text w-5 h-5"
 					xmlns="http://www.w3.org/2000/svg"
 					width="1em"
 					height="1em"

@@ -1,2 +1,2 @@
-export const themes = ['simple', 'leaf', 'blush', 'glow', 'ocean']
-export const defaultTheme = themes[0]
+export const themes = ['charcoal', 'leaf', 'sunset', 'volcano', 'ocean'] as const
+export type Theme = (typeof themes)[number]

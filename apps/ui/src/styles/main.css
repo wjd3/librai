@@ -17,13 +17,13 @@
 body {
 	@apply bg-page-bg; /* Changed to a cleaner white */
 }
-body * {
+body *:not(svg, path) {
 	@apply font-sans text-text-color;
 }
 
 /* Section Styles */
 section {
-	@apply px-4 md:px-6 lg:px-8 pt-20 md:pt-20 lg:pt-24 pb-32;
+	@apply px-4 md:px-6 lg:px-8 pt-28 md:pt-20 lg:pt-24 pb-32;
 }
 header,
 footer {
@@ -46,12 +46,22 @@ a {
 	@apply text-text-color px-4 py-2 rounded-lg border transition duration-200;
 }
 button.primary,
-a.primary {
-	@apply bg-btn-bg;
-}
+a.primary,
 button.secondary,
 a.secondary {
-	@apply bg-btn-bg;
+	@apply bg-btn-bg transition-colors duration-200 text-btn-text;
+}
+button.primary svg,
+a.primary svg,
+button.secondary svg,
+a.secondary svg {
+	@apply fill-btn-text stroke-btn-text;
+}
+button.primary:not(:disabled):hover,
+a.primary:not(:disabled):hover,
+button.secondary:not(:disabled):hover,
+a.secondary:not(:disabled):hover {
+	@apply bg-btn-hover-bg;
 }
 button:disabled,
 a:disabled {
@@ -68,22 +78,22 @@ h6 {
 	@apply text-text-color;
 }
 h1 {
-	@apply text-4xl md:text-5xl lg:text-6xl;
+	@apply text-5xl lg:text-6xl;
 }
 h2 {
-	@apply text-3xl md:text-4xl lg:text-5xl;
+	@apply text-4xl lg:text-5xl;
 }
 h3 {
-	@apply text-2xl md:text-3xl lg:text-4xl;
+	@apply text-3xl lg:text-4xl;
 }
 h4 {
-	@apply text-xl md:text-2xl lg:text-3xl;
+	@apply text-2xl lg:text-3xl;
 }
 h5 {
-	@apply text-lg md:text-xl lg:text-2xl;
+	@apply text-xl lg:text-2xl;
 }
 h6 {
-	@apply text-base md:text-lg lg:text-xl;
+	@apply text-lg lg:text-xl;
 }
 
 /* Text Styles */

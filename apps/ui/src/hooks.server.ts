@@ -1,6 +1,6 @@
-import type { Handle } from '@sveltejs/kit'
 import { pb } from '$lib/server/pocketbase'
-import { defaultTheme } from '$lib/constants/theme'
+import { themes } from '$lib/constants/theme'
+import type { Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const authHeader = event.request.headers.get('Authorization')
@@ -27,7 +27,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	const response = await resolve(event, {
 		transformPageChunk: ({ html }) => {
-			return html.replace('%DATA_THEME%', process.env.PUBLIC_THEME || defaultTheme)
+			return html.replace('%DATA_THEME%', process.env.PUBLIC_THEME || themes[0])
 		}
 	})
 

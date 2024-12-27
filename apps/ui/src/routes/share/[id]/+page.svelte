@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
-	import { cubicInOut } from 'svelte/easing'
+	import { quartInOut } from 'svelte/easing'
 	import { page } from '$app/stores'
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
-	import CopyButton from '$lib/components/CopyButton.svelte'
+	import CopyButton from '$components/CopyButton.svelte'
 	import { PUBLIC_APP_TITLE, PUBLIC_APP_URL } from '$env/static/public'
 	import { goto } from '$app/navigation'
 	import { isAuthenticated, authToken } from '$lib/stores/auth'
@@ -91,10 +91,6 @@
 		isLoading = false
 	})
 
-	async function newMessage() {
-		await goto('/')
-	}
-
 	async function forkConversation() {
 		if (!conversation) return
 
@@ -169,28 +165,52 @@
 	<meta name="twitter:image" content="" />
 </svelte:head>
 
-<section class="container max-w-2xl mx-auto">
+<section class="container max-w-2xl mx-auto !pb-16">
 	<div class="flex justify-between items-center mb-6">
-		<h1 class="text-4xl">Shared Conversation</h1>
+		<h1 class={`text-3xl ${isLoading ? 'animate-pulse' : ''}`}>
+			{#if isLoading}
+				Loading Conversation...
+			{:else if conversation}
+				{conversation.title}
+			{/if}
+		</h1>
 		<button disabled={isLoading} class="primary px-4" onclick={forkConversation}>
 			Continue Chat
 		</button>
 	</div>
 
 	{#if isLoading}
-		<p>Loading shared conversation...</p>
+		<svg
+			class="w-6 h-6 animate-spin mx-auto mt-8"
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" fill="transparent" /><path
+				d="M21 3v5h-5"
+			/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" fill="transparent" /><path
+				d="M8 16H3v5"
+			/>
+			<path d="M8 16H3v5" />
+		</svg>
 	{:else if error}
 		<div class="bg-red-500/10 p-4 rounded-lg">
 			<p class="text-red-500">{error}</p>
 		</div>
 	{:else if conversation}
 		<div class="space-y-6">
-			<h1 class="text-2xl">{conversation.title}</h1>
 			<div class="space-y-6 flex flex-col">
 				{#each conversation.messages as message, i}
 					<div
-						class={`chat-message ${message.isUser ? 'is-user' : ''}`}
-						transition:fade={{ duration: 200, easing: cubicInOut }}
+						class="chat-message"
+						class:is-user={message.isUser}
+						transition:fade={{ duration: 200, easing: quartInOut }}
 					>
 						{#if message.isUser}
 							<h2 class="sr-only">User said:</h2>

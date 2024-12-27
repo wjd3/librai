@@ -1,19 +1,20 @@
 <script lang="ts">
 	import '$styles/main.css'
+	import { createScrollSpy } from '$lib/scroll'
 	import { onMount } from 'svelte'
 	import { PUBLIC_THEME, PUBLIC_APP_TITLE, PUBLIC_APP_DESCRIPTION } from '$env/static/public'
-	import { defaultTheme, themes } from '$lib/constants/theme'
+	import { themes, type Theme } from '$lib/constants/theme'
 	import { fade } from 'svelte/transition'
-	import { cubicInOut } from 'svelte/easing'
-	import Auth from '$lib/components/Auth.svelte'
-	import DarkModeToggle from '$lib/components/DarkModeToggle.svelte'
+	import { quadInOut } from 'svelte/easing'
+	import Auth from '$components/Auth.svelte'
+	import DarkModeToggle from '$components/DarkModeToggle.svelte'
 	import { page } from '$app/stores'
 	import { authToken, currentUser, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
 
 	let { children } = $props()
 
 	// Themes
-	const theme = themes.includes(PUBLIC_THEME) ? PUBLIC_THEME : defaultTheme
+	const theme = themes.includes(PUBLIC_THEME as Theme) ? PUBLIC_THEME : themes[0]
 	const setTheme = () => {
 		document.documentElement.setAttribute('data-theme', theme)
 	}
@@ -86,6 +87,12 @@
 		isDarkMode = !isDarkMode
 		setIsDarkMode()
 	}
+
+	const sectionIds = ['scroll-spy']
+	const { isVisible } = createScrollSpy({
+		sections: sectionIds,
+		offset: 64
+	})
 </script>
 
 <svelte:head>
@@ -97,30 +104,52 @@
 	/>
 </svelte:head>
 
-<header>
-	<div class="container relative">
-		<div
-			class="hidden md:block fixed top-6 md:top-8 lg:top-10 xl:top-12 left-8 md:left-12 lg:left-16 xl:left-24 z-50"
-		>
+<div
+	id="scroll-spy"
+	aria-hidden="true"
+	class="absolute top-0 left-0 right-0 w-0 h-16 bg-transparent z-[-1]"
+></div>
+
+<header
+	class={`fixed top-0 left-0 w-screen bg-chat-bar-bg border-b border-form-border transition-colors duration-200 ease-out will-change-transform z-50 h-16 ${
+		$isVisible ? 'bg-transparent border-transparent' : ''
+	}`}
+>
+	<div class="px-4 md:px-8 h-full flex items-center justify-between">
+		<div class="flex-shrink-0">
 			{#if $page.url.pathname !== '/'}
-				<a class="inline-block p-0 border-none" href="/">
-					<h1 class="text-xl" in:fade={{ duration: 500, easing: cubicInOut }}>
-						{#if PUBLIC_APP_TITLE}
-							{PUBLIC_APP_TITLE}
-						{:else}
-							Librai UI
-						{/if}
+				<a
+					class="inline-block p-0 border-none"
+					href="/"
+					in:fade={{ duration: 200, easing: quadInOut }}
+				>
+					<h1 class="text-xl">
+						{PUBLIC_APP_TITLE || 'Librai UI'}
 					</h1>
 				</a>
 			{/if}
 		</div>
 
-		<div
-			class="fixed z-50 top-6 md:top-8 lg:top-10 xl:top-12 right-8 md:right-12 lg:right-16 xl:right-24 flex items-center space-x-4"
-		>
+		<div class="flex items-center space-x-2 md:space-x-4">
 			{#if !$isAuthLoading && !isCheckingConversations}
 				{#if $isAuthenticated && hasConversations}
-					<a href="/conversations" class="secondary px-4"> History </a>
+					<a href="/conversations" class="secondary px-4 py-2" aria-label="History">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="!fill-none"
+							><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path
+								d="M3 3v5h5"
+							/><path d="M12 7v5l4 2" /></svg
+						>
+					</a>
 				{/if}
 
 				<Auth />
@@ -131,6 +160,6 @@
 	</div>
 </header>
 
-<main>
+<main class="relative z-40">
 	{@render children()}
 </main>

@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition'
 	import DOMPurify from 'dompurify'
 	import { goto } from '$app/navigation'
+	import { quartInOut } from 'svelte/easing'
 
 	let showAuth = $state(false)
 	let isRegistering = $state(false)
@@ -127,7 +128,23 @@
 </script>
 
 {#if $isAuthenticated}
-	<button class="secondary px-4" onclick={logout}> Logout </button>
+	<button class="secondary px-4 py-2" onclick={logout} aria-label="Logout">
+		<svg
+			class="!fill-none"
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline
+				points="16 17 21 12 16 7"
+			/><line x1="21" x2="9" y1="12" y2="12" /></svg
+		>
+	</button>
 {:else}
 	<button
 		class="secondary px-4"
@@ -154,7 +171,7 @@
 {#if showAuth}
 	<div
 		class="fixed inset-0 flex items-center justify-center z-50 !ml-0"
-		transition:fade={{ duration: 200 }}
+		transition:fade={{ duration: 200, easing: quartInOut }}
 	>
 		<div
 			aria-hidden="true"
@@ -164,7 +181,7 @@
 
 		<div
 			class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative z-10"
-			transition:fade={{ duration: 200, delay: 100 }}
+			transition:fade={{ duration: 200, delay: 100, easing: quartInOut }}
 		>
 			<h2 class="text-xl mb-4">{isRegistering ? 'Sign Up' : 'Login'}</h2>
 
@@ -251,7 +268,7 @@
 						Cancel
 					</button>
 					<button type="submit" class="primary" disabled={$isAuthLoading}>
-						{$isAuthLoading ? 'Loading...' : isRegistering ? 'Sign Up' : 'Login'}
+						{$isAuthLoading ? 'Hang tight...' : isRegistering ? 'Sign Up' : 'Login'}
 					</button>
 				</div>
 
