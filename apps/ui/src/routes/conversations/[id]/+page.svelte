@@ -11,6 +11,12 @@
 		;(async () => {
 			if (isLoading && !$isAuthLoading) {
 				if (!$isAuthenticated) {
+					// For non-logged in users, check if we have a temporary conversation
+					const tempConversation = $currentConversation
+					if (tempConversation && tempConversation.id === $page.params.id) {
+						isLoading = false
+						return
+					}
 					await goto('/')
 				} else {
 					try {
@@ -28,7 +34,7 @@
 
 						const conversation = await response.json()
 						currentConversation.set(conversation)
-						chatHistory.set(conversation.messages)
+						chatHistory.set(conversation.messages || [])
 					} catch (err) {
 						console.error('Error loading conversation:', err)
 						await goto('/')

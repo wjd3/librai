@@ -9,6 +9,8 @@
 	import { PUBLIC_APP_TITLE, PUBLIC_APP_URL } from '$env/static/public'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
 	import { goto } from '$app/navigation'
+	import { isAuthenticated, authToken } from '$lib/stores/auth'
+	import { currentConversation, chatHistory } from '$lib/stores'
 
 	let conversation = $state<Conversation | null>(null)
 	let isLoading = $state(true)
@@ -92,6 +94,65 @@
 	async function newMessage() {
 		await goto('/')
 	}
+
+	async function forkConversation() {
+		if (!conversation) return
+
+		if ($isAuthenticated) {
+			// Check if this is the user's own conversation
+			try {
+				const response = await fetch(`/api/conversations/${conversation.id}`, {
+					headers: {
+						Authorization: `Bearer ${$authToken}`
+					}
+				})
+
+				if (response.ok) {
+					// User owns this conversation, redirect to continue it
+					await goto(`/conversations/${conversation.id}`)
+					return
+				}
+			} catch (error) {
+				console.error('Error checking conversation ownership:', error)
+			}
+
+			// User is logged in but doesn't own the conversation - create a new one
+			try {
+				const response = await fetch('/api/conversations', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${$authToken}`
+					},
+					body: JSON.stringify({
+						title: conversation.title,
+						messages: conversation.messages
+					})
+				})
+
+				if (response.ok) {
+					const result = await response.json()
+					await goto(`/conversations/${result.id}`)
+				}
+			} catch (error) {
+				console.error('Error forking conversation:', error)
+			}
+		} else {
+			// For non-logged-in users, create a temporary conversation
+			const tempId = crypto.randomUUID()
+			currentConversation.set({
+				id: tempId,
+				title: conversation.title,
+				messages: conversation.messages,
+				created: new Date().toISOString(),
+				updated: new Date().toISOString(),
+				isPublic: false,
+				shareId: null
+			})
+			chatHistory.set(conversation.messages)
+			await goto(`/conversations/${tempId}`)
+		}
+	}
 </script>
 
 <svelte:head>
@@ -110,7 +171,9 @@
 <section class="container max-w-2xl mx-auto">
 	<div class="flex justify-between items-center mb-6">
 		<h1 class="text-4xl">Shared Conversation</h1>
-		<button class="primary px-4" onclick={newMessage}> New Message </button>
+		<button disabled={isLoading} class="primary px-4" onclick={forkConversation}>
+			Continue Chat
+		</button>
 	</div>
 
 	{#if isLoading}
