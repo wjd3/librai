@@ -15,6 +15,9 @@
 					const tempConversation = $currentConversation
 					if (tempConversation && tempConversation.id === $page.params.id) {
 						isLoading = false
+						// Trigger initial chat response
+						const event = new CustomEvent('start-chat')
+						window.dispatchEvent(event)
 						return
 					}
 					await goto('/')
@@ -27,7 +30,6 @@
 						})
 
 						if (!response.ok) {
-							// Conversation not found or user doesn't have access
 							await goto('/')
 							return
 						}
@@ -35,12 +37,18 @@
 						const conversation = await response.json()
 						currentConversation.set(conversation)
 						chatHistory.set(conversation.messages || [])
+						isLoading = false
+
+						// Trigger initial chat response if this is a new conversation
+						if (conversation.messages?.length === 1 && conversation.messages[0].isUser) {
+							const event = new CustomEvent('start-chat')
+							window.dispatchEvent(event)
+							console.log('event dispatchedx')
+						}
 					} catch (err) {
 						console.error('Error loading conversation:', err)
 						await goto('/')
 						return
-					} finally {
-						isLoading = false
 					}
 				}
 			}
@@ -49,7 +57,7 @@
 </script>
 
 {#if isLoading}
-	<div class="flex justify-center items-center min-h-screen">
+	<div class="flex justify-center items-center min-h-[100lvh]">
 		<p>Loading conversation...</p>
 	</div>
 {:else}

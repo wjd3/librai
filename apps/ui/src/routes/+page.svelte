@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import ChatInterface from '$lib/components/ChatInterface.svelte'
+	import HomeChatInterface from '$lib/components/HomeChatInterface.svelte'
 	import { currentConversation, chatHistory } from '$lib/stores'
 
 	onMount(() => {
@@ -10,4 +10,4 @@
 	})
 </script>
 
-<ChatInterface />
+<HomeChatInterface />

@@ -147,7 +147,8 @@
 				created: new Date().toISOString(),
 				updated: new Date().toISOString(),
 				isPublic: false,
-				shareId: null
+				shareId: undefined,
+				user: ''
 			})
 			chatHistory.set(conversation.messages)
 			await goto(`/conversations/${tempId}`)
