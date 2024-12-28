@@ -147,30 +147,64 @@
 	</button>
 {:else}
 	<button
-		class="secondary px-4"
-		onclick={() => {
-			showAuth = true
-			isRegistering = false
-			resetForm()
-		}}
-	>
-		Login
-	</button>
-	<button
 		class="primary px-4"
 		onclick={() => {
 			showAuth = true
 			isRegistering = true
 			resetForm()
 		}}
+		aria-label="Sign Up"
 	>
-		Sign Up
+		<svg
+			class="!fill-none"
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><line
+				x1="19"
+				x2="19"
+				y1="8"
+				y2="14"
+			/><line x1="22" x2="16" y1="11" y2="11" /></svg
+		>
+	</button>
+
+	<button
+		class="secondary px-4"
+		onclick={() => {
+			showAuth = true
+			isRegistering = false
+			resetForm()
+		}}
+		aria-label="Login"
+	>
+		<svg
+			class="!fill-none"
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline
+				points="10 17 15 12 10 7"
+			/><line x1="15" x2="3" y1="12" y2="12" /></svg
+		>
 	</button>
 {/if}
 
 {#if showAuth}
 	<div
-		class="fixed inset-0 flex items-center justify-center z-50 !ml-0"
+		class="fixed inset-0 flex items-center justify-center z-50 !ml-0 h-[100lvh]"
 		transition:fade={{ duration: 200, easing: quartInOut }}
 	>
 		<div
@@ -181,7 +215,7 @@
 
 		<div
 			class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative z-10"
-			transition:fade={{ duration: 200, delay: 100, easing: quartInOut }}
+			transition:fade={{ duration: 200, easing: quartInOut }}
 		>
 			<h2 class="text-xl mb-4">{isRegistering ? 'Sign Up' : 'Login'}</h2>
 

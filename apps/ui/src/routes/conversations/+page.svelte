@@ -563,7 +563,7 @@
 	{#if showShareDialog}
 		<div
 			class="fixed inset-0 flex items-center justify-center z-50 !ml-0"
-			transition:fade={{ duration: 200 }}
+			transition:fade={{ duration: 200, easing: quartInOut }}
 		>
 			<div
 				aria-hidden="true"
@@ -573,7 +573,7 @@
 
 			<div
 				class="bg-page-bg p-6 rounded-lg max-w-[34rem] w-full mx-4 relative"
-				transition:fade={{ duration: 200, delay: 100 }}
+				transition:fade={{ duration: 200, easing: quartInOut }}
 			>
 				<h2 class="text-xl mb-4">Share Conversation</h2>
 
@@ -650,7 +650,7 @@
 
 			<div
 				class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative"
-				in:fade={{ duration: 200, delay: 100, easing: quadOut }}
+				in:fade={{ duration: 200, easing: quadOut }}
 				out:fade={{ duration: 200, easing: quadOut }}
 			>
 				<h2 class="text-xl mb-4">Delete Conversation</h2>

@@ -5,7 +5,7 @@
 	import { PUBLIC_THEME, PUBLIC_APP_TITLE, PUBLIC_APP_DESCRIPTION } from '$env/static/public'
 	import { themes, type Theme } from '$lib/constants/theme'
 	import { fade } from 'svelte/transition'
-	import { quadInOut } from 'svelte/easing'
+	import { quadInOut, quartInOut } from 'svelte/easing'
 	import Auth from '$components/Auth.svelte'
 	import DarkModeToggle from '$components/DarkModeToggle.svelte'
 	import { page } from '$app/stores'
