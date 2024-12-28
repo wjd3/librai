@@ -306,8 +306,8 @@
 {#if typeof remainingMessages === 'number'}
 	<p class="text-xs text-center opacity-70">
 		{remainingMessages} message{remainingMessages === 1 ? '' : 's'} remaining
-		{#if remainingMessages < 5}
-			(resets at {rateLimitResetAt?.toLocaleTimeString()})
+		{#if rateLimitResetAt}
+			(resets at {new Date(rateLimitResetAt).toLocaleTimeString()})
 		{/if}
 	</p>
 {/if}

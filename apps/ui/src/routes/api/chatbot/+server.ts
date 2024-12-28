@@ -25,8 +25,11 @@ async function summarizeConversation(history: Array<ChatCompletionMessageParam>)
 
 export const POST = async ({ request, locals, getClientAddress }) => {
 	const { query, history, conversationId } = await request.json()
+
+	// Get user ID or IP address for rate limiting
+	const clientIp = getClientAddress()
 	const userId = locals.user?.id
-	const identifier = userId || getClientAddress()
+	const identifier = userId || clientIp
 
 	// Check rate limit
 	const rateLimit = await RateLimitService.checkRateLimit(identifier, !!userId)
