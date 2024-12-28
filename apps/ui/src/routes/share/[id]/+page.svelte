@@ -206,18 +206,18 @@
 	{:else if conversation}
 		<div class="space-y-6">
 			<div class="space-y-6 flex flex-col">
-				{#each conversation.messages as message, i}
+				{#each conversation.messages as { message, isUser }, i}
 					<div
 						class="chat-message"
-						class:is-user={message.isUser}
+						class:is-user={isUser}
 						transition:fade={{ duration: 200, easing: quartInOut }}
 					>
-						{#if message.isUser}
+						{#if isUser}
 							<h2 class="sr-only">User said:</h2>
-							<p>{DOMPurify.sanitize(message.message)}</p>
+							<p>{DOMPurify.sanitize(message)}</p>
 						{:else}
 							<h2 class="sr-only">AI said:</h2>
-							{@html marked.parse(DOMPurify.sanitize(message.message))}
+							{@html marked.parse(DOMPurify.sanitize(message), { async: false })}
 							<CopyButton {message} messageIndex={i} />
 						{/if}
 					</div>

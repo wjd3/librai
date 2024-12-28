@@ -10,7 +10,7 @@ import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
 async function summarizeConversation(history: Array<ChatCompletionMessageParam>) {
 	if (history.length <= 10) return null
 
-	const summaryMessages = [
+	const summaryMessages: Array<ChatCompletionMessageParam> = [
 		{
 			role: 'system',
 			content:
@@ -121,25 +121,14 @@ Please answer the query above, taking into account both the provided context and
 			[]
 		)
 
-		// Add a summary of older messages if needed
-		if (JSON.parse(history || '[]').length > 10) {
-			const summary = await summarizeConversation(conversationHistory)
-			if (summary) {
-				messages.unshift({
-					role: 'system',
-					content: `Previous conversation summary: ${summary}`
-				})
-			}
-		}
-
 		// Add this before constructing the messages array
 		const systemPrompt = `${PRIVATE_SYSTEM_PROMPT || ''}
 
-You are participating in an ongoing conversation. Please:
-1. Maintain context from previous messages
-2. Reference previous parts of the conversation when relevant
-3. If you're unsure about something mentioned earlier, ask for clarification
-4. Use the provided context documents only when they're relevant to the current query`
+			You are participating in an ongoing conversation. Please:
+			1. Maintain context from previous messages
+			2. Reference previous parts of the conversation when relevant
+			3. If you're unsure about something mentioned earlier, ask for clarification
+			4. Use the provided context documents only when they're relevant to the current query`
 
 		// Construct message array for OpenAI
 		const messages: Array<ChatCompletionMessageParam> = [
@@ -147,6 +136,18 @@ You are participating in an ongoing conversation. Please:
 			...conversationHistory,
 			{ role: 'user', content: queryWithContext }
 		]
+
+		// Add a summary of older messages if needed
+		if (JSON.parse(history || '[]').length > 10) {
+			const summary = await summarizeConversation(conversationHistory)
+
+			if (summary) {
+				messages.unshift({
+					role: 'system',
+					content: `Previous conversation summary: ${summary}`
+				})
+			}
+		}
 
 		// Set up streaming response
 		const stream = new ReadableStream({

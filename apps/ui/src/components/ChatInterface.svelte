@@ -184,8 +184,8 @@
 
 							{#if isUser}
 								<p>{DOMPurify.sanitize(message)}</p>
-							{:else if typeof window != 'undefined'}
-								{@html marked.parse(DOMPurify.sanitize(message))}
+							{:else}
+								{@html marked.parse(DOMPurify.sanitize(message), { async: false })}
 							{/if}
 
 							{#if !isUser && !(isSubmitting && $chatHistory.length - 1 === i)}

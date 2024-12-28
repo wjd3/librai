@@ -5,7 +5,7 @@
 	import { PUBLIC_THEME, PUBLIC_APP_TITLE, PUBLIC_APP_DESCRIPTION } from '$env/static/public'
 	import { themes, type Theme } from '$lib/constants/theme'
 	import { fade } from 'svelte/transition'
-	import { quadInOut, quartInOut } from 'svelte/easing'
+	import { quartInOut } from 'svelte/easing'
 	import Auth from '$components/Auth.svelte'
 	import DarkModeToggle from '$components/DarkModeToggle.svelte'
 	import { page } from '$app/stores'
@@ -121,7 +121,7 @@
 				<a
 					class="inline-block p-0 border-none"
 					href="/"
-					in:fade={{ duration: 200, easing: quadInOut }}
+					in:fade={{ duration: 200, easing: quartInOut }}
 				>
 					<h1 class="text-xl">
 						{PUBLIC_APP_TITLE || 'Librai UI'}

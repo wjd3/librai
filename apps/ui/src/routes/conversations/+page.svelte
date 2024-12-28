@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
-	import { quadOut, quartInOut } from 'svelte/easing'
+	import { quartOut, quartInOut } from 'svelte/easing'
 	import { currentConversation, chatHistory } from '$lib/stores/index'
 	import { goto } from '$app/navigation'
 	import { PUBLIC_APP_URL } from '$env/static/public'
@@ -640,7 +640,7 @@
 	{#if showDeleteDialog}
 		<div
 			class="fixed inset-0 flex items-center justify-center z-50 !ml-0"
-			transition:fade={{ duration: 200, easing: quadOut }}
+			transition:fade={{ duration: 200, easing: quartOut }}
 		>
 			<div
 				aria-hidden="true"
@@ -650,8 +650,8 @@
 
 			<div
 				class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative"
-				in:fade={{ duration: 200, easing: quadOut }}
-				out:fade={{ duration: 200, easing: quadOut }}
+				in:fade={{ duration: 200, easing: quartOut }}
+				out:fade={{ duration: 200, easing: quartOut }}
 			>
 				<h2 class="text-xl mb-4">Delete Conversation</h2>
 				<p class="mb-6">
