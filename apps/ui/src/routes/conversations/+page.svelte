@@ -271,7 +271,7 @@
 							</form>
 							<div class="flex space-x-2 ml-2">
 								<button
-									class="secondary py-1"
+									class="secondary p-1"
 									disabled={isSavingTitle}
 									onclick={() => (editingTitleId = null)}
 									title="Cancel"
@@ -333,7 +333,9 @@
 							</div>
 						{:else}
 							<div class="min-h-[48px] flex items-center">
-								<h2 class="text-xl flex-1 truncate w-[310px]">{conversation.title}</h2>
+								<h2 class="text-xl flex-1 truncate w-[235px] sm:w-96 md:w-[515px]">
+									{conversation.title}
+								</h2>
 							</div>
 
 							<button
