@@ -43,10 +43,22 @@
 			return
 		}
 
-		const conversationHistory = JSON.stringify([...$chatHistory])
+		const conversationHistory = JSON.stringify(
+			[...$chatHistory].map((msg) => ({
+				...msg,
+				created: msg.created || new Date().toISOString()
+			}))
+		)
 
 		if (!skipPush) {
-			chatHistory.update((history) => [...history, { message: query, isUser: true }])
+			chatHistory.update((history) => [
+				...history,
+				{
+					message: query,
+					isUser: true,
+					created: new Date().toISOString()
+				}
+			])
 		}
 
 		userInput = ''
