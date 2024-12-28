@@ -71,7 +71,7 @@
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${$authToken}`
+					...($authToken ? { Authorization: `Bearer ${$authToken}` } : {})
 				},
 				body: JSON.stringify({
 					query,

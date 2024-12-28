@@ -3,11 +3,13 @@ import { themes } from '$lib/constants/theme'
 import type { Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const authHeader = event.request.headers.get('Authorization')
-	const token = authHeader?.replace('Bearer ', '')
+	const hasAuthHeader = event.request.headers.has('Authorization')
 
-	if (token) {
+	if (hasAuthHeader) {
 		try {
+			const authHeader = event.request.headers.get('Authorization')
+			const token = authHeader?.replace('Bearer ', '') || ''
+
 			pb.authStore.save(token)
 			await pb.collection('users').authRefresh()
 
@@ -17,10 +19,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 					email: pb.authStore.model?.email,
 					name: pb.authStore.model?.name
 				}
+
 				event.locals.token = token
 			}
-		} catch (error) {
-			console.error('Error validating token:', error)
+		} catch (e) {
+			console.error('Error validating token:', e)
 			pb.authStore.clear()
 		}
 	}
