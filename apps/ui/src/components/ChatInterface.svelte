@@ -271,7 +271,16 @@
 			</form>
 
 			{#if $chatHistory.length > 0}
-				<p class="text-xs text-center select-none opacity-70">Check answers for accuracy.</p>
+				<p class="text-xs text-center select-none opacity-70">
+					Check answers for accuracy.
+					{#if typeof remainingMessages === 'number'}
+						{remainingMessages} message{remainingMessages === 1 ? '' : 's'} remaining.
+
+						{#if rateLimitResetAt}
+							Resets at {new Date(rateLimitResetAt).toLocaleTimeString()}.
+						{/if}
+					{/if}
+				</p>
 			{/if}
 		</div>
 
@@ -302,12 +311,3 @@
 		{/if}
 	</div>
 </section>
-
-{#if typeof remainingMessages === 'number'}
-	<p class="text-xs text-center opacity-70">
-		{remainingMessages} message{remainingMessages === 1 ? '' : 's'} remaining
-		{#if rateLimitResetAt}
-			(resets at {new Date(rateLimitResetAt).toLocaleTimeString()})
-		{/if}
-	</p>
-{/if}

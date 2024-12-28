@@ -7,7 +7,8 @@ import {
 
 const UNAUTHENTICATED_LIMIT = 30
 const AUTHENTICATED_LIMIT = 60
-const WINDOW_SIZE_MS = 60 * 60 * 1000 // 1 hour in milliseconds
+const WINDOW_SIZE_HOURS = 6
+const WINDOW_SIZE_MS = WINDOW_SIZE_HOURS * 60 * 60 * 1000
 
 // Initialize Upstash Redis client
 const redis = new Redis({
@@ -18,14 +19,14 @@ const redis = new Redis({
 // Initialize separate rate limiters for authenticated and unauthenticated users
 const unauthenticatedRatelimit = new Ratelimit({
 	redis,
-	limiter: Ratelimit.slidingWindow(UNAUTHENTICATED_LIMIT, '1 h'),
+	limiter: Ratelimit.slidingWindow(UNAUTHENTICATED_LIMIT, `${WINDOW_SIZE_HOURS} h`),
 	analytics: true,
 	prefix: 'ratelimit:unauth'
 })
 
 const authenticatedRatelimit = new Ratelimit({
 	redis,
-	limiter: Ratelimit.slidingWindow(AUTHENTICATED_LIMIT, '1 h'),
+	limiter: Ratelimit.slidingWindow(AUTHENTICATED_LIMIT, `${WINDOW_SIZE_HOURS} h`),
 	analytics: true,
 	prefix: 'ratelimit:auth'
 })

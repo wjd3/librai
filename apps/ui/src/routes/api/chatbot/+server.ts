@@ -34,6 +34,12 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 	// Check rate limit
 	const rateLimit = await RateLimitService.checkRateLimit(identifier, !!userId)
 
+	// Add rate limit headers to response
+	const headers = {
+		'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+		'X-RateLimit-Reset': rateLimit.resetAt.toISOString()
+	}
+
 	if (!rateLimit.allowed) {
 		const resetAt = rateLimit.resetAt.toLocaleTimeString()
 		return json(
@@ -44,18 +50,9 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 			},
 			{
 				status: 429,
-				headers: {
-					'X-RateLimit-Remaining': rateLimit.remaining.toString(),
-					'X-RateLimit-Reset': rateLimit.resetAt.toISOString()
-				}
+				headers
 			}
 		)
-	}
-
-	// Add rate limit headers to response
-	const headers = {
-		'X-RateLimit-Remaining': rateLimit.remaining.toString(),
-		'X-RateLimit-Reset': rateLimit.resetAt.toISOString()
 	}
 
 	const sanitizedQuery = DOMPurify.sanitize(query)
