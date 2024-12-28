@@ -1,5 +1,5 @@
 .chat-history {
-	@apply w-[22rem] md:w-[500px] lg:w-[600px] xl:w-[700px];
+	@apply w-full md:w-[45rem];
 }
 @media (max-width: 360px) {
 	.chat-history {

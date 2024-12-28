@@ -217,7 +217,7 @@
 				}}
 			>
 				<div
-					class={`w-full h-full ${$chatHistory.length > 0 ? 'max-w-[280px] sm:max-w-xs md:max-w-lg lg:max-w-xl xl:max-w-2xl' : ''}`}
+					class={`w-full h-full ${$chatHistory.length > 0 ? 'sm:max-w-xl md:max-w-[40rem] lg:max-w-2xl' : ''}`}
 				>
 					<label for="chat-input" class="sr-only">Query the custom Librai AI chatbot.</label>
 					<textarea
