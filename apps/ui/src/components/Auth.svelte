@@ -7,6 +7,8 @@
 	import { quartInOut } from 'svelte/easing'
 
 	let showAuth = $state(false)
+	let showLogoutConfirm = $state(false)
+	let isLoggingOut = $state(false)
 	let isRegistering = $state(false)
 	let email = $state('')
 	let password = $state('')
@@ -109,12 +111,15 @@
 	}
 
 	async function logout() {
+		isLoggingOut = true
 		await fetch('/api/auth/logout', { method: 'POST' })
 		authToken.set(null)
 		localStorage.removeItem('auth_token')
 		isAuthenticated.set(false)
 		currentUser.set(null)
+		showLogoutConfirm = false
 		await goto('/')
+		isLoggingOut = false
 	}
 
 	function resetForm() {
@@ -128,7 +133,11 @@
 </script>
 
 {#if $isAuthenticated}
-	<button class="secondary px-4 py-2" onclick={logout} aria-label="Logout">
+	<button
+		class="secondary px-4 py-2"
+		onclick={() => (showLogoutConfirm = true)}
+		aria-label="Logout"
+	>
 		<svg
 			class="!fill-none"
 			xmlns="http://www.w3.org/2000/svg"
@@ -202,6 +211,45 @@
 	</button>
 {/if}
 
+{#if showLogoutConfirm}
+	<div
+		class="fixed inset-0 flex items-center justify-center z-50 !ml-0 h-[100lvh]"
+		transition:fade={{ duration: 200, easing: quartInOut }}
+	>
+		<div
+			aria-hidden="true"
+			class="absolute inset-0 bg-black/50 backdrop-blur-sm z-0"
+			onclick={() => {
+				if (!isLoggingOut) {
+					showLogoutConfirm = false
+				}
+			}}
+		></div>
+
+		<div
+			class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative z-10"
+			transition:fade={{ duration: 200, easing: quartInOut }}
+		>
+			<h2 class="text-xl mb-4">Confirm Logout</h2>
+			<p class="mb-6">Are you sure you want to log out?</p>
+
+			<div class="flex justify-end space-x-4">
+				<button
+					disabled={isLoggingOut}
+					type="button"
+					class="secondary"
+					onclick={() => (showLogoutConfirm = false)}
+				>
+					Cancel
+				</button>
+				<button disabled={isLoggingOut} type="button" class="primary" onclick={logout}>
+					{isLoggingOut ? 'Logging out...' : 'Logout'}
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
 {#if showAuth}
 	<div
 		class="fixed inset-0 flex items-center justify-center z-50 !ml-0 h-[100lvh]"
@@ -210,7 +258,11 @@
 		<div
 			aria-hidden="true"
 			class="absolute inset-0 bg-black/50 backdrop-blur-sm z-0"
-			onclick={() => (showAuth = false)}
+			onclick={() => {
+				if (!$isAuthLoading) {
+					showAuth = false
+				}
+			}}
 		></div>
 
 		<div
@@ -311,7 +363,7 @@
 						<p>Already have an account?</p>
 						<button
 							type="button"
-							class="text-primary-color hover:underline"
+							class="secondary"
 							onclick={() => {
 								isRegistering = false
 								resetForm()
@@ -323,7 +375,7 @@
 						<p>Need an account?</p>
 						<button
 							type="button"
-							class="text-primary-color hover:underline"
+							class="secondary"
 							onclick={() => {
 								isRegistering = true
 								resetForm()

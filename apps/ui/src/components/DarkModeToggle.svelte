@@ -2,7 +2,7 @@
 	let { isDarkMode, toggleDarkMode } = $props()
 </script>
 
-<button class="border-0 rounded-full max-md:bg-chat-bar-bg px-4 py-2" onclick={toggleDarkMode}>
+<button class="border-0 rounded-full bg-chat-bar-bg p-2" onclick={toggleDarkMode}>
 	<svg
 		class="w-5 h-5"
 		xmlns="http://www.w3.org/2000/svg"

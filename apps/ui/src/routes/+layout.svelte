@@ -14,7 +14,7 @@
 	import { quartInOut } from 'svelte/easing'
 	import Auth from '$components/Auth.svelte'
 	import DarkModeToggle from '$components/DarkModeToggle.svelte'
-	import { page } from '$app/stores'
+	import { page } from '$app/state'
 	import { authToken, currentUser, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
 
 	let { children } = $props()
@@ -135,9 +135,9 @@
 		$isVisible ? 'bg-transparent border-transparent' : ''
 	}`}
 >
-	<div class="px-4 md:px-8 h-full flex items-center justify-between">
+	<div class="h-full flex items-center justify-between">
 		<div class="flex-shrink-0">
-			{#if $page.url.pathname !== '/'}
+			{#if page.url.pathname !== '/'}
 				<a
 					class="inline-block p-0 border-none"
 					href="/"
@@ -150,7 +150,7 @@
 			{/if}
 		</div>
 
-		<div class="flex items-center space-x-2 md:space-x-4">
+		<div class="flex items-center space-x-4">
 			{#if !$isAuthLoading && !isCheckingConversations}
 				{#if $isAuthenticated && hasConversations}
 					<a href="/conversations" class="secondary px-4 py-2" aria-label="History">
