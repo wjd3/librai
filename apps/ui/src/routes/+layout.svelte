@@ -2,7 +2,13 @@
 	import '$styles/main.css'
 	import { createScrollSpy } from '$lib/scroll'
 	import { onMount } from 'svelte'
-	import { PUBLIC_THEME, PUBLIC_APP_TITLE, PUBLIC_APP_DESCRIPTION } from '$env/static/public'
+	import {
+		PUBLIC_THEME,
+		PUBLIC_APP_TITLE,
+		PUBLIC_APP_DESCRIPTION,
+		PUBLIC_APP_OG_IMAGE,
+		PUBLIC_APP_TWITTER_IMAGE
+	} from '$env/static/public'
 	import { themes, type Theme } from '$lib/constants/theme'
 	import { fade } from 'svelte/transition'
 	import { quartInOut } from 'svelte/easing'
@@ -93,15 +99,29 @@
 		sections: sectionIds,
 		offset: 64
 	})
+
+	const appTitle = PUBLIC_APP_TITLE || 'Librai UI'
+	const appDescription =
+		PUBLIC_APP_DESCRIPTION ||
+		'A chatbot UI for interacting with an OpenAI chatbot trained on your data.'
 </script>
 
 <svelte:head>
-	<title>{PUBLIC_APP_TITLE || 'Librai UI'}</title>
-	<meta
-		name="description"
-		content={PUBLIC_APP_DESCRIPTION ||
-			'A chatbot UI for interacting with an OpenAI chatbot trained on your data.'}
-	/>
+	<title>{appTitle}</title>
+	<meta name="description" content={appDescription} />
+
+	<meta property="og:image" content={PUBLIC_APP_OG_IMAGE} />
+	<meta property="og:image:alt" content={appDescription} />
+
+	{#if PUBLIC_APP_OG_IMAGE}
+		<meta property="og:image" content={PUBLIC_APP_OG_IMAGE} />
+		<meta property="og:image:alt" content={appDescription} />
+	{/if}
+
+	{#if PUBLIC_APP_TWITTER_IMAGE}
+		<meta property="twitter:image" content={PUBLIC_APP_TWITTER_IMAGE} />
+		<meta property="twitter:image:alt" content={appDescription} />
+	{/if}
 </svelte:head>
 
 <div
