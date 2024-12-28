@@ -6,6 +6,7 @@
 	"license": "AGPL-3.0-or-later",
 	"scripts": {
 		"dev": "vite dev",
+		"dev:host": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"start": "npm run preview",

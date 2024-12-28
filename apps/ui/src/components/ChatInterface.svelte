@@ -125,8 +125,10 @@
 				})
 			}
 
-			remainingMessages = parseInt(response.headers.get('X-RateLimit-Remaining') || '0')
-			rateLimitResetAt = new Date(response.headers.get('X-RateLimit-Reset') || '')
+			const remainingMessagesHeader = response.headers.get('X-RateLimit-Remaining')
+			const rateLimitResetHeader = response.headers.get('X-RateLimit-Reset')
+			remainingMessages = remainingMessagesHeader ? parseInt(remainingMessagesHeader) : null
+			rateLimitResetAt = rateLimitResetHeader ? new Date(rateLimitResetHeader) : null
 		} catch (error) {
 			console.error('Error:', error)
 			chatHistory.update((history) => [
@@ -207,7 +209,7 @@
 
 		<!-- Input Form -->
 		<div
-			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 pt-3 pb-2 md:py-3 flex flex-col space-y-2 z-40 bg-chat-bar-bg max-sm:px-2' : 'max-w-lg w-full'}`}
+			class={`${$chatHistory.length > 0 ? 'fixed bottom-0 left-0 right-0 py-2 md:py-3 flex flex-col space-y-2 z-40 bg-chat-bar-bg max-sm:px-2 border-t border-form-border' : 'max-w-lg w-full'}`}
 		>
 			<form
 				class="flex flex-row items-center justify-center space-x-4 w-full h-12"
@@ -271,20 +273,20 @@
 			</form>
 
 			{#if $chatHistory.length > 0}
-				<p class="text-xs text-center select-none opacity-70">
-					Check answers for accuracy.
-					{#if typeof remainingMessages === 'number'}
-						{remainingMessages} message{remainingMessages === 1 ? '' : 's'} remaining.
-
+				<p class="text-xs text-center opacity-70">
+					Check answers for accuracy. {#if remainingMessages && remainingMessages <= 0}
+						No messages remaining
 						{#if rateLimitResetAt}
-							Resets at {new Date(rateLimitResetAt).toLocaleTimeString()}.
+							until {new Date(rateLimitResetAt).toLocaleTimeString()}.
+						{:else}
+							until later.
 						{/if}
 					{/if}
 				</p>
 			{/if}
 		</div>
 
-		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat}
+		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat && !isSubmitting}
 			<button
 				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2 bottom-32"
 				in:fade={{ duration: 200, easing: quartOut }}

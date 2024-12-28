@@ -34,6 +34,8 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 	// Check rate limit
 	const rateLimit = await RateLimitService.checkRateLimit(identifier, !!userId)
 
+	console.log('rateLimit', rateLimit)
+
 	// Add rate limit headers to response
 	const headers = {
 		'X-RateLimit-Remaining': rateLimit.remaining.toString(),
