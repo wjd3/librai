@@ -232,7 +232,9 @@ export default {
 				'bot-bubble-bg': 'var(--bot-bubble-bg)',
 				'chat-bar-bg': 'var(--chat-bar-bg)',
 				highlight: 'var(--highlight)',
-				'highlight-dark': 'var(--highlight-dark)'
+				'highlight-dark': 'var(--highlight-dark)',
+				'btn-secondary-bg': 'var(--btn-secondary-bg)',
+				'btn-secondary-hover-bg': 'var(--btn-secondary-hover-bg)'
 			}
 		}
 	},

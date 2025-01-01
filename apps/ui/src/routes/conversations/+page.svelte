@@ -251,7 +251,7 @@
 		<div class="space-y-4">
 			{#each conversations as conversation, i}
 				<div
-					class="bg-primary-card-bg px-4 pt-2 pb-4 rounded-lg group"
+					class="bg-primary-card-bg px-4 pt-2 pb-4 rounded-lg shadow-sm group"
 					transition:fade={{ duration: 200, easing: quartInOut }}
 				>
 					<div class="flex items-center justify-between mb-2">
@@ -290,7 +290,7 @@
 								</button>
 
 								<button
-									class="secondary p-1"
+									class="primary p-1"
 									disabled={editedTitle === conversation.title || isSavingTitle}
 									onclick={() => updateConversationTitle(conversation)}
 									title="Save"
@@ -339,7 +339,7 @@
 							</div>
 
 							<button
-								class="secondary px-2 py-1 ml-4"
+								class="primary px-2 py-1 ml-4"
 								onclick={() => startEditing(conversation)}
 								title="Edit title"
 								aria-label="Edit title"
@@ -455,7 +455,7 @@
 								</button>
 
 								<button
-									class="secondary px-4"
+									class="primary px-4"
 									onclick={() =>
 										conversation.shareId && copyShareUrl(getShareUrl(conversation.shareId), i)}
 								>
@@ -493,7 +493,7 @@
 							{:else}
 								<button
 									disabled={isSharing}
-									class="secondary px-4"
+									class="primary px-4"
 									onclick={() => shareConversation(conversation, i)}
 								>
 									{#if isSharing && isSharingIndex === i}

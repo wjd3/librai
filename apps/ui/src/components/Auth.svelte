@@ -136,6 +136,7 @@
 	<button
 		class="secondary px-4 py-2"
 		onclick={() => (showLogoutConfirm = true)}
+		transition:fade={{ duration: 200, easing: quartInOut }}
 		aria-label="Logout"
 	>
 		<svg
@@ -156,12 +157,13 @@
 	</button>
 {:else}
 	<button
-		class="primary px-4"
+		class="secondary px-4"
 		onclick={() => {
 			showAuth = true
 			isRegistering = true
 			resetForm()
 		}}
+		transition:fade={{ duration: 200, easing: quartInOut }}
 		aria-label="Sign Up"
 	>
 		<svg
@@ -191,6 +193,7 @@
 			isRegistering = false
 			resetForm()
 		}}
+		transition:fade={{ duration: 200, easing: quartInOut }}
 		aria-label="Login"
 	>
 		<svg
@@ -407,7 +410,7 @@
 						<p>Already have an account?</p>
 						<button
 							type="button"
-							class="secondary"
+							class="primary"
 							onclick={() => {
 								isRegistering = false
 								resetForm()
@@ -419,7 +422,7 @@
 						<p>Need an account?</p>
 						<button
 							type="button"
-							class="secondary"
+							class="primary"
 							onclick={() => {
 								isRegistering = true
 								resetForm()
