@@ -151,7 +151,7 @@
 		</div>
 
 		<div class="flex items-center space-x-4">
-			{#if !$isAuthLoading && !isCheckingConversations}
+			{#if !isCheckingConversations}
 				{#if $isAuthenticated && hasConversations}
 					<a href="/conversations" class="secondary px-4 py-2" aria-label="History">
 						<svg

@@ -243,7 +243,25 @@
 					Cancel
 				</button>
 				<button disabled={isLoggingOut} type="button" class="primary" onclick={logout}>
-					{isLoggingOut ? 'Logging out...' : 'Logout'}
+					{#if isLoggingOut}
+						<svg
+							class="!fill-none animate-spin"
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path
+								d="M21 3v5h-5"
+							/></svg
+						>
+					{:else}
+						Logout
+					{/if}
 				</button>
 			</div>
 		</div>
@@ -269,7 +287,13 @@
 			class="bg-page-bg p-6 rounded-lg max-w-sm w-full mx-4 relative z-10"
 			transition:fade={{ duration: 200, easing: quartInOut }}
 		>
-			<h2 class="text-xl mb-4">{isRegistering ? 'Sign Up' : 'Login'}</h2>
+			<h2 class="text-xl mb-4">
+				{#if isRegistering}
+					Sign Up
+				{:else}
+					Login
+				{/if}
+			</h2>
 
 			<form onsubmit={handleSubmit} class="space-y-4">
 				{#if isRegistering}
@@ -354,7 +378,27 @@
 						Cancel
 					</button>
 					<button type="submit" class="primary" disabled={$isAuthLoading}>
-						{$isAuthLoading ? 'Hang tight...' : isRegistering ? 'Sign Up' : 'Login'}
+						{#if $isAuthLoading}
+							<svg
+								class="!fill-none animate-spin"
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path
+									d="M21 3v5h-5"
+								/></svg
+							>
+						{:else if isRegistering}
+							Sign Up
+						{:else}
+							Login
+						{/if}
 					</button>
 				</div>
 
