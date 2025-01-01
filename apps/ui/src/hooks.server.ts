@@ -1,6 +1,8 @@
 import { pb } from '$lib/server/pocketbase'
 import { themes } from '$lib/constants/theme'
+
 import type { Handle } from '@sveltejs/kit'
+import { getThemeColorValues } from '$lib/color'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const hasAuthHeader = event.request.headers.has('Authorization')
@@ -30,7 +32,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	const response = await resolve(event, {
 		transformPageChunk: ({ html }) => {
-			return html.replace('%DATA_THEME%', process.env.PUBLIC_THEME || themes[0])
+			const theme = process.env.PUBLIC_THEME || themes[0]
+
+			const { light, dark } = getThemeColorValues(theme, 'page-bg')
+
+			return html
+				.replace('%DATA_THEME%', theme)
+				.replace('content="%DATA_THEME_COLOR%"', light ? `content="${light}"` : 'content=""')
+				.replace('content="%DATA_DARK_THEME_COLOR%"', dark ? `content="${dark}"` : 'content=""')
 		}
 	})
 

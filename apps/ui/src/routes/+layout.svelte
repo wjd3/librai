@@ -27,8 +27,29 @@
 
 	// Dark mode
 	let isDarkMode = $state(false)
+
+	let themeColorMeta: HTMLMetaElement
+	let darkThemeColorMeta: HTMLMetaElement
+	let themeColor: string
+	let darkThemeColor: string
+	onMount(() => {
+		themeColorMeta = document.getElementById('theme-color') as HTMLMetaElement
+		if (themeColorMeta) {
+			themeColor = themeColorMeta.content
+		}
+
+		darkThemeColorMeta = document.getElementById('dark-theme-color') as HTMLMetaElement
+		if (darkThemeColorMeta) {
+			darkThemeColor = darkThemeColorMeta.content
+		}
+	})
+
 	const setIsDarkMode = () => {
 		document.documentElement.setAttribute('data-mode', isDarkMode ? 'dark' : 'light')
+
+		if (themeColor && darkThemeColor) {
+			themeColorMeta.content = isDarkMode ? darkThemeColor : themeColor
+		}
 	}
 
 	let isCheckingConversations = $state(false)
