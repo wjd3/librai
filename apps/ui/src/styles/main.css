@@ -49,20 +49,33 @@ button.primary,
 a.primary,
 button.secondary,
 a.secondary {
-	@apply bg-btn-bg transition-colors duration-200 text-btn-text;
+	@apply transition-colors duration-200 text-btn-text;
 }
+button.primary,
+a.primary {
+	@apply bg-btn-bg border-btn-hover-bg;
+}
+button.secondary,
+a.secondary {
+	@apply bg-btn-secondary-bg border-btn-secondary-hover-bg;
+}
+
 button.primary svg,
 a.primary svg,
 button.secondary svg,
 a.secondary svg {
 	@apply fill-btn-text stroke-btn-text;
 }
+
 button.primary:not(:disabled):hover,
-a.primary:not(:disabled):hover,
-button.secondary:not(:disabled):hover,
-a.secondary:not(:disabled):hover {
+a.primary:not(:disabled):hover {
 	@apply bg-btn-hover-bg;
 }
+button.secondary:not(:disabled):hover,
+a.secondary:not(:disabled):hover {
+	@apply bg-btn-secondary-hover-bg;
+}
+
 button:disabled,
 a:disabled {
 	@apply opacity-70 cursor-default;

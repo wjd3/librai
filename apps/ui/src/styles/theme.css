@@ -18,6 +18,8 @@
 	--chat-bar-bg: theme('colors.iron.50');
 	--highlight: theme('colors.mine-shaft.400');
 	--highlight-dark: theme('colors.mine-shaft.600');
+	--btn-secondary-bg: theme('colors.iron.500');
+	--btn-secondary-hover-bg: theme('colors.iron.600');
 }
 
 :root[data-theme='charcoal'][data-mode='dark'] {
@@ -37,6 +39,8 @@
 	--user-bubble-bg: theme('colors.mine-shaft.800');
 	--bot-bubble-bg: theme('colors.iron.800');
 	--chat-bar-bg: theme('colors.mine-shaft.900');
+	--btn-secondary-bg: theme('colors.iron.600');
+	--btn-secondary-hover-bg: theme('colors.iron.700');
 }
 
 /* Leaf Theme - Natural, organic */
@@ -59,6 +63,8 @@
 	--chat-bar-bg: theme('colors.sage.50');
 	--highlight: theme('colors.asparagus.400');
 	--highlight-dark: theme('colors.asparagus.600');
+	--btn-secondary-bg: theme('colors.tea-rose.400');
+	--btn-secondary-hover-bg: theme('colors.tea-rose.500');
 }
 
 :root[data-theme='leaf'][data-mode='dark'] {
@@ -78,6 +84,8 @@
 	--user-bubble-bg: theme('colors.sage.800');
 	--bot-bubble-bg: theme('colors.tea-rose.900');
 	--chat-bar-bg: theme('colors.sage.900');
+	--btn-secondary-bg: theme('colors.tea-rose.500');
+	--btn-secondary-hover-bg: theme('colors.tea-rose.600');
 }
 
 /* Ocean Theme - Cool, calming */
@@ -100,6 +108,8 @@
 	--chat-bar-bg: theme('colors.mystic.100');
 	--highlight: theme('colors.blue-dianne.400');
 	--highlight-dark: theme('colors.blue-dianne.600');
+	--btn-secondary-bg: theme('colors.mystic.400');
+	--btn-secondary-hover-bg: theme('colors.mystic.500');
 }
 
 :root[data-theme='ocean'][data-mode='dark'] {
@@ -119,6 +129,8 @@
 	--user-bubble-bg: theme('colors.matisse.800');
 	--bot-bubble-bg: theme('colors.mystic.900');
 	--chat-bar-bg: theme('colors.matisse.900');
+	--btn-secondary-bg: theme('colors.mystic.500');
+	--btn-secondary-hover-bg: theme('colors.mystic.600');
 }
 
 /* Sunset Theme */
@@ -141,6 +153,8 @@
 	--chat-bar-bg: theme('colors.sundown.100');
 	--highlight: theme('colors.mulled-wine.400');
 	--highlight-dark: theme('colors.mulled-wine.600');
+	--btn-secondary-bg: theme('colors.sundown.400');
+	--btn-secondary-hover-bg: theme('colors.sundown.500');
 }
 
 :root[data-theme='sunset'][data-mode='dark'] {
@@ -160,6 +174,8 @@
 	--user-bubble-bg: theme('colors.coral.800');
 	--bot-bubble-bg: theme('colors.sundown.900');
 	--chat-bar-bg: theme('colors.coral.900');
+	--btn-secondary-bg: theme('colors.sundown.500');
+	--btn-secondary-hover-bg: theme('colors.sundown.600');
 }
 
 /* Volcano Theme - Dramatic, intense, earthy */
@@ -182,6 +198,8 @@
 	--chat-bar-bg: theme('colors.cocoa-brown.100');
 	--highlight: theme('colors.cinnabar.400');
 	--highlight-dark: theme('colors.cinnabar.600');
+	--btn-secondary-bg: theme('colors.almond-frost.400');
+	--btn-secondary-hover-bg: theme('colors.almond-frost.500');
 }
 
 :root[data-theme='volcano'][data-mode='dark'] {
@@ -201,6 +219,6 @@
 	--user-bubble-bg: theme('colors.cocoa-brown.800');
 	--bot-bubble-bg: theme('colors.cinnabar.900');
 	--chat-bar-bg: theme('colors.cocoa-brown.900');
-	--highlight: theme('colors.cinnabar.500');
-	--highlight-dark: theme('colors.cinnabar.700');
+	--btn-secondary-bg: theme('colors.almond-frost.500');
+	--btn-secondary-hover-bg: theme('colors.almond-frost.600');
 }

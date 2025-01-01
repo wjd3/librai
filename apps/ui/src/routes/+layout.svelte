@@ -97,7 +97,7 @@
 	const sectionIds = ['scroll-spy']
 	const { isVisible } = createScrollSpy({
 		sections: sectionIds,
-		offset: 64
+		offset: 32
 	})
 
 	const appTitle = PUBLIC_APP_TITLE || 'Librai UI'
@@ -127,7 +127,7 @@
 <div
 	id="scroll-spy"
 	aria-hidden="true"
-	class="absolute top-0 left-0 right-0 w-0 h-16 bg-transparent z-[-1]"
+	class="absolute top-0 left-0 right-0 w-0 h-8 bg-transparent z-[-1]"
 ></div>
 
 <header
@@ -151,9 +151,14 @@
 		</div>
 
 		<div class="flex items-center space-x-4">
-			{#if !$isAuthLoading && !isCheckingConversations}
+			{#if !isCheckingConversations}
 				{#if $isAuthenticated && hasConversations}
-					<a href="/conversations" class="secondary px-4 py-2" aria-label="History">
+					<a
+						href="/conversations"
+						class="primary px-4 py-2"
+						transition:fade={{ duration: 200, easing: quartInOut }}
+						aria-label="History"
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="24"

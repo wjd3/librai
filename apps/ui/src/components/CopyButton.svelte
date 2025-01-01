@@ -23,7 +23,7 @@
 </script>
 
 <button
-	class="w-fit self-end secondary mt-1 md:mt-2 p-2"
+	class="w-fit self-end primary mt-1 md:mt-2 p-2"
 	onclick={() => copyToClipboard(message, messageIndex)}
 	aria-label="Copy to clipboard"
 	in:fade={{ duration: 200, easing: quartInOut }}
@@ -31,8 +31,8 @@
 	{#if isCopied && copiedIndex === messageIndex}
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
+			width="16"
+			height="16"
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
@@ -44,8 +44,8 @@
 	{:else}
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
+			width="16"
+			height="16"
 			viewBox="0 0 24 24"
 			fill="none"
 			stroke="currentColor"
