@@ -97,7 +97,7 @@
 	const sectionIds = ['scroll-spy']
 	const { isVisible } = createScrollSpy({
 		sections: sectionIds,
-		offset: 64
+		offset: 32
 	})
 
 	const appTitle = PUBLIC_APP_TITLE || 'Librai UI'
@@ -127,7 +127,7 @@
 <div
 	id="scroll-spy"
 	aria-hidden="true"
-	class="absolute top-0 left-0 right-0 w-0 h-16 bg-transparent z-[-1]"
+	class="absolute top-0 left-0 right-0 w-0 h-8 bg-transparent z-[-1]"
 ></div>
 
 <header

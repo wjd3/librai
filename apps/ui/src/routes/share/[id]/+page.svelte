@@ -166,17 +166,35 @@
 </svelte:head>
 
 <section class="container max-w-2xl mx-auto !pb-16">
-	<div class="flex justify-between items-center mb-6">
-		<h1 class={`text-3xl ${isLoading ? 'animate-pulse' : ''}`}>
+	<div class="space-y-3 mb-6">
+		<button
+			class="primary px-2"
+			disabled={isLoading}
+			onclick={forkConversation}
+			aria-label="Continue Chat"
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="!fill-none"
+				><line x1="6" x2="6" y1="4" y2="20" /><polygon points="10,4 20,12 10,20" /></svg
+			>
+		</button>
+
+		<h1 class="text-2xl sm:text-3xl" class:animate-pulse={isLoading}>
 			{#if isLoading}
 				Loading Conversation...
 			{:else if conversation}
 				{conversation.title}
 			{/if}
 		</h1>
-		<button disabled={isLoading} class="primary px-4" onclick={forkConversation}>
-			Continue Chat
-		</button>
 	</div>
 
 	{#if isLoading}
@@ -204,7 +222,7 @@
 			<p class="text-red-500">{error}</p>
 		</div>
 	{:else if conversation}
-		<div class="space-y-6">
+		<div class="flex flex-col space-y-6">
 			<div class="space-y-6 flex flex-col">
 				{#each conversation.messages as { message, isUser }, i}
 					<div
@@ -223,6 +241,27 @@
 					</div>
 				{/each}
 			</div>
+
+			<button
+				class="primary px-2 self-end"
+				disabled={isLoading}
+				onclick={forkConversation}
+				aria-label="Continue Chat"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="!fill-none"
+					><line x1="6" x2="6" y1="4" y2="20" /><polygon points="10,4 20,12 10,20" /></svg
+				>
+			</button>
 		</div>
 	{/if}
 </section>
