@@ -195,7 +195,7 @@
 	}
 </script>
 
-<section class="container max-w-2xl mx-auto !pb-12">
+<section class="pt-0 w-full max-w-[664px]">
 	<div class="flex justify-between items-center mb-6">
 		<h1 class="text-3xl" class:animate-pulse={isLoading}>
 			{#if isLoading}
