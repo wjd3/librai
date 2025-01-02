@@ -33,16 +33,11 @@ export const POST = async ({ request, locals }) => {
 		}
 
 		// Create new conversation
-		const conversation = await PocketbaseService.createConversation(
+		const conversation = await PocketbaseService.createConversation({
 			userId,
-			messages[0]?.message || '',
-			generatedTitle || 'New Conversation'
-		)
-
-		// If messages were provided (forking case), add them to the conversation
-		if (messages && messages.length > 0) {
-			await PocketbaseService.updateConversation(conversation.id, messages)
-		}
+			firstMessage: messages[0]?.message,
+			title: generatedTitle
+		})
 
 		return json(conversation)
 	} catch (error) {
