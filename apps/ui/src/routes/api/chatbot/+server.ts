@@ -34,8 +34,6 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 	// Check rate limit
 	const rateLimit = await RateLimitService.checkRateLimit(identifier, !!userId)
 
-	console.log('rateLimit', rateLimit)
-
 	// Add rate limit headers to response
 	const headers = {
 		'X-RateLimit-Remaining': rateLimit.remaining.toString(),
@@ -82,7 +80,11 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 			} else {
 				// Create new conversation and redirect
 				const title = await OpenAIService.generateAITitle(sanitizedQuery)
-				conversation = await PocketbaseService.createConversation(userId, sanitizedQuery, title)
+				conversation = await PocketbaseService.createConversation({
+					userId,
+					firstMessage: sanitizedQuery,
+					title
+				})
 			}
 		}
 
@@ -167,11 +169,25 @@ Please answer the query above, taking into account both the provided context and
 
 					// Update conversation with complete response after stream ends
 					if (userId && conversation) {
-						await PocketbaseService.updateConversation(conversation.id, [
-							...JSON.parse(history || '[]'),
+						const updatedConversation = [
 							{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() },
 							{ message: responseMessage, isUser: false, created: new Date().toISOString() }
-						])
+						]
+
+						const conversationHistory = JSON.parse(history || '[]')
+						if (Array.isArray(conversationHistory)) {
+							const lastMessage = conversationHistory[conversationHistory.length - 1]
+							const isNewConversation =
+								conversationHistory.length === 1 &&
+								lastMessage?.isUser &&
+								lastMessage.message === sanitizedQuery
+
+							if (!isNewConversation) {
+								updatedConversation.unshift(...conversationHistory)
+							}
+						}
+
+						await PocketbaseService.updateConversation(conversation.id, updatedConversation)
 					}
 
 					controller.close()

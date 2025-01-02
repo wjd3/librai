@@ -17,11 +17,15 @@ export type Conversation = {
 }
 
 export class PocketbaseService {
-	static async createConversation(
-		userId: string,
-		firstMessage: string,
+	static async createConversation({
+		userId,
+		firstMessage,
+		title
+	}: {
+		userId: string
+		firstMessage: string
 		title?: string
-	): Promise<Conversation> {
+	}): Promise<Conversation> {
 		return await pb.collection('conversations').create({
 			user: userId,
 			messages: JSON.stringify([

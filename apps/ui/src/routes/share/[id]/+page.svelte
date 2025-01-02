@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte'
 	import { fade } from 'svelte/transition'
 	import { quartInOut } from 'svelte/easing'
-	import { page } from '$app/stores'
+	import { page } from '$app/state'
 	import { marked } from 'marked'
 	import DOMPurify from 'dompurify'
 	import CopyButton from '$components/CopyButton.svelte'
@@ -57,7 +57,7 @@
 			document.querySelector('meta[property="og:image"]')?.setAttribute('content', ogImageUrl)
 			document
 				.querySelector('meta[property="og:url"]')
-				?.setAttribute('content', `${PUBLIC_APP_URL}/share/${$page.params.id}`)
+				?.setAttribute('content', `${PUBLIC_APP_URL}/share/${page.params.id}`)
 			document
 				.querySelector('meta[name="twitter:title"]')
 				?.setAttribute('content', conversation.title)
@@ -69,7 +69,7 @@
 	})
 
 	onMount(async () => {
-		const shareId = $page.params.id
+		const shareId = page.params.id
 		if (!shareId) {
 			error = 'Invalid share link'
 			isLoading = false
@@ -112,9 +112,9 @@
 				console.error('Error checking conversation ownership:', error)
 			}
 
-			// User is logged in but doesn't own the conversation - create a new one
+			// User is logged in but doesn't own the conversation - fork it
 			try {
-				const response = await fetch('/api/conversations', {
+				const response = await fetch('/api/conversations/fork', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',

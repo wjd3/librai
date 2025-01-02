@@ -64,6 +64,7 @@
 			} else {
 				// Create temporary conversation in memory
 				const tempId = crypto.randomUUID()
+
 				currentConversation.set({
 					id: tempId,
 					messages: [{ message: query, isUser: true, created: new Date().toISOString() }],
@@ -75,6 +76,7 @@
 					shareId: undefined
 				})
 				chatHistory.set([{ message: query, isUser: true }])
+
 				await goto(`/conversations/${tempId}`)
 			}
 		} catch (error) {

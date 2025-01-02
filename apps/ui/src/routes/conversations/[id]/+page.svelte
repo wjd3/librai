@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores'
+	import { page } from '$app/state'
 	import { goto } from '$app/navigation'
 	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken, isAuthLoading, isAuthenticated } from '$lib/stores/auth'
@@ -19,7 +19,7 @@
 				if (!$isAuthenticated) {
 					// For non-logged in users, check if we have a temporary conversation
 					const tempConversation = $currentConversation
-					if (tempConversation && tempConversation.id === $page.params.id) {
+					if (tempConversation && tempConversation.id === page.params.id) {
 						isLoading = false
 						shouldStartChat.set(true)
 						return
@@ -27,7 +27,7 @@
 					await goto('/')
 				} else {
 					try {
-						const response = await fetch(`/api/conversations/${$page.params.id}`, {
+						const response = await fetch(`/api/conversations/${page.params.id}`, {
 							headers: {
 								Authorization: `Bearer ${$authToken}`
 							}
