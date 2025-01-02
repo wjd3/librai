@@ -173,31 +173,6 @@
 
 		<div class="flex items-center space-x-4">
 			{#if !isCheckingConversations}
-				{#if $isAuthenticated && hasConversations}
-					<a
-						href="/conversations"
-						class="primary px-4 py-2"
-						transition:fade={{ duration: 200, easing: quartInOut }}
-						aria-label="History"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="!fill-none"
-							><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path
-								d="M3 3v5h5"
-							/><path d="M12 7v5l4 2" /></svg
-						>
-					</a>
-				{/if}
-
 				<Auth />
 			{/if}
 
