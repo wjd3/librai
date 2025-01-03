@@ -10,6 +10,7 @@
 	import { tick } from 'svelte'
 	import CopyButton from './CopyButton.svelte'
 	import { goto } from '$app/navigation'
+	import { currentUser } from '$lib/stores'
 
 	onMount(() => promptInput?.focus())
 
@@ -76,7 +77,8 @@
 				body: JSON.stringify({
 					query,
 					history: conversationHistory,
-					conversationId: $currentConversation?.id
+					conversationId: $currentConversation?.id,
+					name: $currentUser?.name
 				})
 			})
 

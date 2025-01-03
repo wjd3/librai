@@ -60,6 +60,17 @@ a.secondary {
 	@apply bg-btn-secondary-bg border-btn-secondary-hover-bg;
 }
 
+button.primary p,
+button.primary span,
+a.primary p,
+a.primary span,
+button.secondary p,
+button.secondary span,
+a.secondary p,
+a.secondary span {
+	@apply text-btn-text;
+}
+
 button.primary svg,
 a.primary svg,
 button.secondary svg,

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { currentUser, isAuthLoading } from '$lib/stores'
-	import { authToken } from '$lib/stores/auth'
+	import { currentUser } from '$lib/stores'
+	import { authToken, isAuthLoading } from '$lib/stores/auth'
 	import { fade } from 'svelte/transition'
 	import { quartInOut } from 'svelte/easing'
 	import DOMPurify from 'dompurify'
@@ -15,6 +15,17 @@
 	let name = $state($currentUser?.name || '')
 	let error = $state('')
 	let success = $state('')
+
+	let isNameSet = $state(false)
+	$effect(() => {
+		if (!isNameSet && !$isAuthLoading) {
+			if (!name && $currentUser?.name) {
+				name = $currentUser.name
+			}
+
+			isNameSet = true
+		}
+	})
 
 	// Password change form
 	let oldPassword = $state('')
@@ -32,7 +43,7 @@
 		isUpdating = true
 
 		try {
-			const cleanName = DOMPurify.sanitize(name)
+			const sanitizedName = DOMPurify.sanitize(name)
 
 			const response = await fetch('/api/auth/update', {
 				method: 'PATCH',
@@ -40,7 +51,7 @@
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${$authToken}`
 				},
-				body: JSON.stringify({ name: cleanName })
+				body: JSON.stringify({ name: sanitizedName })
 			})
 
 			if (!response.ok) throw new Error('Failed to update profile')
@@ -168,7 +179,7 @@
 							type="button"
 							class="secondary text-sm px-3"
 							onclick={() => (showChangeEmail = true)}
-							disabled={isUpdating}
+							disabled={isUpdating || $isAuthLoading}
 						>
 							Change Email
 						</button>
@@ -183,7 +194,7 @@
 							type="button"
 							class="secondary text-sm px-3"
 							onclick={() => (showChangePassword = true)}
-							disabled={isUpdating}
+							disabled={isUpdating || $isAuthLoading}
 						>
 							Change Password
 						</button>
@@ -203,7 +214,7 @@
 						type="button"
 						class="secondary px-4 text-sm"
 						onclick={() => (showLogoutConfirm = true)}
-						disabled={isUpdating}
+						disabled={isUpdating || $isAuthLoading}
 					>
 						<div class="flex items-center space-x-2">
 							<svg
@@ -226,14 +237,14 @@
 						</div>
 					</button>
 
-					<button type="submit" class="primary px-4" disabled={isUpdating}>
+					<button type="submit" class="primary px-4" disabled={isUpdating || $isAuthLoading}>
 						<div class="flex items-center space-x-2">
 							{#if isUpdating}
 								<svg
 									class="!fill-none animate-spin"
 									xmlns="http://www.w3.org/2000/svg"
-									width="18"
-									height="18"
+									width="24"
+									height="24"
 									viewBox="0 0 24 24"
 									fill="none"
 									stroke="currentColor"
@@ -244,7 +255,6 @@
 									<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
 									<path d="M21 3v5h-5" />
 								</svg>
-								<span>Saving...</span>
 							{:else}
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -336,11 +346,11 @@
 						type="button"
 						class="secondary"
 						onclick={() => (showChangePassword = false)}
-						disabled={isUpdating}
+						disabled={isUpdating || $isAuthLoading}
 					>
 						Cancel
 					</button>
-					<button type="submit" class="primary" disabled={isUpdating}>
+					<button type="submit" class="primary" disabled={isUpdating || $isAuthLoading}>
 						{#if isUpdating}
 							<svg
 								class="!fill-none animate-spin"
@@ -410,11 +420,11 @@
 						type="button"
 						class="secondary"
 						onclick={() => (showChangeEmail = false)}
-						disabled={isUpdating}
+						disabled={isUpdating || $isAuthLoading}
 					>
 						Cancel
 					</button>
-					<button type="submit" class="primary" disabled={isUpdating}>
+					<button type="submit" class="primary" disabled={isUpdating || $isAuthLoading}>
 						{#if isUpdating}
 							<svg
 								class="!fill-none animate-spin"

@@ -7,7 +7,7 @@ import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
 import { RateLimitService } from '$lib/server/services/rateLimitService'
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
 
-async function summarizeConversation(history: Array<ChatCompletionMessageParam>) {
+const summarizeConversation = async (history: Array<ChatCompletionMessageParam>) => {
 	if (history.length <= 10) return null
 
 	const summaryMessages: Array<ChatCompletionMessageParam> = [
@@ -24,7 +24,7 @@ async function summarizeConversation(history: Array<ChatCompletionMessageParam>)
 }
 
 export const POST = async ({ request, locals, getClientAddress }) => {
-	const { query, history, conversationId } = await request.json()
+	const { query, history, conversationId, name } = await request.json()
 
 	// Get user ID or IP address for rate limiting
 	const clientIp = getClientAddress()
@@ -92,6 +92,9 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 		const searchResults = await getSemanticResults(sanitizedQuery)
 		const context = searchResults.map((result) => `\n\n${result.content}`).join('')
 
+		// Add the user's name to the prompt
+		const sanitizedName = DOMPurify.sanitize(name || '')
+
 		// Format the prompt with context and history
 		const queryWithContext = `
 Context from relevant documents:
@@ -100,6 +103,8 @@ ${context}
 Current query: ${sanitizedQuery}
 
 Please answer the query above, taking into account both the provided context and our conversation history. If the context isn't relevant to the current query, you can ignore it.
+
+${sanitizedName ? `Keep in mind that the user's name is: ${sanitizedName}` : ''}
 `
 
 		const conversationHistory = JSON.parse(history || '[]').reduce(

@@ -8,7 +8,7 @@
 		<aside class="flex md:flex-col gap-2 md:w-16">
 			<a
 				href="/account"
-				class="flex items-center justify-center w-full px-4 py-3 rounded-lg transition-colors hover:bg-hover-bg"
+				class="flex items-center justify-center w-full px-4 py-3 rounded-lg transition-colors hover:bg-primary-card-bg duration-300"
 				class:bg-primary-card-bg={page.url.pathname === '/account'}
 				aria-label="Profile"
 			>
@@ -31,7 +31,7 @@
 
 			<a
 				href="/account/conversations"
-				class="flex items-center justify-center w-full px-4 py-3 rounded-lg transition-colors hover:bg-hover-bg"
+				class="flex items-center justify-center w-full px-4 py-3 rounded-lg transition-colors hover:bg-primary-card-bg duration-300"
 				class:bg-primary-card-bg={page.url.pathname === '/account/conversations'}
 				aria-label="Conversations"
 			>
