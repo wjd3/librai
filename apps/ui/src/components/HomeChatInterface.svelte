@@ -2,7 +2,7 @@
 	import DOMPurify from 'dompurify'
 	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
 	import { chatHistory, currentConversation } from '$lib/stores/index'
-	import { authToken, isAuthenticated } from '$lib/stores/auth'
+	import { authToken, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import { preventDefault } from '$lib/utils'
@@ -142,7 +142,7 @@
 				</div>
 
 				<button
-					disabled={isDisabled}
+					disabled={isDisabled || $isAuthLoading}
 					type="submit"
 					class="primary w-16 h-full flex items-center justify-center self-end"
 					class:animate-pulse={isSubmitting}

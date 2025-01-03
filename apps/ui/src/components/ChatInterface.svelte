@@ -10,7 +10,7 @@
 	import { tick } from 'svelte'
 	import CopyButton from './CopyButton.svelte'
 	import { goto } from '$app/navigation'
-	import { currentUser } from '$lib/stores'
+	import { currentUser, isAuthLoading } from '$lib/stores'
 
 	onMount(() => promptInput?.focus())
 
@@ -256,7 +256,7 @@
 				</div>
 
 				<button
-					disabled={isDisabled}
+					disabled={isDisabled || $isAuthLoading}
 					type="submit"
 					class="primary w-16 h-full flex items-center justify-center"
 					class:self-end={!$chatHistory.length}
