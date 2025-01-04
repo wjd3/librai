@@ -9,22 +9,31 @@
 		PUBLIC_APP_OG_IMAGE,
 		PUBLIC_APP_TWITTER_IMAGE
 	} from '$env/static/public'
-	import { themes, type Theme } from '$lib/constants/theme'
+	import { themes, type Theme } from '$lib/constants/themes'
 	import { fade } from 'svelte/transition'
 	import { quartInOut } from 'svelte/easing'
 	import Auth from '$components/Auth.svelte'
 	import DarkModeToggle from '$components/DarkModeToggle.svelte'
 	import { page } from '$app/state'
 	import { authToken, currentUser, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
+	import ThemeSwitcher from '$components/ThemeSwitcher.svelte'
 
 	let { children } = $props()
 
 	const metaOverride = page.data.meta
 
 	// Themes
-	const theme = themes.includes(PUBLIC_THEME as Theme) ? PUBLIC_THEME : themes[0]
+	let currentTheme = $state<Theme>(
+		(themes.includes(PUBLIC_THEME as Theme) ? PUBLIC_THEME : themes[0]) as Theme
+	)
+
 	const setTheme = () => {
-		document.documentElement.setAttribute('data-theme', theme)
+		// Check for saved theme in localStorage
+		const savedTheme = localStorage.getItem('theme')
+		if (savedTheme && themes.includes(savedTheme as Theme)) {
+			currentTheme = savedTheme as Theme
+		}
+		document.documentElement.setAttribute('data-theme', currentTheme)
 	}
 
 	// Dark mode
@@ -187,6 +196,8 @@
 			{#if !isCheckingConversations}
 				<Auth />
 			{/if}
+
+			<ThemeSwitcher {currentTheme} />
 
 			<DarkModeToggle {isDarkMode} {toggleDarkMode} />
 		</div>

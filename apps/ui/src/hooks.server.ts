@@ -1,5 +1,5 @@
 import { pb } from '$lib/server/pocketbase'
-import { themes } from '$lib/constants/theme'
+import { themes } from '$lib/constants/themes'
 
 import type { Handle } from '@sveltejs/kit'
 import { getThemeColorValues } from '$lib/color'

@@ -1,4 +1,5 @@
 import forms from '@tailwindcss/forms'
+import { addIconSelectors } from '@iconify/tailwind'
 import type { Config } from 'tailwindcss'
 
 export default {
@@ -239,5 +240,5 @@ export default {
 		}
 	},
 
-	plugins: [forms]
+	plugins: [forms, addIconSelectors(['lucide'])]
 } as Config
