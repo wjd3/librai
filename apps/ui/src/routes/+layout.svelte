@@ -19,6 +19,8 @@
 
 	let { children } = $props()
 
+	const metaOverride = page.data.meta
+
 	// Themes
 	const theme = themes.includes(PUBLIC_THEME as Theme) ? PUBLIC_THEME : themes[0]
 	const setTheme = () => {
@@ -128,20 +130,22 @@
 </script>
 
 <svelte:head>
-	<title>{appTitle}</title>
-	<meta name="description" content={appDescription} />
+	{#if !metaOverride}
+		<title>{appTitle}</title>
+		<meta name="description" content={appDescription} />
 
-	<meta property="og:image" content={PUBLIC_APP_OG_IMAGE} />
-	<meta property="og:image:alt" content={appDescription} />
-
-	{#if PUBLIC_APP_OG_IMAGE}
 		<meta property="og:image" content={PUBLIC_APP_OG_IMAGE} />
 		<meta property="og:image:alt" content={appDescription} />
-	{/if}
 
-	{#if PUBLIC_APP_TWITTER_IMAGE}
-		<meta property="twitter:image" content={PUBLIC_APP_TWITTER_IMAGE} />
-		<meta property="twitter:image:alt" content={appDescription} />
+		{#if PUBLIC_APP_OG_IMAGE}
+			<meta property="og:image" content={PUBLIC_APP_OG_IMAGE} />
+			<meta property="og:image:alt" content={appDescription} />
+		{/if}
+
+		{#if PUBLIC_APP_TWITTER_IMAGE}
+			<meta property="twitter:image" content={PUBLIC_APP_TWITTER_IMAGE} />
+			<meta property="twitter:image:alt" content={appDescription} />
+		{/if}
 	{/if}
 </svelte:head>
 

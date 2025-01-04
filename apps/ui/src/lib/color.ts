@@ -1,10 +1,13 @@
 import themesCssString from '../styles/theme.css?raw'
 import resolveConfig from 'tailwindcss/resolveConfig'
 import tailwindConfig from '../../tailwind.config'
+import { themes } from './constants/theme'
 
 const fullTailwindConfig = resolveConfig(tailwindConfig)
 
-export const getThemeColorValues = (theme: string, themeVariable: string) => {
+export const getThemeColorValues = (themeVariable: string) => {
+	const theme = process.env.PUBLIC_THEME || themes[0]
+
 	const lightModeRegex = new RegExp(
 		`:root\\[data-theme='${theme}'\\][^{]*{[^}]*--${themeVariable}:\\s*([^;\\n]+)`
 	)
