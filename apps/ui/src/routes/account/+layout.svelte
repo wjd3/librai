@@ -12,21 +12,7 @@
 				class:bg-primary-card-bg={page.url.pathname === '/account'}
 				aria-label="Profile"
 			>
-				<svg
-					class="!fill-none"
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-					<circle cx="12" cy="7" r="4" />
-				</svg>
+				<span class="iconify lucide--user"> </span>
 			</a>
 
 			<a
@@ -35,20 +21,7 @@
 				class:bg-primary-card-bg={page.url.pathname === '/account/conversations'}
 				aria-label="Conversations"
 			>
-				<svg
-					class="!fill-none"
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-				</svg>
+				<span class="iconify lucide--message-square-text"> </span>
 			</a>
 		</aside>
 

@@ -88,19 +88,7 @@
 <section class="container max-w-2xl mx-auto !pb-16">
 	<div class="space-y-3 mb-6">
 		<button class="primary px-2" onclick={forkConversation} aria-label="Continue Chat">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				class="!fill-none"
-				><line x1="6" x2="6" y1="4" y2="20" /><polygon points="10,4 20,12 10,20" /></svg
-			>
+			<span class="iconify lucide--step-forward"></span>
 		</button>
 
 		<h1 class="text-2xl sm:text-3xl">
@@ -129,19 +117,7 @@
 		</div>
 
 		<button class="primary px-2 self-end" onclick={forkConversation} aria-label="Continue Chat">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				class="!fill-none"
-				><line x1="6" x2="6" y1="4" y2="20" /><polygon points="10,4 20,12 10,20" /></svg
-			>
+			<span class="iconify lucide--step-forward"></span>
 		</button>
 	</div>
 </section>
