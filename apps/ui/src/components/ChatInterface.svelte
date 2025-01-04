@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { marked } from 'marked'
+	import { parseMarkdownToHtml } from '$lib/parse'
 	import DOMPurify from 'isomorphic-dompurify'
 	import { PUBLIC_CHATBOT_THINKING_TEXT } from '$env/static/public'
 	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
@@ -189,7 +189,7 @@
 							{#if isUser}
 								<p>{DOMPurify.sanitize(message)}</p>
 							{:else}
-								{@html marked.parse(DOMPurify.sanitize(message), { async: false })}
+								{@html parseMarkdownToHtml(message)}
 							{/if}
 
 							{#if !isUser && !(isSubmitting && $chatHistory.length - 1 === i)}
@@ -263,11 +263,7 @@
 					class:animate-pulse={isSubmitting}
 				>
 					{#if isSubmitting}
-						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256">
-							<path
-								d="M144 128a16 16 0 1 1-16-16a16 16 0 0 1 16 16m-84-16a16 16 0 1 0 16 16a16 16 0 0 0-16-16m136 0a16 16 0 1 0 16 16a16 16 0 0 0-16-16"
-							/>
-						</svg>
+						<span class="iconify lucide--ellipsis animate-spin"> </span>
 					{:else}
 						Ask
 					{/if}
@@ -296,21 +292,7 @@
 				onclick={scrollToBottom}
 				aria-label="Scroll to bottom"
 			>
-				<svg
-					class="fill-btn-text stroke-btn-text w-5 h-5"
-					xmlns="http://www.w3.org/2000/svg"
-					width="1em"
-					height="1em"
-					viewBox="0 0 24 24"
-				>
-					<path
-						fill="none"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="1.5"
-						d="M12 4.5v15m0 0l-6-5.625m6 5.625l6-5.625"
-					/>
-				</svg>
+				<span class="iconify lucide--arrow-down w-5 h-5 text-xl"> </span>
 			</button>
 		{/if}
 	</div>

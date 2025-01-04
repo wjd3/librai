@@ -207,44 +207,12 @@
 			{/if}
 		</h1>
 		<button class="primary px-4" onclick={newMessage} aria-label="New Message">
-			<svg
-				class="!fill-none"
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path
-					d="M12 7v6"
-				/><path d="M9 10h6" /></svg
-			>
+			<span class="iconify lucide--message-square-plus"></span>
 		</button>
 	</div>
 
 	{#if isLoading}
-		<svg
-			class="w-6 h-6 animate-spin mx-auto mt-8"
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" fill="transparent" /><path
-				d="M21 3v5h-5"
-			/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" fill="transparent" /><path
-				d="M8 16H3v5"
-			/>
-			<path d="M8 16H3v5" />
-		</svg>
+		<span class="iconify lucide--rotate-cw animate-spin w-6 h-6 mx-auto mt-8"> </span>
 	{:else if conversations.length === 0}
 		<p>No conversations yet.</p>
 	{:else}
@@ -277,16 +245,7 @@
 									title="Cancel"
 									aria-label="Cancel"
 								>
-									<svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
-										<path
-											fill="none"
-											stroke="currentColor"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M18 6L6 18M6 6l12 12"
-										/>
-									</svg>
+									<span class="iconify lucide--x"></span>
 								</button>
 
 								<button
@@ -297,37 +256,9 @@
 									aria-label="Save"
 								>
 									{#if isSavingTitle}
-										<svg
-											class="!fill-none"
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path
-												d="M21 3v5h-5"
-											/></svg
-										>
+										<span class="iconify lucide--rotate-cw animate-spin"> </span>
 									{:else}
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-										>
-											<path
-												fill="none"
-												stroke="currentColor"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="M5 13l4 4L19 7"
-											/>
-										</svg>
+										<span class="iconify lucide--check"></span>
 									{/if}
 								</button>
 							</div>
@@ -344,30 +275,7 @@
 								title="Edit title"
 								aria-label="Edit title"
 							>
-								<svg
-									class="!fill-none"
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-								>
-									<path
-										fill="none"
-										stroke="currentColor"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-									/>
-									<path
-										fill="none"
-										stroke="currentColor"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-									/>
-								</svg>
+								<span class="iconify lucide--square-pen"></span>
 							</button>
 						{/if}
 					</div>
@@ -382,21 +290,7 @@
 							class="secondary px-4"
 							onclick={() => confirmDelete(conversation.id)}
 						>
-							<svg
-								class="stroke-btn-text text-btn-text"
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								><path
-									fill="none"
-									stroke="currentColor"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2m-6 5v6m4-6v6"
-								/></svg
-							>
+							<span class="iconify lucide--trash-2"></span>
 						</button>
 
 						<div class="flex space-x-2">
@@ -408,49 +302,9 @@
 									aria-label="Unshare Conversation"
 								>
 									{#if isSharing}
-										<svg
-											class="!fill-none"
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path
-												d="M21 3v5h-5"
-											/></svg
-										>
+										<span class="iconify lucide--rotate-cw animate-spin"> </span>
 									{:else}
-										<svg
-											class="!fill-none"
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											><path
-												d="m18.84 12.25 1.72-1.71h-.02a5.004 5.004 0 0 0-.12-7.07 5.006 5.006 0 0 0-6.95 0l-1.72 1.71"
-											/><path
-												d="m5.17 11.75-1.71 1.71a5.004 5.004 0 0 0 .12 7.07 5.006 5.006 0 0 0 6.95 0l1.71-1.71"
-											/><line x1="8" x2="8" y1="2" y2="5" /><line
-												x1="2"
-												x2="5"
-												y1="8"
-												y2="8"
-											/><line x1="16" x2="16" y1="19" y2="22" /><line
-												x1="19"
-												x2="22"
-												y1="16"
-												y2="16"
-											/></svg
-										>
+										<span class="iconify lucide--link-2-off"></span>
 									{/if}
 								</button>
 
@@ -460,34 +314,9 @@
 										conversation.shareId && copyShareUrl(getShareUrl(conversation.shareId), i)}
 								>
 									{#if copiedShareIndex === i}
-										<svg
-											class="!fill-none"
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg
-										>
+										<span class="iconify lucide--check"></span>
 									{:else}
-										<svg
-											class="!fill-none"
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path
-												d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
-											/></svg
-										>
+										<span class="iconify lucide--copy"></span>
 									{/if}
 								</button>
 							{:else}
@@ -497,41 +326,9 @@
 									onclick={() => shareConversation(conversation, i)}
 								>
 									{#if isSharing && isSharingIndex === i}
-										<svg
-											class="!fill-none"
-											class:animate-spin={isSharing && isSharingIndex === i}
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										>
-											<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path
-												d="M21 3v5h-5"
-											/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path
-												d="M8 16H3v5"
-											/></svg
-										>
+										<span class="iconify lucide--rotate-cw animate-spin"></span>
 									{:else}
-										<svg
-											class="!fill-none"
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path
-												d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-											/></svg
-										>
+										<span class="iconify lucide--link"></span>
 									{/if}
 								</button>
 							{/if}
@@ -541,19 +338,7 @@
 								class="primary px-4"
 								onclick={() => loadConversation(conversation)}
 							>
-								<svg
-									class="!fill-none"
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									><line x1="6" x2="6" y1="4" y2="20" /><polygon points="10,4 20,12 10,20" /></svg
-								>
+								<span class="iconify lucide--step-forward"></span>
 							</button>
 						</div>
 					</div>
@@ -584,34 +369,9 @@
 						<input type="text" readonly value={shareUrl} class="w-full input" />
 						<button type="submit" class="secondary px-4">
 							{#if copiedShareIndex === -1}
-								<svg
-									class="!fill-none"
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg
-								>
+								<span class="iconify lucide--copy"></span>
 							{:else}
-								<svg
-									class="!fill-none"
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path
-										d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
-									/></svg
-								>
+								<span class="iconify lucide--check"></span>
 							{/if}
 						</button>
 					</div>

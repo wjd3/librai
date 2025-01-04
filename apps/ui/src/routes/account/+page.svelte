@@ -167,17 +167,25 @@
 						required
 						class="input w-full"
 						maxlength="700"
-						placeholder="Enter your name"
+						placeholder={$isAuthLoading ? 'Loading name...' : 'Enter your name'}
 					/>
 				</div>
 
 				<!-- Email Field -->
 				<div class="space-y-2">
-					<div class="flex items-center justify-between p-3 bg-page-bg rounded-lg">
-						<span class="opacity-90">{$currentUser?.email}</span>
+					<div
+						class="flex max-sm:flex-col max-sm:space-y-2 sm:items-center justify-between p-3 bg-page-bg rounded-lg"
+					>
+						<span class="opacity-90"
+							>{$isAuthLoading
+								? 'Loading email...'
+								: $currentUser?.email
+									? $currentUser.email
+									: ''}</span
+						>
 						<button
 							type="button"
-							class="secondary text-sm px-3"
+							class="primary text-sm px-3"
 							onclick={() => (showChangeEmail = true)}
 							disabled={isUpdating || $isAuthLoading}
 						>
@@ -188,11 +196,15 @@
 
 				<!-- Password Field -->
 				<div class="space-y-2">
-					<div class="flex items-center justify-between p-3 bg-page-bg rounded-lg">
-						<span class="opacity-90">••••••••</span>
+					<div
+						class="flex sm:items-center justify-between p-3 bg-page-bg rounded-lg max-sm:flex-col max-sm:space-y-2"
+					>
+						<span class="opacity-90 text-left"
+							>{$isAuthLoading ? 'Loading password...' : '••••••••••••'}</span
+						>
 						<button
 							type="button"
-							class="secondary text-sm px-3"
+							class="primary text-sm px-3"
 							onclick={() => (showChangePassword = true)}
 							disabled={isUpdating || $isAuthLoading}
 						>
@@ -209,69 +221,27 @@
 					<p class="text-green-500 text-sm bg-green-500/10 px-3 py-2 rounded">{success}</p>
 				{/if}
 
-				<div class="flex items-center justify-between pt-4 border-t border-form-border">
+				<div
+					class="flex sm:items-center justify-between pt-4 border-t border-form-border max-sm:flex-col-reverse max-sm:space-y-2 max-sm:space-y-reverse"
+				>
 					<button
 						type="button"
 						class="secondary px-4 text-sm"
 						onclick={() => (showLogoutConfirm = true)}
 						disabled={isUpdating || $isAuthLoading}
 					>
-						<div class="flex items-center space-x-2">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="18"
-								height="18"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								class="!fill-none"
-							>
-								<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-								<polyline points="16 17 21 12 16 7" />
-								<line x1="21" x2="9" y1="12" y2="12" />
-							</svg>
+						<div class="flex items-center space-x-2 max-sm:justify-center">
+							<span class="iconify lucide--log-out !text-lg !w-[18px] !h-[18px]"></span>
 							<span>Logout</span>
 						</div>
 					</button>
 
 					<button type="submit" class="primary px-4" disabled={isUpdating || $isAuthLoading}>
-						<div class="flex items-center space-x-2">
+						<div class="flex items-center space-x-2 max-sm:justify-center">
 							{#if isUpdating}
-								<svg
-									class="!fill-none animate-spin"
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-								>
-									<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-									<path d="M21 3v5h-5" />
-								</svg>
+								<span class="iconify lucide--rotate-cw animate-spin"> </span>
 							{:else}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="18"
-									height="18"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									class="!fill-none"
-								>
-									<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-									<polyline points="17 21 17 13 7 13 7 21" />
-									<polyline points="7 3 7 8 15 8" />
-								</svg>
+								<span class="iconify lucide--save !text-lg !w-[18px] !h-[18px]"> </span>
 								<span>Save Changes</span>
 							{/if}
 						</div>
@@ -352,21 +322,7 @@
 					</button>
 					<button type="submit" class="primary" disabled={isUpdating || $isAuthLoading}>
 						{#if isUpdating}
-							<svg
-								class="!fill-none animate-spin"
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							>
-								<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-								<path d="M21 3v5h-5" />
-							</svg>
+							<span class="iconify lucide--rotate-cw animate-spin"> </span>
 						{:else}
 							Change Password
 						{/if}
@@ -426,21 +382,7 @@
 					</button>
 					<button type="submit" class="primary" disabled={isUpdating || $isAuthLoading}>
 						{#if isUpdating}
-							<svg
-								class="!fill-none animate-spin"
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							>
-								<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-								<path d="M21 3v5h-5" />
-							</svg>
+							<span class="iconify lucide--rotate-cw animate-spin"> </span>
 						{:else}
 							Change Email
 						{/if}
@@ -480,21 +422,7 @@
 				</button>
 				<button type="button" class="primary" onclick={logout} disabled={isLoggingOut}>
 					{#if isLoggingOut}
-						<svg
-							class="!fill-none animate-spin"
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-							<path d="M21 3v5h-5" />
-						</svg>
+						<span class="iconify lucide--rotate-cw animate-spin"> </span>
 					{:else}
 						Logout
 					{/if}

@@ -129,23 +129,7 @@
 		transition:fade={{ duration: 200, easing: quartInOut }}
 		aria-label="Sign Up"
 	>
-		<svg
-			class="!fill-none"
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-			<circle cx="9" cy="7" r="4" />
-			<line x1="19" x2="19" y1="8" y2="14" />
-			<line x1="22" x2="16" y1="11" y2="11" />
-		</svg>
+		<span class="iconify lucide--user-plus"> </span>
 	</button>
 
 	<button
@@ -159,40 +143,11 @@
 		transition:fade={{ duration: 200, easing: quartInOut }}
 		aria-label="Login"
 	>
-		<svg
-			class="!fill-none"
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-			<polyline points="10 17 15 12 10 7" />
-			<line x1="15" x2="3" y1="12" y2="12" />
-		</svg>
+		<span class="iconify lucide--log-in"> </span>
 	</button>
 {:else}
 	<a href="/account" class="secondary px-4 py-2" aria-label="Account">
-		<svg
-			class="!fill-none"
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-			<circle cx="12" cy="7" r="4" />
-		</svg>
+		<span class="iconify lucide--user"> </span>
 	</a>
 {/if}
 
@@ -299,21 +254,7 @@
 					</button>
 					<button type="submit" class="primary" disabled={$isAuthLoading}>
 						{#if $isAuthLoading}
-							<svg
-								class="!fill-none animate-spin"
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path
-									d="M21 3v5h-5"
-								/></svg
-							>
+							<span class="iconify lucide--rotate-cw animate-spin"> </span>
 						{:else if isRegistering}
 							Sign Up
 						{:else}

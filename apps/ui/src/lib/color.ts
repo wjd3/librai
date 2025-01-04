@@ -1,7 +1,7 @@
-import themesCssString from '../styles/theme.css?raw'
+import themesCssString from '../styles/themes.css?raw'
 import resolveConfig from 'tailwindcss/resolveConfig'
 import tailwindConfig from '../../tailwind.config'
-import { themes } from './constants/theme'
+import { themes } from './constants/themes'
 
 const fullTailwindConfig = resolveConfig(tailwindConfig)
 

@@ -104,7 +104,9 @@ Current query: ${sanitizedQuery}
 
 Please answer the query above, taking into account both the provided context and our conversation history. If the context isn't relevant to the current query, you can ignore it.
 
-${sanitizedName ? `Keep in mind that the user's name is: ${sanitizedName}` : ''}
+DO NOT wrap formulas in brackets like [ FORMULA GOES HERE ]. Instead, wrap them in double dollar signs like $$ FORMULA GOES HERE $$.
+
+${sanitizedName ? `The user's name is ${sanitizedName}.` : ''}
 `
 
 		const conversationHistory = JSON.parse(history || '[]').reduce(

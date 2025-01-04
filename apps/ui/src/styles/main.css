@@ -2,8 +2,7 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-@import './theme.css';
-
+@import './themes.css';
 @import './chat.css';
 
 ::selection {
@@ -142,4 +141,9 @@ svg {
 button.primary svg,
 button.secondary svg {
 	@apply fill-current; /* Reset fill for SVGs inside buttons */
+}
+
+/* Iconify Styles */
+span.iconify {
+	@apply text-2xl w-6 h-6 leading-none block;
 }
