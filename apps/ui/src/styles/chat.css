@@ -15,7 +15,7 @@
 .chat-message:not(.is-user) {
 	@apply flex flex-col space-y-2 rounded-br-lg self-start bg-bot-bubble-bg;
 }
-.chat-message:not(.is-user) :nth-child(2) {
+.chat-message:not(.is-user) > :nth-child(2) {
 	@apply !mt-0;
 }
 
@@ -54,4 +54,9 @@
 }
 .chat-message th {
 	@apply text-left;
+}
+
+/* Katex */
+li .katex-display {
+	@apply w-fit;
 }

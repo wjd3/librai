@@ -147,6 +147,14 @@
 			<meta property="twitter:image:alt" content={appDescription} />
 		{/if}
 	{/if}
+
+	<!-- Katex -->
+	<link
+		rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/katex@0.16.19/dist/katex.min.css"
+		integrity="sha256-NKg8QXp7tt8XVGCRSD7mBlZe7t3UK8Jyrh2CPTByCWY="
+		crossorigin="anonymous"
+	/>
 </svelte:head>
 
 <div

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
 	import { quartInOut } from 'svelte/easing'
-	import { marked } from 'marked'
 	import DOMPurify from 'isomorphic-dompurify'
 	import CopyButton from '$components/CopyButton.svelte'
 	import { isAuthenticated, authToken } from '$lib/stores/auth'
 	import { currentConversation, chatHistory } from '$lib/stores/index'
 	import { goto } from '$app/navigation'
+	import { parseMarkdownToHtml } from '$lib/parse'
 
 	let { data } = $props()
 	const { conversation, meta } = data
@@ -121,7 +121,7 @@
 						<p>{DOMPurify.sanitize(message)}</p>
 					{:else}
 						<h2 class="sr-only">AI said:</h2>
-						{@html marked.parse(DOMPurify.sanitize(message), { async: false })}
+						{@html parseMarkdownToHtml(message)}
 						<CopyButton {message} messageIndex={i} />
 					{/if}
 				</div>

@@ -48,6 +48,7 @@
 		"dotenv": "^16.4.5",
 		"isomorphic-dompurify": "^2.16.0",
 		"marked": "^15.0.0",
+		"marked-katex-extension": "^5.1.4",
 		"openai": "^4.68.4",
 		"pocketbase": "^0.21.5"
 	}
