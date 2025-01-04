@@ -173,7 +173,9 @@
 
 				<!-- Email Field -->
 				<div class="space-y-2">
-					<div class="flex items-center justify-between p-3 bg-page-bg rounded-lg">
+					<div
+						class="flex max-sm:flex-col max-sm:space-y-2 sm:items-center justify-between p-3 bg-page-bg rounded-lg"
+					>
 						<span class="opacity-90">{$currentUser?.email}</span>
 						<button
 							type="button"
@@ -188,8 +190,10 @@
 
 				<!-- Password Field -->
 				<div class="space-y-2">
-					<div class="flex items-center justify-between p-3 bg-page-bg rounded-lg">
-						<span class="opacity-90">••••••••</span>
+					<div
+						class="flex sm:items-center justify-between p-3 bg-page-bg rounded-lg max-sm:flex-col max-sm:space-y-2"
+					>
+						<span class="opacity-90 text-left">••••••••••••</span>
 						<button
 							type="button"
 							class="secondary text-sm px-3"
@@ -209,14 +213,16 @@
 					<p class="text-green-500 text-sm bg-green-500/10 px-3 py-2 rounded">{success}</p>
 				{/if}
 
-				<div class="flex items-center justify-between pt-4 border-t border-form-border">
+				<div
+					class="flex sm:items-center justify-between pt-4 border-t border-form-border max-sm:flex-col max-sm:space-y-2"
+				>
 					<button
 						type="button"
 						class="secondary px-4 text-sm"
 						onclick={() => (showLogoutConfirm = true)}
 						disabled={isUpdating || $isAuthLoading}
 					>
-						<div class="flex items-center space-x-2">
+						<div class="flex items-center space-x-2 max-sm:justify-center">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="18"
@@ -238,7 +244,7 @@
 					</button>
 
 					<button type="submit" class="primary px-4" disabled={isUpdating || $isAuthLoading}>
-						<div class="flex items-center space-x-2">
+						<div class="flex items-center space-x-2 max-sm:justify-center">
 							{#if isUpdating}
 								<svg
 									class="!fill-none animate-spin"
