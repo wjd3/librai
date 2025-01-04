@@ -12,7 +12,7 @@ const generateOgImageUrl = async (title: string, userMessage: string, aiMessage:
 
 	const ogImageUrl = new URL('https://og.tailgraph.com/og')
 	ogImageUrl.searchParams.set('fontFamily', 'system-ui')
-	ogImageUrl.searchParams.set('title', `${PUBLIC_APP_TITLE || 'Librai UI'} - ${title}`)
+	ogImageUrl.searchParams.set('title', `${title} | ${PUBLIC_APP_TITLE || 'Librai UI'}`)
 	ogImageUrl.searchParams.set('titleTailwind', `text-4xl font-bold text-[${lightTextColor}] mb-6`)
 	ogImageUrl.searchParams.set(
 		'text',
