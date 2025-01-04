@@ -3,7 +3,7 @@
 	import { authToken, isAuthLoading } from '$lib/stores/auth'
 	import { fade } from 'svelte/transition'
 	import { quartInOut } from 'svelte/easing'
-	import DOMPurify from 'dompurify'
+	import DOMPurify from 'isomorphic-dompurify'
 
 	let showLogoutConfirm = $state(false)
 	let isLoggingOut = $state(false)

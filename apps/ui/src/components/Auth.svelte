@@ -2,7 +2,7 @@
 	import { isAuthenticated, currentUser, isAuthLoading } from '$lib/stores/index'
 	import { authToken } from '$lib/stores/auth'
 	import { fade } from 'svelte/transition'
-	import DOMPurify from 'dompurify'
+	import DOMPurify from 'isomorphic-dompurify'
 	import { quartInOut } from 'svelte/easing'
 
 	let showAuth = $state(false)

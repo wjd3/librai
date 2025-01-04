@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DOMPurify from 'dompurify'
+	import DOMPurify from 'isomorphic-dompurify'
 	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
 	import { chatHistory, currentConversation } from '$lib/stores/index'
 	import { authToken, isAuthenticated, isAuthLoading } from '$lib/stores/auth'

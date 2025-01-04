@@ -34,7 +34,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		transformPageChunk: ({ html }) => {
 			const theme = process.env.PUBLIC_THEME || themes[0]
 
-			const { light, dark } = getThemeColorValues(theme, 'page-bg')
+			const { light, dark } = getThemeColorValues('page-bg')
 
 			return html
 				.replace('%DATA_THEME%', theme)

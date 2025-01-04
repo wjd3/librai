@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { marked } from 'marked'
-	import DOMPurify from 'dompurify'
+	import DOMPurify from 'isomorphic-dompurify'
 	import { PUBLIC_CHATBOT_THINKING_TEXT } from '$env/static/public'
 	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken } from '$lib/stores/auth'
