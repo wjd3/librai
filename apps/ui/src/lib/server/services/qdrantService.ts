@@ -18,13 +18,11 @@ type QdrantSearchResult = {
 	id: string | number
 	version: number
 	score: number
-	payload?:
-		| Record<string, unknown>
-		| {
-				[key: string]: unknown
-		  }
-		| null
-		| undefined
+	payload?: {
+		title?: string
+		content?: string
+		concepts?: string[]
+	} | null
 	vector?:
 		| Record<string, unknown>
 		| number[]
@@ -54,30 +52,50 @@ type QdrantSearchResult = {
 }
 
 const parseSemanticResults = (searchResults: QdrantSearchResult[]) =>
-	searchResults.reduce((acc: { title: string; content: string }[], result) => {
+	searchResults.reduce((acc: { title: string; content: string; concepts?: string[] }[], result) => {
 		if (result.payload?.title && result.payload?.content) {
 			acc.push({
-				title: result.payload.title as string,
-				content: result.payload.content as string
+				title: result.payload.title,
+				content: result.payload.content,
+				concepts: result.payload.concepts || []
 			})
 		}
 		return acc
 	}, [])
 
 export async function getSemanticResults(query: string, topK: number = 40) {
+	// Get concepts from the query
+	const queryConcepts = await OpenAIService.extractConcepts(query)
+
 	// Convert the query to an embedding
 	const queryEmbedding = await OpenAIService.getEmbedding(query)
 
-	// Search the Qdrant collection for the query embedding
-	const searchResults: QdrantSearchResult[] = await qdrantClient.search(
-		PRIVATE_QDRANT_COLLECTION_NAME,
-		{
-			vector: queryEmbedding,
-			limit: topK // topK specifies the number of top results to return from the search
-		}
-	)
+	// Search the Qdrant collection with both vector similarity and concept filtering
+	const searchResults = await qdrantClient.search(PRIVATE_QDRANT_COLLECTION_NAME, {
+		vector: queryEmbedding,
+		limit: topK,
+		filter:
+			queryConcepts.length > 0
+				? {
+						must: [
+							{
+								should: queryConcepts.map((concept) => ({
+									key: 'concepts',
+									match: { value: concept }
+								}))
+							}
+						]
+					}
+				: undefined
+	})
 
-	// Parse the search results to give context to the AI API
+	// Parse and sort results by relevance
 	const parsedResults = parseSemanticResults(searchResults)
-	return parsedResults
+
+	// Sort results to prioritize those with matching concepts
+	return parsedResults.sort((a, b) => {
+		const aMatchCount = a.concepts?.filter((c) => queryConcepts.includes(c)).length || 0
+		const bMatchCount = b.concepts?.filter((c) => queryConcepts.includes(c)).length || 0
+		return bMatchCount - aMatchCount
+	})
 }

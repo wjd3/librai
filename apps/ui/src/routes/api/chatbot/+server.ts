@@ -88,21 +88,30 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 			}
 		}
 
-		// Retrieve context from Qdrant
+		// Retrieve context from Qdrant with concept-aware search
 		const searchResults = await getSemanticResults(sanitizedQuery)
-		const context = searchResults.map((result) => `\n\n${result.content}`).join('')
+
+		// Format context with concepts
+		const context = searchResults
+			.map((result) => {
+				const conceptsInfo = result.concepts?.length
+					? `\nRelated concepts: ${result.concepts.join(', ')}`
+					: ''
+				return `\n\nContent: ${result.content}${conceptsInfo}`
+			})
+			.join('')
 
 		// Add the user's name to the prompt
 		const sanitizedName = DOMPurify.sanitize(name || '')
 
 		// Format the prompt with context and history
 		const queryWithContext = `
-Context from relevant documents:
+Context from relevant documents (sorted by concept relevance):
 ${context}
 
 Current query: ${sanitizedQuery}
 
-Please answer the query above, taking into account both the provided context and our conversation history. If the context isn't relevant to the current query, you can ignore it.
+Please answer the query above, taking into account both the provided context and our conversation history. Focus on information from context sections that share concepts with the query. If the context isn't relevant to the current query, you can ignore it.
 
 ${sanitizedName ? `Keep in mind that the user's name is: ${sanitizedName}` : ''}
 `

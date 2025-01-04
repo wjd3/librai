@@ -5,7 +5,8 @@ import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
 import {
 	PRIVATE_OPENAI_API_KEY,
 	PRIVATE_OPENAI_EMBEDDINGS_MODEL,
-	PRIVATE_OPENAI_CHAT_MODEL
+	PRIVATE_OPENAI_CHAT_MODEL,
+	PRIVATE_CONCEPTS_PROMPT
 } from '$env/static/private'
 
 const openai = new OpenAI({ apiKey: PRIVATE_OPENAI_API_KEY })
@@ -62,5 +63,27 @@ export class OpenAIService {
 			console.error('Error generating title:', error)
 			return message.slice(0, 50).trim() + '...'
 		}
+	}
+
+	static async extractConcepts(text: string): Promise<string[]> {
+		const prompt = `${PRIVATE_CONCEPTS_PROMPT}
+
+Text to analyze: "${text}"
+
+Return only a comma-separated list of 1-3 word concepts, no explanations. If you cannot identify any concepts, return "none".`
+
+		const response = await openai.chat.completions.create({
+			model: PRIVATE_OPENAI_CHAT_MODEL,
+			messages: [{ role: 'user', content: prompt }],
+			temperature: 0.1
+		})
+
+		const concepts =
+			response.choices[0].message.content
+				?.split(',')
+				.map((concept) => concept.trim())
+				.filter((concept) => concept && concept !== 'none') || []
+
+		return concepts
 	}
 }
