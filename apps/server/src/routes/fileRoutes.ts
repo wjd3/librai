@@ -34,6 +34,7 @@ router.post(
 		try {
 			const { file } = req
 			const excludePagesJson = req.body.excludePages
+			const conceptsListJson = req.body.conceptsList
 
 			if (!file) {
 				res.status(400).json({ error: 'No file uploaded' })
@@ -50,6 +51,16 @@ router.post(
 				}
 			}
 
+			let conceptsList: string[] = []
+			if (conceptsListJson) {
+				try {
+					conceptsList = JSON.parse(conceptsListJson)
+				} catch (e) {
+					res.status(400).json({ error: 'Invalid concepts list format' })
+					return
+				}
+			}
+
 			console.log('Processing file:', file.originalname)
 			const fileContent = await processFile(file, excludePages)
 			const fileTitle = file.originalname
@@ -57,7 +68,8 @@ router.post(
 			console.log('Generating and storing embeddings in Qdrant...')
 			const result = await storeFileEmbeddingsInQdrant({
 				fileContent,
-				fileTitle
+				fileTitle,
+				conceptsList
 			})
 
 			res.json({

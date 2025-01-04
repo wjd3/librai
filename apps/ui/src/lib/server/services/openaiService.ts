@@ -1,4 +1,4 @@
-// src/lib/services/openaiService.ts
+// src/lib/services/openAiService.ts
 
 import { OpenAI } from 'openai'
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'

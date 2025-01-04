@@ -1,7 +1,7 @@
 import DOMPurify from 'isomorphic-dompurify'
 import { json } from '@sveltejs/kit'
 import { getSemanticResults } from '$lib/server/services/qdrantService'
-import { OpenAIService } from '$lib/server/services/openaiService'
+import { OpenAIService } from '$lib/server/services/openAiService'
 import { PocketbaseService, type Conversation } from '$lib/server/services/pocketbaseService'
 import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
 import { RateLimitService } from '$lib/server/services/rateLimitService'

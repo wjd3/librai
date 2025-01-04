@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { PocketbaseService } from '$lib/server/services/pocketbaseService'
-import { OpenAIService } from '$lib/server/services/openaiService'
+import { OpenAIService } from '$lib/server/services/openAiService'
 
 export const GET = async ({ locals }) => {
 	const userId = locals.user?.id

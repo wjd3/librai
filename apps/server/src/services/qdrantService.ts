@@ -1,5 +1,5 @@
 import { QdrantClient } from '@qdrant/js-client-rest'
-import generatePoints from '../utils/generatePoints'
+import generatePoints from './openAiService'
 
 if (!process.env.QDRANT_API_URL || !process.env.QDRANT_API_KEY || !process.env.QDRANT_COLLECTION) {
 	throw new Error(
@@ -16,18 +16,21 @@ const qdrantClient = new QdrantClient({
 type StoreFileEmbeddingsParams = {
 	fileContent: string
 	fileTitle: string
+	conceptsList?: string[]
 }
 
 // Store file embeddings in Qdrant
 export async function storeFileEmbeddingsInQdrant({
 	fileContent,
-	fileTitle
+	fileTitle,
+	conceptsList = []
 }: StoreFileEmbeddingsParams) {
 	try {
 		// Generate array of points (embeddings) for the file content
 		const points = await generatePoints({
 			content: fileContent,
-			title: fileTitle
+			title: fileTitle,
+			conceptsList
 		})
 
 		// Insert the embeddings into Qdrant with metadata

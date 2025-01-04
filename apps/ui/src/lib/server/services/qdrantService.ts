@@ -1,6 +1,6 @@
 // src/lib/services/qdrantService.ts
 
-import { OpenAIService } from './openaiService'
+import { OpenAIService } from './openAiService'
 import { QdrantClient } from '@qdrant/js-client-rest'
 import {
 	PRIVATE_QDRANT_ENDPOINT_URL,

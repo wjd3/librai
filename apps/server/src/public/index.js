@@ -6,6 +6,7 @@ document.addEventListener('alpine:init', () => {
 		errorMessage: '',
 		successMessage: '',
 		result: null,
+		conceptsList: '',
 
 		handleDrop(event) {
 			this.isDragging = false
@@ -77,6 +78,13 @@ document.addEventListener('alpine:init', () => {
 			}
 		},
 
+		parseConceptsList() {
+			return this.conceptsList
+				.split('\n')
+				.map((concept) => concept.trim())
+				.filter((concept) => concept.length > 0)
+		},
+
 		async submitFile() {
 			if (this.selectedFiles.length === 0 || this.isUploading) return
 
@@ -86,6 +94,7 @@ document.addEventListener('alpine:init', () => {
 			this.result = null
 
 			const results = []
+			const concepts = this.parseConceptsList()
 
 			for (const fileObj of this.selectedFiles) {
 				const formData = new FormData()
@@ -98,10 +107,13 @@ document.addEventListener('alpine:init', () => {
 					}
 				}
 
+				if (concepts.length > 0) {
+					formData.append('conceptsList', JSON.stringify(concepts))
+				}
+
 				try {
 					const response = await fetch('/api/files/upload', {
 						method: 'POST',
-
 						body: formData
 					})
 
