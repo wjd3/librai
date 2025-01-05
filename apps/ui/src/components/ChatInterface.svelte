@@ -82,21 +82,12 @@
 				})
 			})
 
-			if (response.status === 429) {
-				const data = await response.json()
-				chatHistory.update((history) => [
-					...history,
-					{
-						message: `⚠️ ${data.error}`,
-						isUser: false
-					}
-				])
-				isSubmitting = false
-				return
+			if (!response.ok) {
+				const errorData = await response.text()
+				throw new Error(`HTTP error! status: ${response.status}, message: ${errorData}`)
 			}
-
-			if (!response.ok || !response.body) {
-				throw new Error('Network response was not ok')
+			if (!response.body) {
+				throw new Error('Response body is null')
 			}
 
 			const newConversationId = response.headers.get('X-Conversation-Id')
@@ -109,22 +100,32 @@
 			const reader = response.body.getReader()
 			const decoder = new TextDecoder()
 			let message = ''
+			let hasReceivedContent = false
 
 			while (true) {
 				const { done, value } = await reader.read()
-				if (done) break
+
+				if (done) {
+					if (!hasReceivedContent) {
+						throw new Error('Stream completed without content')
+					}
+					break
+				}
 
 				const text = decoder.decode(value)
-				message += text
+				if (text) {
+					hasReceivedContent = true
+					message += text
 
-				chatHistory.update((history) => {
-					const lastMessage = history[history.length - 1]
-					if (!lastMessage || lastMessage.isUser) {
-						return [...history, { message, isUser: false }]
-					} else {
-						return history.map((msg, i) => (i === history.length - 1 ? { ...msg, message } : msg))
-					}
-				})
+					chatHistory.update((history) => {
+						const lastMessage = history[history.length - 1]
+						if (!lastMessage || lastMessage.isUser) {
+							return [...history, { message, isUser: false }]
+						} else {
+							return history.map((msg, i) => (i === history.length - 1 ? { ...msg, message } : msg))
+						}
+					})
+				}
 			}
 
 			const remainingMessagesHeader = response.headers.get('X-RateLimit-Remaining')
@@ -135,7 +136,10 @@
 			console.error('Error:', error)
 			chatHistory.update((history) => [
 				...history,
-				{ message: 'Error fetching response', isUser: false }
+				{
+					message: `Error: ${(error as Error).message || 'An unexpected error occurred'}`,
+					isUser: false
+				}
 			])
 		}
 
@@ -263,7 +267,7 @@
 					class:animate-pulse={isSubmitting}
 				>
 					{#if isSubmitting}
-						<span class="iconify lucide--ellipsis animate-spin"> </span>
+						<span class="iconify lucide--ellipsis"> </span>
 					{:else}
 						Ask
 					{/if}

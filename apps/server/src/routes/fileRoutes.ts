@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import multer from 'multer'
 import path from 'path'
-import { storeFileEmbeddingsInQdrant } from '../services/qdrantService'
+import { qdrantService } from '../services/qdrantService'
 import { processFile } from '../services/fileService'
 
 const router = express.Router()
@@ -55,7 +55,7 @@ router.post(
 			const fileTitle = file.originalname
 
 			console.log('Generating and storing embeddings in Qdrant...')
-			const result = await storeFileEmbeddingsInQdrant({
+			const result = await qdrantService.storeFileEmbeddings({
 				fileContent,
 				fileTitle
 			})

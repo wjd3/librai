@@ -64,3 +64,12 @@ export class OpenAIService {
 		}
 	}
 }
+
+export async function generateQueryEmbedding(query: string): Promise<number[]> {
+	const response = await openai.embeddings.create({
+		model: 'text-embedding-3-large',
+		input: query,
+		dimensions: 3072
+	})
+	return response.data[0].embedding
+}

@@ -1,44 +1,46 @@
 import { QdrantClient } from '@qdrant/js-client-rest'
-import generatePoints from '../utils/generatePoints'
+import { generatePoints } from './openAiService'
 
-if (!process.env.QDRANT_API_URL || !process.env.QDRANT_API_KEY || !process.env.QDRANT_COLLECTION) {
-	throw new Error(
-		'One or more required environment variables are undefined: QDRANT_API_URL, QDRANT_API_KEY, QDRANT_COLLECTION'
-	)
-}
+export class QdrantService {
+	private client: QdrantClient
 
-const qdrantClient = new QdrantClient({
-	url: process.env.QDRANT_API_URL,
-	apiKey: process.env.QDRANT_API_KEY
-})
+	constructor() {
+		if (
+			!process.env.QDRANT_API_URL ||
+			!process.env.QDRANT_API_KEY ||
+			!process.env.QDRANT_COLLECTION
+		) {
+			throw new Error('Missing required Qdrant environment variables')
+		}
 
-// Define types for the function parameters
-type StoreFileEmbeddingsParams = {
-	fileContent: string
-	fileTitle: string
-}
-
-// Store file embeddings in Qdrant
-export async function storeFileEmbeddingsInQdrant({
-	fileContent,
-	fileTitle
-}: StoreFileEmbeddingsParams) {
-	try {
-		// Generate array of points (embeddings) for the file content
-		const points = await generatePoints({
-			content: fileContent,
-			title: fileTitle
+		this.client = new QdrantClient({
+			url: process.env.QDRANT_API_URL,
+			apiKey: process.env.QDRANT_API_KEY
 		})
+	}
 
-		// Insert the embeddings into Qdrant with metadata
-		const result = await qdrantClient.upsert(process.env.QDRANT_COLLECTION as string, {
-			points
-		})
+	async storeFileEmbeddings({
+		fileContent,
+		fileTitle
+	}: {
+		fileContent: string
+		fileTitle: string
+	}) {
+		try {
+			const points = await generatePoints({ content: fileContent, title: fileTitle })
 
-		console.log(`Embeddings for file "${fileTitle}" stored in Qdrant.`)
-		return result.status
-	} catch (error) {
-		console.error(`Error storing embeddings for file "${fileTitle}" in Qdrant:`, error)
-		throw error
+			const result = await this.client.upsert(process.env.QDRANT_COLLECTION as string, {
+				points,
+				wait: true // Ensure points are indexed before continuing
+			})
+
+			console.log(`Embeddings stored for "${fileTitle}"`)
+			return result.status
+		} catch (error) {
+			console.error(`Error storing embeddings for "${fileTitle}":`, error)
+			throw error
+		}
 	}
 }
+
+export const qdrantService = new QdrantService()
