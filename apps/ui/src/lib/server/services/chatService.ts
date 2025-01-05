@@ -1,4 +1,4 @@
-import { OpenAIService } from '$lib/server/services/openaiService'
+import { OpenAIService } from '$lib/server/services/openAiService'
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
 import type { EnhancedSearchResult } from './qdrantService'
 

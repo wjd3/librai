@@ -1,7 +1,7 @@
 import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
 import DOMPurify from 'isomorphic-dompurify'
 import { json } from '@sveltejs/kit'
-import { OpenAIService } from '$lib/server/services/openaiService'
+import { OpenAIService } from '$lib/server/services/openAiService'
 import { PocketbaseService, type Conversation } from '$lib/server/services/pocketbaseService'
 import { RateLimitService } from '$lib/server/services/rateLimitService'
 import { searchWithHybrid } from '$lib/server/services/qdrantService'
