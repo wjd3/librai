@@ -51,7 +51,7 @@
 						Authorization: `Bearer ${$authToken}`
 					},
 					body: JSON.stringify({
-						messages: [{ message: query, isUser: true }]
+						messages: [{ message: query, isUser: true, created: new Date().toISOString() }]
 					})
 				})
 

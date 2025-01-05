@@ -130,11 +130,13 @@ ${ctx.payload.content.trim()}`
 	constructSystemPrompt({
 		enhancedContext,
 		conversationSummary,
-		customPrompt
+		customPrompt,
+		userActualName
 	}: {
 		enhancedContext: string
 		conversationSummary?: string
 		customPrompt?: string
+		userActualName?: string
 	}) {
 		const promptParts = [
 			// Include the private system prompt if provided or fall back to the default assistant behavior
@@ -147,6 +149,8 @@ When answering:
 3. If the context doesn't contain relevant information, do not say so
 4. Maintain consistent personality and knowledge across the conversation
 5. Use clear formatting for readability`,
+
+			userActualName && `User Name: ${userActualName}`,
 
 			enhancedContext && `Context:\n${enhancedContext}`,
 

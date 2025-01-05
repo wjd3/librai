@@ -2,14 +2,18 @@
 import DOMPurify from 'isomorphic-dompurify'
 import { json } from '@sveltejs/kit'
 import { OpenAIService } from '$lib/server/services/openAiService'
-import { PocketbaseService, type Conversation } from '$lib/server/services/pocketbaseService'
+import {
+	PocketbaseService,
+	type ChatMessage,
+	type Conversation
+} from '$lib/server/services/pocketbaseService'
 import { RateLimitService } from '$lib/server/services/rateLimitService'
 import { searchWithHybrid } from '$lib/server/services/qdrantService'
 import { chatService } from '$lib/server/services/chatService'
 import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
 
 export const POST = async ({ request, locals, getClientAddress }) => {
-	const { query, history, conversationId } = await request.json()
+	const { query, history, conversationId, name } = await request.json()
 
 	const userId = locals.user?.id
 	const headers: Record<string, string> = {}
@@ -56,7 +60,7 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 	try {
 		let conversation: Conversation | null = null
 		let responseMessage = ''
-		const conversationHistory = JSON.parse(history || '[]')
+		const conversationHistory = JSON.parse(history || '[]') as ChatMessage[]
 
 		if (userId) {
 			if (conversationId) {
@@ -86,7 +90,8 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 		// Construct the complete system prompt
 		const systemPrompt = chatService.constructSystemPrompt({
 			enhancedContext,
-			customPrompt: PRIVATE_SYSTEM_PROMPT
+			customPrompt: PRIVATE_SYSTEM_PROMPT,
+			userActualName: DOMPurify.sanitize(name || '')
 		})
 
 		// Add system message at the beginning
@@ -116,10 +121,16 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 					// Update conversation after stream completes
 					if (userId && conversation) {
 						try {
+							const isNewConversation =
+								conversationHistory.length === 1 && conversationHistory[0].isUser
+
 							// Prepare the updated conversation history
 							const updatedConversation = [
 								...conversationHistory,
-								{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() },
+								// Avoid repeating the first message in the conversation history
+								...(!isNewConversation
+									? [{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }]
+									: []),
 								{ message: responseMessage, isUser: false, created: new Date().toISOString() }
 							]
 
