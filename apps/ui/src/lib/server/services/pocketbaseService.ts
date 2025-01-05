@@ -42,7 +42,6 @@ export class PocketbaseService {
 			messages,
 			updated: new Date().toISOString()
 		})
-		console.log('Updated conversation:', conversation.id)
 		return conversation
 	}
 

@@ -1,3 +1,4 @@
+// src/lib/server/services/qdrantService.ts
 import { OpenAIService } from './openAiService'
 import { QdrantClient } from '@qdrant/js-client-rest'
 import {
@@ -12,7 +13,7 @@ const qdrantClient = new QdrantClient({
 	apiKey: PRIVATE_QDRANT_API_KEY
 })
 
-type QdrantSearchResult = {
+export type QdrantSearchResult = {
 	id: string | number
 	version: number
 	score: number
@@ -29,14 +30,10 @@ type QdrantSearchResult = {
 	order_value?: number | Record<string, unknown> | null | undefined
 }
 
-export interface EnhancedSearchResult extends QdrantSearchResult {
-	score: number // Already included in QdrantSearchResult but explicitly defined here
-}
-
 const parseSemanticResults = (
 	searchResults: QdrantSearchResult[]
-): { title: string; content: string }[] =>
-	searchResults.reduce((acc: { title: string; content: string }[], result) => {
+): { title: string; content: string }[] => {
+	return searchResults.reduce((acc: { title: string; content: string }[], result) => {
 		const title = result.payload?.title || result.payload?.metadata?.bookTitle
 		if (title && result.payload?.content) {
 			acc.push({
@@ -46,6 +43,7 @@ const parseSemanticResults = (
 		}
 		return acc
 	}, [])
+}
 
 export async function getSemanticResults(query: string, topK: number = 40) {
 	// Convert the query to an embedding
@@ -61,15 +59,23 @@ export async function getSemanticResults(query: string, topK: number = 40) {
 	const parsedResults = parseSemanticResults(searchResults as QdrantSearchResult[])
 	return parsedResults
 }
+
+interface SearchParams {
+	query: string
+	limit?: number
+}
+
+const RELEVANCE_THRESHOLDS = {
+	HIGH: 0.46,
+	LOW: 0.35
+} as const
+
 export async function searchWithHybrid({
 	query,
 	limit = 5
-}: {
-	query: string
-	limit?: number
-}): Promise<EnhancedSearchResult[]> {
+}: SearchParams): Promise<QdrantSearchResult[]> {
+	// Get embedding and search results
 	const queryEmbedding = await OpenAIService.getEmbedding(query)
-
 	const searchResults = await qdrantClient.search(PRIVATE_QDRANT_COLLECTION_NAME, {
 		vector: queryEmbedding,
 		limit: limit * 2,
@@ -77,42 +83,25 @@ export async function searchWithHybrid({
 		with_vector: true
 	})
 
-	// Filter out results that are not relevant
-	const HIGH_RELEVANCE_THRESHOLD = 0.46
-	const LOW_RELEVANCE_THRESHOLD = 0.35
-
-	// The score property in the response is the vector similarity score from Qdrant
+	// Filter results by relevance
 	const highRelevanceResults = searchResults.filter(
-		(result) => result.score >= HIGH_RELEVANCE_THRESHOLD
-	)
-	const lowRelevanceResults = searchResults.filter(
-		(result, index) =>
-			result.score >= LOW_RELEVANCE_THRESHOLD &&
-			result.score < HIGH_RELEVANCE_THRESHOLD &&
-			highRelevanceResults.length + index + 1 <= limit
+		(result) => result.score >= RELEVANCE_THRESHOLDS.HIGH
 	)
 
-	const filteredResults =
-		highRelevanceResults.length < limit
-			? [...highRelevanceResults, ...lowRelevanceResults]
-			: highRelevanceResults.filter((_, index) => index + 1 <= limit)
-
-	if (highRelevanceResults.length < limit) {
-		console.log(
-			`Only ${highRelevanceResults.length} high relevance result${
-				highRelevanceResults.length === 1 ? '' : 's'
-			} found. ${limit} results requested. Returning ${lowRelevanceResults.length} additional low relevance result${
-				lowRelevanceResults.length === 1 ? '' : 's'
-			}.`
-		)
+	// If we have enough high relevance results, return them
+	if (highRelevanceResults.length >= limit) {
+		return highRelevanceResults.slice(0, limit) as QdrantSearchResult[]
 	}
-	console.log(
-		`${filteredResults.length} results out of ${searchResults.length} vector results kept as relevant.`
+
+	// Add low relevance results if needed
+	const lowRelevanceResults = searchResults.filter(
+		(result) => result.score >= RELEVANCE_THRESHOLDS.LOW && result.score < RELEVANCE_THRESHOLDS.HIGH
 	)
 
-	// Sort and limit the results
-	const sortedResults = filteredResults.sort((a, b) => b.score - a.score)
-	const limitedResults = sortedResults.slice(0, limit)
+	const combinedResults = [...highRelevanceResults, ...lowRelevanceResults]
 
-	return limitedResults as EnhancedSearchResult[]
+	// Return combined results, or fall back to top results if no relevant matches
+	return (combinedResults.length > 0 ? combinedResults : searchResults)
+		.sort((a, b) => b.score - a.score)
+		.slice(0, limit) as QdrantSearchResult[]
 }

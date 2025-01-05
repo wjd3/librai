@@ -1,6 +1,8 @@
+// src/routes/api/conversations/+server.ts
 import { json } from '@sveltejs/kit'
 import { PocketbaseService } from '$lib/server/services/pocketbaseService'
-import { OpenAIService } from '$lib/server/services/openaiService'
+import { OpenAIService } from '$lib/server/services/openAiService'
+import DOMPurify from 'isomorphic-dompurify'
 
 export const GET = async ({ locals }) => {
 	const userId = locals.user?.id
@@ -25,17 +27,19 @@ export const POST = async ({ request, locals }) => {
 
 	try {
 		const { messages, title } = await request.json()
-		let generatedTitle = title
 
-		if (!generatedTitle && messages[0]?.message) {
+		const sanitizedFirstMessage = DOMPurify.sanitize(messages[0]?.message)
+		let generatedTitle = DOMPurify.sanitize(title)
+
+		if (!generatedTitle && sanitizedFirstMessage) {
 			// Generate title using OpenAI if not provided
-			generatedTitle = await OpenAIService.generateAITitle(messages[0].message)
+			generatedTitle = await OpenAIService.generateAITitle(sanitizedFirstMessage)
 		}
 
 		// Create new conversation
 		const conversation = await PocketbaseService.createConversation({
 			userId,
-			firstMessage: messages[0]?.message,
+			firstMessage: sanitizedFirstMessage,
 			title: generatedTitle
 		})
 

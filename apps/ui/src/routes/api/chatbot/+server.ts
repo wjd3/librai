@@ -1,15 +1,19 @@
-import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
+// src/routes/api/chatbot/+server.ts
 import DOMPurify from 'isomorphic-dompurify'
 import { json } from '@sveltejs/kit'
 import { OpenAIService } from '$lib/server/services/openAiService'
-import { PocketbaseService, type Conversation } from '$lib/server/services/pocketbaseService'
+import {
+	PocketbaseService,
+	type ChatMessage,
+	type Conversation
+} from '$lib/server/services/pocketbaseService'
 import { RateLimitService } from '$lib/server/services/rateLimitService'
 import { searchWithHybrid } from '$lib/server/services/qdrantService'
 import { chatService } from '$lib/server/services/chatService'
-import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
+import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
 
 export const POST = async ({ request, locals, getClientAddress }) => {
-	const { query, history, conversationId } = await request.json()
+	const { query, history, conversationId, name } = await request.json()
 
 	const userId = locals.user?.id
 	const headers: Record<string, string> = {}
@@ -56,16 +60,17 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 	try {
 		let conversation: Conversation | null = null
 		let responseMessage = ''
+		const conversationHistory = JSON.parse(history || '[]') as ChatMessage[]
 
 		if (userId) {
 			if (conversationId) {
 				// Update existing conversation
 				conversation = await PocketbaseService.updateConversation(conversationId, [
-					...JSON.parse(history || '[]'),
+					...conversationHistory,
 					{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }
 				])
 			} else {
-				// Create new conversation and redirect
+				// Create new conversation
 				const title = await OpenAIService.generateAITitle(sanitizedQuery)
 				conversation = await PocketbaseService.createConversation({
 					userId,
@@ -79,46 +84,21 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 		const searchResults = await searchWithHybrid({ query: sanitizedQuery })
 		const enhancedContext = chatService.buildEnhancedContext(searchResults)
 
-		const systemPrompt = `
-${PRIVATE_SYSTEM_PROMPT || ''}
+		// Prepare conversation history with smart summarization
+		const messages = await chatService.prepareConversationHistory(conversationHistory)
 
-You are a knowledgeable assistant with access to specific source materials.
-When answering:
-1. Primarily use the provided context
-2. Cite specific parts of the source material
-3. If the context doesn't contain relevant information, say so
-4. Maintain conversation history for continuity
-5. Use clear formatting for readability
+		// Construct the complete system prompt
+		const systemPrompt = chatService.constructSystemPrompt({
+			enhancedContext,
+			customPrompt: PRIVATE_SYSTEM_PROMPT,
+			userActualName: DOMPurify.sanitize(name || '')
+		})
 
-Context:
-${enhancedContext}
-		`.trim()
+		// Add system message at the beginning
+		messages.unshift({ role: 'system', content: systemPrompt })
 
-		// Construct message array for OpenAI
-		const conversationHistory = JSON.parse(history || '[]')
-		const parsedConversationHistory = conversationHistory.map(
-			(message: { message: string; isUser: boolean }) => ({
-				role: message.isUser ? 'user' : 'assistant',
-				content: message.message
-			})
-		)
-
-		const messages: Array<ChatCompletionMessageParam> = [
-			{ role: 'system', content: systemPrompt },
-			...parsedConversationHistory
-		]
-
-		// Add a summary of older messages if needed
-		if (JSON.parse(history || '[]').length > 10) {
-			const summary = await chatService.summarizeConversation(JSON.parse(history || '[]'))
-
-			if (summary) {
-				messages.unshift({
-					role: 'system',
-					content: `Previous conversation summary: ${summary}`
-				})
-			}
-		}
+		// Add current user query
+		messages.push({ role: 'user', content: sanitizedQuery })
 
 		// Set up streaming response
 		const stream = new ReadableStream({
@@ -134,7 +114,6 @@ ${enhancedContext}
 						}
 					}
 
-					// Ensure we have some content before closing
 					if (!responseMessage) {
 						throw new Error('No content received from OpenAI')
 					}
@@ -142,35 +121,28 @@ ${enhancedContext}
 					// Update conversation after stream completes
 					if (userId && conversation) {
 						try {
+							const isNewConversation =
+								conversationHistory.length === 1 && conversationHistory[0].isUser
+
+							// Prepare the updated conversation history
 							const updatedConversation = [
-								{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() },
+								...conversationHistory,
+								// Avoid repeating the first message in the conversation history
+								...(!isNewConversation
+									? [{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }]
+									: []),
 								{ message: responseMessage, isUser: false, created: new Date().toISOString() }
 							]
-
-							const conversationHistory = JSON.parse(history || '[]')
-							if (Array.isArray(conversationHistory)) {
-								const lastMessage = conversationHistory[conversationHistory.length - 1]
-								const isNewConversation =
-									conversationHistory.length === 1 &&
-									lastMessage?.isUser &&
-									lastMessage.message === sanitizedQuery
-
-								if (!isNewConversation) {
-									updatedConversation.unshift(...conversationHistory)
-								}
-							}
 
 							await PocketbaseService.updateConversation(conversation.id, updatedConversation)
 						} catch (error) {
 							console.error('Error updating conversation:', error)
-							// Don't throw here - we still want to close the stream successfully
 						}
 					}
 
 					controller.close()
 				} catch (error) {
 					console.error('Stream error:', error)
-					// Ensure we send an error message before closing
 					controller.enqueue('An error occurred while processing your request.')
 					controller.error(error)
 				}
