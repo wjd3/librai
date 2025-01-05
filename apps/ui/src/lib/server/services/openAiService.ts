@@ -1,12 +1,11 @@
 // src/lib/services/openaiService.ts
-
-import { OpenAI } from 'openai'
-import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
 import {
 	PRIVATE_OPENAI_API_KEY,
 	PRIVATE_OPENAI_EMBEDDINGS_MODEL,
 	PRIVATE_OPENAI_CHAT_MODEL
 } from '$env/static/private'
+import { OpenAI } from 'openai'
+import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
 
 const openai = new OpenAI({ apiKey: PRIVATE_OPENAI_API_KEY })
 
