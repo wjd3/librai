@@ -11,9 +11,17 @@ import { RateLimitService } from '$lib/server/services/rateLimitService'
 import { searchWithHybrid } from '$lib/server/services/qdrantService'
 import { chatService } from '$lib/server/services/chatService'
 import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
+import { censorText } from '$lib/utils/censor'
 
 export const POST = async ({ request, locals, getClientAddress }) => {
-	const { query, history, conversationId, name } = await request.json()
+	const { query: rawQuery, history: rawHistory, conversationId, name } = await request.json()
+
+	// Censor the query and history
+	const query = censorText(DOMPurify.sanitize(rawQuery))
+	const history = JSON.parse(rawHistory || '[]').map((msg: ChatMessage) => ({
+		...msg,
+		message: censorText(msg.message)
+	}))
 
 	const userId = locals.user?.id
 	const headers: Record<string, string> = {}
@@ -46,8 +54,7 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 		}
 	}
 
-	const sanitizedQuery = DOMPurify.sanitize(query)
-	if (!sanitizedQuery || sanitizedQuery.length < 1 || sanitizedQuery.length > 4096) {
+	if (!query || query.length < 1 || query.length > 4096) {
 		return json(
 			{
 				response: "I'm sorry, I couldn't understand that! Please try again.",
@@ -60,28 +67,28 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 	try {
 		let conversation: Conversation | null = null
 		let responseMessage = ''
-		const conversationHistory = JSON.parse(history || '[]') as ChatMessage[]
+		const conversationHistory = history
 
 		if (userId) {
 			if (conversationId) {
 				// Update existing conversation
 				conversation = await PocketbaseService.updateConversation(conversationId, [
 					...conversationHistory,
-					{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }
+					{ message: query, isUser: true, created: new Date().toISOString() }
 				])
 			} else {
 				// Create new conversation
-				const title = await OpenAIService.generateAITitle(sanitizedQuery)
+				const title = await OpenAIService.generateAITitle(query)
 				conversation = await PocketbaseService.createConversation({
 					userId,
-					firstMessage: sanitizedQuery,
+					firstMessage: query,
 					title
 				})
 			}
 		}
 
 		// Use hybrid search for better results
-		const searchResults = await searchWithHybrid({ query: sanitizedQuery })
+		const searchResults = await searchWithHybrid({ query })
 		const enhancedContext = chatService.buildEnhancedContext(searchResults)
 
 		// Prepare conversation history with smart summarization
@@ -98,7 +105,7 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 		messages.unshift({ role: 'system', content: systemPrompt })
 
 		// Add current user query
-		messages.push({ role: 'user', content: sanitizedQuery })
+		messages.push({ role: 'user', content: query })
 
 		// Set up streaming response
 		const stream = new ReadableStream({
@@ -129,7 +136,7 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 								...conversationHistory,
 								// Avoid repeating the first message in the conversation history
 								...(!isNewConversation
-									? [{ message: sanitizedQuery, isUser: true, created: new Date().toISOString() }]
+									? [{ message: query, isUser: true, created: new Date().toISOString() }]
 									: []),
 								{ message: responseMessage, isUser: false, created: new Date().toISOString() }
 							]

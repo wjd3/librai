@@ -11,6 +11,7 @@
 	import CopyButton from './CopyButton.svelte'
 	import { goto } from '$app/navigation'
 	import { currentUser, isAuthLoading } from '$lib/stores'
+	import { censorText } from '$lib/utils/censor'
 
 	onMount(() => promptInput?.focus())
 
@@ -38,11 +39,13 @@
 			return
 		}
 
-		const query = message || DOMPurify.sanitize(userInput || '').trim()
-		if (!query || query.length < 1) {
+		const rawQuery = message || DOMPurify.sanitize(userInput || '').trim()
+		if (!rawQuery || rawQuery.length < 1) {
 			isSubmitting = false
 			return
 		}
+
+		const query = censorText(rawQuery)
 
 		const conversationHistory = JSON.stringify(
 			[...$chatHistory].map((msg) => ({
