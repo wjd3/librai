@@ -42,12 +42,8 @@
 			return
 		}
 
-		console.log({ rawQuery })
-
 		// Censor the query before processing
 		const query = censorText(rawQuery)
-
-		console.log({ query })
 
 		try {
 			if ($isAuthenticated) {
@@ -83,7 +79,7 @@
 					isPublic: false,
 					shareId: undefined
 				})
-				chatHistory.set([{ message: query, isUser: true }])
+				chatHistory.set([{ message: query, isUser: true, created: new Date().toISOString() }])
 
 				await goto(`/conversations/${tempId}`)
 			}
