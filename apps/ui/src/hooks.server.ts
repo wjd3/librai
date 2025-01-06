@@ -1,8 +1,7 @@
 import { pb } from '$lib/server/pocketbase'
 import { themes } from '$lib/constants/themes'
-
+import { getThemeColorValues } from '$lib/utils/color'
 import type { Handle } from '@sveltejs/kit'
-import { getThemeColorValues } from '$lib/color'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const hasAuthHeader = event.request.headers.has('Authorization')

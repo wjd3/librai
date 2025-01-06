@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit'
 import { PocketbaseService } from '$lib/server/services/pocketbaseService'
 import { PUBLIC_APP_TITLE, PUBLIC_APP_URL } from '$env/static/public'
-import { getThemeColorValues } from '$lib/color'
+import { getThemeColorValues } from '$lib/utils/color'
 
 const generateOgImageUrl = async (title: string, userMessage: string, aiMessage: string) => {
 	const { light: lightTextColor } = getThemeColorValues('text-color')
