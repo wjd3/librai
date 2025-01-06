@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '$styles/main.css'
-	import { createScrollSpy } from '$lib/scroll'
+	import { createScrollSpy } from '$lib/utils/scroll'
 	import { onMount } from 'svelte'
 	import {
 		PUBLIC_THEME,

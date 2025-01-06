@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { parseMarkdownToHtml } from '$lib/parse'
+	import { parseMarkdownToHtml } from '$lib/utils/parse'
 	import DOMPurify from 'isomorphic-dompurify'
 	import { PUBLIC_CHATBOT_THINKING_TEXT } from '$env/static/public'
 	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'

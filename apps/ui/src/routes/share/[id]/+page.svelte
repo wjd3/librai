@@ -6,7 +6,7 @@
 	import { isAuthenticated, authToken } from '$lib/stores/auth'
 	import { currentConversation, chatHistory } from '$lib/stores/index'
 	import { goto } from '$app/navigation'
-	import { parseMarkdownToHtml } from '$lib/parse'
+	import { parseMarkdownToHtml } from '$lib/utils/parse'
 
 	let { data } = $props()
 	const { conversation, meta } = data
