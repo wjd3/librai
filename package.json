@@ -8,7 +8,7 @@
 		"lint": "turbo run lint"
 	},
 	"devDependencies": {
-		"turbo": "^2.3.3"
+		"turbo": "^2.3.4"
 	},
 	"packageManager": "npm@10.9.0",
 	"workspaces": [
