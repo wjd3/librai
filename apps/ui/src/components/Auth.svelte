@@ -18,6 +18,10 @@
 	let resetSuccess = $state(false)
 	let registrationSuccess = $state(false)
 	let registrationMessage = $state('')
+	let showPassword = $state(false)
+	let showPasswordConfirm = $state(false)
+
+	const maxPasswordLength = 128
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault()
@@ -29,10 +33,10 @@
 		isAuthLoading.set(true)
 		error = ''
 
-		const cleanName = DOMPurify.sanitize(name)
-		const cleanEmail = DOMPurify.sanitize(email)
-		const cleanPassword = DOMPurify.sanitize(password)
-		const cleanPasswordConfirm = DOMPurify.sanitize(passwordConfirm)
+		const cleanName = DOMPurify.sanitize(name.trim())
+		const cleanEmail = DOMPurify.sanitize(email.trim())
+		const cleanPassword = DOMPurify.sanitize(password.trim())
+		const cleanPasswordConfirm = DOMPurify.sanitize(passwordConfirm.trim())
 
 		try {
 			if (isRegistering) {
@@ -303,7 +307,7 @@
 						</button>
 					</div>
 				{:else}
-					<form onsubmit={handleSubmit} class="space-y-6">
+					<form onsubmit={handleSubmit} class="space-y-4">
 						{#if isRegistering}
 							<div>
 								<label for="name" class="block text-lg mb-2">Name</label>
@@ -330,28 +334,58 @@
 						</div>
 						<div>
 							<label for="password" class="block text-lg mb-2">Password</label>
-							<input
-								type="password"
-								id="password"
-								bind:value={password}
-								required
-								minlength="8"
-								maxlength="72"
-								class="input w-full px-4 py-3"
-							/>
+							<div class="relative">
+								<input
+									type={showPassword && isRegistering ? 'text' : 'password'}
+									id="password"
+									bind:value={password}
+									required
+									minlength="8"
+									maxlength={maxPasswordLength}
+									class="input w-full pr-10"
+								/>
+								{#if isRegistering}
+									<button
+										type="button"
+										class="absolute right-0 py-3 border-0 top-1/2 -translate-y-1/2"
+										onclick={() => (showPassword = !showPassword)}
+										aria-label="Toggle password visibility"
+									>
+										<span
+											class="iconify"
+											class:lucide--eye={showPassword}
+											class:lucide--eye-off={!showPassword}
+										></span>
+									</button>
+								{/if}
+							</div>
 						</div>
 						{#if isRegistering}
 							<div>
 								<label for="passwordConfirm" class="block text-lg mb-2">Confirm Password</label>
-								<input
-									type="password"
-									id="passwordConfirm"
-									bind:value={passwordConfirm}
-									required
-									minlength="8"
-									maxlength="72"
-									class="input w-full px-4 py-3"
-								/>
+								<div class="relative">
+									<input
+										type={showPasswordConfirm ? 'text' : 'password'}
+										id="passwordConfirm"
+										bind:value={passwordConfirm}
+										required
+										minlength="8"
+										maxlength={maxPasswordLength}
+										class="input w-full pr-10"
+									/>
+									<button
+										type="button"
+										class="absolute right-0 py-3 border-0 top-1/2 -translate-y-1/2"
+										onclick={() => (showPasswordConfirm = !showPasswordConfirm)}
+										aria-label="Toggle confirm password visibility"
+									>
+										<span
+											class="iconify"
+											class:lucide--eye={showPasswordConfirm}
+											class:lucide--eye-off={!showPasswordConfirm}
+										></span>
+									</button>
+								</div>
 							</div>
 						{/if}
 
@@ -395,7 +429,7 @@
 						</div>
 
 						<!-- Secondary actions -->
-						<div class="pt-4 space-y-4 text-center">
+						<div class="space-y-4 text-center">
 							{#if !isRegistering}
 								<button
 									type="button"

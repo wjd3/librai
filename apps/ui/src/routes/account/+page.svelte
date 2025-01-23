@@ -11,7 +11,6 @@
 	let showChangePassword = $state(false)
 	let showChangeEmail = $state(false)
 
-	let showOldPassword = $state(false)
 	let showNewPassword = $state(false)
 	let showPasswordConfirm = $state(false)
 
@@ -71,14 +70,28 @@
 		isUpdating = false
 	}
 
+	const maxPasswordLength = 128
 	async function changePassword(e: Event) {
 		e.preventDefault()
 		error = ''
 		success = ''
 		isUpdating = true
 
+		const sanitizedOldPassword = DOMPurify.sanitize(oldPassword)
+		const sanitizedNewPassword = DOMPurify.sanitize(newPassword.trim())
+		const sanitizedPasswordConfirm = DOMPurify.sanitize(passwordConfirm.trim())
+
 		try {
-			if (newPassword !== passwordConfirm) {
+			if (
+				!sanitizedOldPassword ||
+				!sanitizedPasswordConfirm ||
+				sanitizedPasswordConfirm.length > maxPasswordLength
+			) {
+				error = 'Invalid password'
+				return
+			}
+
+			if (sanitizedNewPassword !== sanitizedPasswordConfirm) {
 				error = 'Passwords do not match'
 				return
 			}
@@ -90,9 +103,9 @@
 					Authorization: `Bearer ${$authToken}`
 				},
 				body: JSON.stringify({
-					oldPassword,
-					password: newPassword,
-					passwordConfirm
+					oldPassword: sanitizedOldPassword,
+					password: sanitizedNewPassword,
+					passwordConfirm: sanitizedPasswordConfirm
 				})
 			})
 
@@ -240,7 +253,7 @@
 						</div>
 					</button>
 
-					<button type="submit" class="primary px-4" disabled={isUpdating || $isAuthLoading}>
+					<button type="submit" class="primary px-4 mr-4" disabled={isUpdating || $isAuthLoading}>
 						<div class="flex items-center space-x-2 max-sm:justify-center">
 							{#if isUpdating}
 								<span class="iconify lucide--rotate-cw animate-spin"> </span>
@@ -278,22 +291,13 @@
 					<label for="oldPassword" class="block mb-1">Current Password</label>
 					<div class="relative">
 						<input
-							type={showOldPassword ? 'text' : 'password'}
+							type="password"
 							id="oldPassword"
 							bind:value={oldPassword}
 							required
 							class="input w-full pr-10"
 							minlength="8"
 						/>
-						<button
-							type="button"
-							class="absolute right-3 top-1/2 -translate-y-1/2"
-							onclick={() => (showOldPassword = !showOldPassword)}
-							aria-label="Toggle old password visibility"
-						>
-							<span class="iconify lucide--{showOldPassword ? 'eye-off' : 'eye'} text-gray-500"
-							></span>
-						</button>
 					</div>
 				</div>
 
@@ -307,14 +311,18 @@
 							required
 							class="input w-full pr-10"
 							minlength="8"
+							maxlength={maxPasswordLength}
 						/>
 						<button
 							type="button"
-							class="absolute right-3 top-1/2 -translate-y-1/2"
+							class="absolute right-0 py-3 border-0 top-1/2 -translate-y-1/2"
 							onclick={() => (showNewPassword = !showNewPassword)}
 							aria-label="Toggle new password visibility"
 						>
-							<span class="iconify lucide--{showNewPassword ? 'eye-off' : 'eye'} text-gray-500"
+							<span
+								class="iconify"
+								class:lucide--eye={showNewPassword}
+								class:lucide--eye-off={!showNewPassword}
 							></span>
 						</button>
 					</div>
@@ -333,11 +341,14 @@
 						/>
 						<button
 							type="button"
-							class="absolute right-3 top-1/2 -translate-y-1/2"
+							class="absolute right-0 py-3 border-0 top-1/2 -translate-y-1/2"
 							onclick={() => (showPasswordConfirm = !showPasswordConfirm)}
 							aria-label="Toggle confirm password visibility"
 						>
-							<span class="iconify lucide--{showPasswordConfirm ? 'eye-off' : 'eye'} text-gray-500"
+							<span
+								class="iconify"
+								class:lucide--eye={showPasswordConfirm}
+								class:lucide--eye-off={!showPasswordConfirm}
 							></span>
 						</button>
 					</div>
