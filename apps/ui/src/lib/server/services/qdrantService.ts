@@ -100,7 +100,7 @@ export async function searchWithHybrid({
 
 	const combinedResults = [...highRelevanceResults, ...lowRelevanceResults]
 
-	// Return combined results, or fall back to top results if no relevant matches
+	// Return combined results, or fall back to the original search results if no matches matched the relevance threshold
 	return (combinedResults.length > 0 ? combinedResults : searchResults)
 		.sort((a, b) => b.score - a.score)
 		.slice(0, limit) as QdrantSearchResult[]

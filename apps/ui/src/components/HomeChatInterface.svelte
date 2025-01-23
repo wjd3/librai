@@ -113,7 +113,7 @@
 				onsubmit={preventDefault(startConversation)}
 			>
 				<div class="w-full h-full">
-					<label for="chat-input" class="sr-only">Query the custom Librai AI chatbot.</label>
+					<label for="chat-input" class="sr-only">Query the chatbot.</label>
 					<textarea
 						required
 						minlength={minQueryLength}
@@ -122,7 +122,7 @@
 						placeholder="Ask a question..."
 						bind:this={promptInput}
 						bind:value={userInput}
-						class="textarea resize-none w-full h-full"
+						class="textarea w-full h-full resize-y min-h-12 max-h-40"
 						onkeydown={(e) => {
 							if (e.key === 'Enter' && !e.shiftKey) {
 								e.preventDefault()
