@@ -6,10 +6,10 @@
 @import './chat.css';
 
 ::selection {
-	@apply bg-highlight text-text-color;
+	@apply bg-btn-secondary-bg text-text-color;
 }
 ::-moz-selection {
-	@apply bg-highlight text-text-color;
+	@apply bg-btn-secondary-bg text-text-color;
 }
 
 /* Body Styles */

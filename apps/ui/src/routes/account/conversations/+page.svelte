@@ -7,19 +7,31 @@
 	import { authToken } from '$lib/stores/auth'
 	import { preventDefault } from '$lib/utils'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
+	let isLoading = $state(true) // Loading state
+	let conversations = $state<Conversation[]>([]) // Conversations data
 
-	let conversations = $state<Conversation[]>([])
-	let isLoading = $state(true)
+	// Share dialog state
 	let shareUrl = $state('')
 	let showShareDialog = $state(false)
+	let shareTimeout: NodeJS.Timeout
+
+	// Delete dialog state
 	let showDeleteDialog = $state(false)
 	let conversationToDelete = $state<string | null>(null)
+
+	// Copy share index state
 	let copiedShareIndex = $state<number | null>(null)
-	let shareTimeout: NodeJS.Timeout
-	let shareHoneypot = $state('')
+
+	// Editing title state
 	let editingTitleId = $state<string | null>(null)
 	let editedTitle = $state('')
 	let isSavingTitle = $state(false)
+
+	// Sharing state
+	let isSharing = $state(false)
+	let isSharingIndex = $state<number | null>(null)
+	let isUnsharing = $state(false)
+	let isUnsharingIndex = $state<number | null>(null)
 
 	$effect(() => {
 		if ($authToken) {
@@ -83,9 +95,6 @@
 		return `${PUBLIC_APP_URL}/share/${shareId}`
 	}
 
-	let isSharing = $state(false)
-	let isSharingIndex = $state<number | null>(null)
-
 	async function shareConversation(conversation: Conversation, index: number) {
 		try {
 			isSharing = true
@@ -112,13 +121,16 @@
 		} catch (error) {
 			console.error('Error sharing conversation:', error)
 		}
+
 		isSharing = false
 		isSharingIndex = null
 	}
 
-	async function unshareConversation(conversation: Conversation) {
+	async function unshareConversation(conversation: Conversation, index: number) {
 		try {
-			isSharing = true
+			isUnsharing = true
+			isUnsharingIndex = index
+
 			const response = await fetch(`/api/conversations/${conversation.id}/share`, {
 				method: 'DELETE',
 				headers: {
@@ -133,7 +145,9 @@
 		} catch (error) {
 			console.error('Error unsharing conversation:', error)
 		}
-		isSharing = false
+
+		isUnsharing = false
+		isUnsharingIndex = null
 	}
 
 	function copyShareUrl(specificShareUrl?: string, index?: number) {
@@ -206,7 +220,7 @@
 				Your Conversations
 			{/if}
 		</h1>
-		<button class="primary px-4" onclick={newMessage} aria-label="New Message">
+		<button class="primary px-4 mr-4" onclick={newMessage} aria-label="New Conversation">
 			<span class="iconify lucide--message-square-plus"></span>
 		</button>
 	</div>
@@ -237,13 +251,14 @@
 									onkeydown={(e) => handleTitleKeydown(e, conversation)}
 								/>
 							</form>
+
 							<div class="flex space-x-2 ml-2">
 								<button
 									class="secondary p-1"
 									disabled={isSavingTitle}
 									onclick={() => (editingTitleId = null)}
 									title="Cancel"
-									aria-label="Cancel"
+									aria-label="Cancel editing title"
 								>
 									<span class="iconify lucide--x"></span>
 								</button>
@@ -253,7 +268,7 @@
 									disabled={editedTitle === conversation.title || isSavingTitle}
 									onclick={() => updateConversationTitle(conversation)}
 									title="Save"
-									aria-label="Save"
+									aria-label="Save title"
 								>
 									{#if isSavingTitle}
 										<span class="iconify lucide--rotate-cw animate-spin"> </span>
@@ -263,19 +278,17 @@
 								</button>
 							</div>
 						{:else}
-							<div class="min-h-[48px] flex items-center">
-								<h2 class="text-xl flex-1 truncate w-[235px] sm:w-96 md:w-[515px]">
-									{conversation.title}
-								</h2>
-							</div>
+							<h2 class="text-xl">
+								{conversation.title}
+							</h2>
 
 							<button
-								class="primary px-2 py-1 ml-4"
+								class="primary px-4 ml-4"
 								onclick={() => startEditing(conversation)}
 								title="Edit title"
-								aria-label="Edit title"
+								aria-label={`Edit title: ${conversation.title}`}
 							>
-								<span class="iconify lucide--square-pen"></span>
+								<span class="iconify lucide--type"></span>
 							</button>
 						{/if}
 					</div>
@@ -286,7 +299,7 @@
 
 					<div class="flex justify-between space-x-2">
 						<button
-							aria-label="Delete Conversation"
+							aria-label={`Delete Conversation: ${conversation.title}`}
 							class="secondary px-4"
 							onclick={() => confirmDelete(conversation.id)}
 						>
@@ -296,12 +309,12 @@
 						<div class="flex space-x-2">
 							{#if conversation.isPublic}
 								<button
-									disabled={isSharing}
+									disabled={isSharing || isUnsharing}
 									class="secondary px-4"
-									onclick={() => unshareConversation(conversation)}
-									aria-label="Unshare Conversation"
+									onclick={() => unshareConversation(conversation, i)}
+									aria-label={`Unshare Conversation: ${conversation.title}`}
 								>
-									{#if isSharing}
+									{#if isUnsharing && isUnsharingIndex === i}
 										<span class="iconify lucide--rotate-cw animate-spin"> </span>
 									{:else}
 										<span class="iconify lucide--link-2-off"></span>
@@ -310,6 +323,8 @@
 
 								<button
 									class="primary px-4"
+									disabled={(isSharing && isSharingIndex === i) ||
+										(isUnsharing && isUnsharingIndex === i)}
 									onclick={() =>
 										conversation.shareId && copyShareUrl(getShareUrl(conversation.shareId), i)}
 								>
@@ -321,7 +336,7 @@
 								</button>
 							{:else}
 								<button
-									disabled={isSharing}
+									disabled={isSharing || isUnsharing}
 									class="primary px-4"
 									onclick={() => shareConversation(conversation, i)}
 								>
@@ -334,11 +349,11 @@
 							{/if}
 
 							<button
-								aria-label="Continue Conversation"
+								aria-label={`Continue Conversation: ${conversation.title}`}
 								class="primary px-4"
 								onclick={() => loadConversation(conversation)}
 							>
-								<span class="iconify lucide--step-forward"></span>
+								<span class="iconify lucide--square-pen"></span>
 							</button>
 						</div>
 					</div>
@@ -374,19 +389,6 @@
 								<span class="iconify lucide--check"></span>
 							{/if}
 						</button>
-					</div>
-
-					<div class="sr-only">
-						<label for="share_website">Leave this empty:</label>
-						<input
-							maxlength="4096"
-							bind:value={shareHoneypot}
-							type="text"
-							id="share_website"
-							name="share_website"
-							autocomplete="off"
-							tabindex="-1"
-						/>
 					</div>
 
 					<div class="flex justify-end">
