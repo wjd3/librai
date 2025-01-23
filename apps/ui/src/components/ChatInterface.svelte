@@ -293,13 +293,13 @@
 
 		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat && !isSubmitting}
 			<button
-				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow hover:translate-y-2 bottom-32"
-				in:fade={{ duration: 200, easing: quartOut }}
-				out:fade={{ duration: 200, easing: quartOut }}
+				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow-md hover:translate-y-2 bottom-32 transition duration-300 group"
+				in:fade={{ duration: 300, easing: quartOut }}
+				out:fade={{ duration: 300, easing: quartOut }}
 				onclick={scrollToBottom}
 				aria-label="Scroll to bottom"
 			>
-				<span class="iconify lucide--arrow-down w-5 h-5 text-xl"> </span>
+				<span class="text-btn-text iconify lucide--arrow-down w-5 h-5 text-xl"> </span>
 			</button>
 		{/if}
 	</div>

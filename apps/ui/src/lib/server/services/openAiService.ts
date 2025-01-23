@@ -36,7 +36,7 @@ export class OpenAIService {
 				{
 					role: 'system',
 					content:
-						'You are a helpful assistant that generates short, descriptive titles. Generate a concise title (4-6 words) that captures the main topic or question. Respond with only the title, no quotes or punctuation.'
+						'You are a helpful assistant that generates short, descriptive titles. Generate a concise title (4-6 words and fewer than 151 characters) that captures the main topic or question. Respond with only the title, no quotes or punctuation.'
 				},
 				{
 					role: 'user',

@@ -173,7 +173,7 @@
 ></div>
 
 <header
-	class={`fixed top-0 left-0 w-screen bg-chat-bar-bg border-b border-form-border transition-colors duration-200 ease-out will-change-transform z-50 h-16 ${
+	class={`fixed top-0 left-0 w-screen bg-chat-bar-bg border-b border-form-border transition-colors duration-300 ease-out will-change-transform z-50 h-16 ${
 		$isVisible ? 'bg-transparent border-transparent' : ''
 	}`}
 >

@@ -6,7 +6,9 @@
 	import { PUBLIC_APP_URL } from '$env/static/public'
 	import { authToken } from '$lib/stores/auth'
 	import { preventDefault } from '$lib/utils'
+	import DOMPurify from 'isomorphic-dompurify'
 	import type { Conversation } from '$lib/server/services/pocketbaseService'
+
 	let isLoading = $state(true) // Loading state
 	let conversations = $state<Conversation[]>([]) // Conversations data
 
@@ -165,8 +167,11 @@
 		await goto('/')
 	}
 
+	const maxTitleLength = 150
 	async function updateConversationTitle(conversation: Conversation) {
-		if (!editedTitle.trim()) {
+		const newTitle = DOMPurify.sanitize(editedTitle.trim())
+
+		if (!newTitle || newTitle.length > maxTitleLength) {
 			editingTitleId = null
 			return
 		}
@@ -179,7 +184,7 @@
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${$authToken}`
 				},
-				body: JSON.stringify({ title: editedTitle.trim() })
+				body: JSON.stringify({ title: newTitle })
 			})
 
 			if (!response.ok) throw new Error('Failed to update title')
@@ -247,7 +252,7 @@
 									bind:value={editedTitle}
 									class="input w-full"
 									placeholder="Enter title..."
-									maxlength="150"
+									maxlength={maxTitleLength}
 									onkeydown={(e) => handleTitleKeydown(e, conversation)}
 								/>
 							</form>

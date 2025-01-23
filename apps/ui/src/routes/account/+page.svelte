@@ -11,6 +11,10 @@
 	let showChangePassword = $state(false)
 	let showChangeEmail = $state(false)
 
+	let showOldPassword = $state(false)
+	let showNewPassword = $state(false)
+	let showPasswordConfirm = $state(false)
+
 	// Profile form
 	let name = $state($currentUser?.name || '')
 	let error = $state('')
@@ -269,42 +273,74 @@
 			transition:fade={{ duration: 200, easing: quartInOut }}
 		>
 			<h2 class="text-xl mb-4">Change Password</h2>
-
 			<form onsubmit={changePassword} class="space-y-4">
 				<div>
 					<label for="oldPassword" class="block mb-1">Current Password</label>
-					<input
-						type="password"
-						id="oldPassword"
-						bind:value={oldPassword}
-						required
-						class="input w-full"
-						minlength="8"
-					/>
+					<div class="relative">
+						<input
+							type={showOldPassword ? 'text' : 'password'}
+							id="oldPassword"
+							bind:value={oldPassword}
+							required
+							class="input w-full pr-10"
+							minlength="8"
+						/>
+						<button
+							type="button"
+							class="absolute right-3 top-1/2 -translate-y-1/2"
+							onclick={() => (showOldPassword = !showOldPassword)}
+							aria-label="Toggle old password visibility"
+						>
+							<span class="iconify lucide--{showOldPassword ? 'eye-off' : 'eye'} text-gray-500"
+							></span>
+						</button>
+					</div>
 				</div>
 
 				<div>
 					<label for="newPassword" class="block mb-1">New Password</label>
-					<input
-						type="password"
-						id="newPassword"
-						bind:value={newPassword}
-						required
-						class="input w-full"
-						minlength="8"
-					/>
+					<div class="relative">
+						<input
+							type={showNewPassword ? 'text' : 'password'}
+							id="newPassword"
+							bind:value={newPassword}
+							required
+							class="input w-full pr-10"
+							minlength="8"
+						/>
+						<button
+							type="button"
+							class="absolute right-3 top-1/2 -translate-y-1/2"
+							onclick={() => (showNewPassword = !showNewPassword)}
+							aria-label="Toggle new password visibility"
+						>
+							<span class="iconify lucide--{showNewPassword ? 'eye-off' : 'eye'} text-gray-500"
+							></span>
+						</button>
+					</div>
 				</div>
 
 				<div>
 					<label for="passwordConfirm" class="block mb-1">Confirm New Password</label>
-					<input
-						type="password"
-						id="passwordConfirm"
-						bind:value={passwordConfirm}
-						required
-						class="input w-full"
-						minlength="8"
-					/>
+					<div class="relative">
+						<input
+							type={showPasswordConfirm ? 'text' : 'password'}
+							id="passwordConfirm"
+							bind:value={passwordConfirm}
+							required
+							class="input w-full pr-10"
+							minlength="8"
+						/>
+						<button
+							type="button"
+							class="absolute right-3 top-1/2 -translate-y-1/2"
+							onclick={() => (showPasswordConfirm = !showPasswordConfirm)}
+							aria-label="Toggle confirm password visibility"
+						>
+							<span class="iconify lucide--{showPasswordConfirm ? 'eye-off' : 'eye'} text-gray-500"
+							></span>
+						</button>
+					</div>
 				</div>
 
 				{#if error}
