@@ -48,7 +48,7 @@ button.primary,
 a.primary,
 button.secondary,
 a.secondary {
-	@apply transition-colors duration-300 text-btn-text;
+	@apply text-btn-text;
 }
 button.primary,
 a.primary {
@@ -78,12 +78,17 @@ a.secondary svg {
 }
 
 button.primary:not(:disabled):hover,
-a.primary:not(:disabled):hover {
-	@apply bg-btn-hover-bg;
-}
+a.primary:not(:disabled):hover,
 button.secondary:not(:disabled):hover,
 a.secondary:not(:disabled):hover {
-	@apply bg-btn-secondary-hover-bg;
+	@apply scale-105;
+}
+
+button.primary:not(:disabled):active,
+a.primary:not(:disabled):active,
+button.secondary:not(:disabled):active,
+a.secondary:not(:disabled):active {
+	@apply scale-95;
 }
 
 button:disabled,
