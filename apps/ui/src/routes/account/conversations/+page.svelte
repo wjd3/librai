@@ -216,7 +216,10 @@
 
 <section class="pt-0 w-full max-w-[664px]">
 	<div class="flex justify-between items-center mb-6">
-		<h1 class="text-3xl" class:animate-pulse={isLoading}>
+		<h1
+			class="text-3xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
+			class:animate-pulse={isLoading}
+		>
 			{#if isLoading}
 				Loading...
 			{:else if conversations && !conversations.length}
@@ -225,20 +228,27 @@
 				Your Conversations
 			{/if}
 		</h1>
-		<button class="primary px-4 mr-4" onclick={newMessage} aria-label="New Conversation">
+		<button
+			class="primary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
+			onclick={newMessage}
+			aria-label="New Conversation"
+		>
 			<span class="iconify lucide--message-square-plus"></span>
 		</button>
 	</div>
 
 	{#if isLoading}
-		<span class="iconify lucide--rotate-cw animate-spin w-6 h-6 mx-auto mt-8"> </span>
+		<div class="flex flex-col items-center space-y-4 mt-8">
+			<span class="iconify lucide--rotate-cw animate-spin w-8 h-8"></span>
+			<p class="text-lg opacity-70">Loading conversations...</p>
+		</div>
 	{:else if conversations.length === 0}
-		<p>No conversations yet.</p>
+		<p class="text-lg opacity-70">No conversations yet.</p>
 	{:else}
 		<div class="space-y-4">
 			{#each conversations as conversation, i}
 				<div
-					class="bg-primary-card-bg px-4 pt-2 pb-4 rounded-lg shadow-sm group"
+					class="bg-primary-card-bg p-4 rounded-xl shadow-sm border border-form-border transition duration-200 hover:shadow-md"
 					transition:fade={{ duration: 200, easing: quartInOut }}
 				>
 					<div class="flex items-center justify-between mb-2">
@@ -250,7 +260,7 @@
 								<input
 									type="text"
 									bind:value={editedTitle}
-									class="input w-full"
+									class="input w-full px-4 py-2 rounded-xl bg-primary-card-bg border border-form-border focus:border-btn-bg transition duration-200"
 									placeholder="Enter title..."
 									maxlength={maxTitleLength}
 									onkeydown={(e) => handleTitleKeydown(e, conversation)}
@@ -259,7 +269,7 @@
 
 							<div class="flex space-x-2 ml-2">
 								<button
-									class="secondary p-1"
+									class="secondary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 									disabled={isSavingTitle}
 									onclick={() => (editingTitleId = null)}
 									title="Cancel"
@@ -269,26 +279,24 @@
 								</button>
 
 								<button
-									class="primary p-1"
+									class="primary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 									disabled={editedTitle === conversation.title || isSavingTitle}
 									onclick={() => updateConversationTitle(conversation)}
 									title="Save"
 									aria-label="Save title"
 								>
 									{#if isSavingTitle}
-										<span class="iconify lucide--rotate-cw animate-spin"> </span>
+										<span class="iconify lucide--rotate-cw animate-spin"></span>
 									{:else}
 										<span class="iconify lucide--check"></span>
 									{/if}
 								</button>
 							</div>
 						{:else}
-							<h2 class="text-xl">
-								{conversation.title}
-							</h2>
+							<h2 class="text-xl font-medium min-h-12">{conversation.title}</h2>
 
 							<button
-								class="primary px-4 ml-4"
+								class="primary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 								onclick={() => startEditing(conversation)}
 								title="Edit title"
 								aria-label={`Edit title: ${conversation.title}`}
@@ -305,7 +313,7 @@
 					<div class="flex justify-between space-x-2">
 						<button
 							aria-label={`Delete Conversation: ${conversation.title}`}
-							class="secondary px-4"
+							class="secondary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 							onclick={() => confirmDelete(conversation.id)}
 						>
 							<span class="iconify lucide--trash-2"></span>
@@ -315,19 +323,19 @@
 							{#if conversation.isPublic}
 								<button
 									disabled={isSharing || isUnsharing}
-									class="secondary px-4"
+									class="secondary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 									onclick={() => unshareConversation(conversation, i)}
 									aria-label={`Unshare Conversation: ${conversation.title}`}
 								>
 									{#if isUnsharing && isUnsharingIndex === i}
-										<span class="iconify lucide--rotate-cw animate-spin"> </span>
+										<span class="iconify lucide--rotate-cw animate-spin"></span>
 									{:else}
 										<span class="iconify lucide--link-2-off"></span>
 									{/if}
 								</button>
 
 								<button
-									class="primary px-4"
+									class="primary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 									disabled={(isSharing && isSharingIndex === i) ||
 										(isUnsharing && isUnsharingIndex === i)}
 									onclick={() =>
@@ -342,7 +350,7 @@
 							{:else}
 								<button
 									disabled={isSharing || isUnsharing}
-									class="primary px-4"
+									class="primary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 									onclick={() => shareConversation(conversation, i)}
 								>
 									{#if isSharing && isSharingIndex === i}
@@ -355,7 +363,7 @@
 
 							<button
 								aria-label={`Continue Conversation: ${conversation.title}`}
-								class="primary px-4"
+								class="primary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 								onclick={() => loadConversation(conversation)}
 							>
 								<span class="iconify lucide--square-pen"></span>
@@ -374,20 +382,28 @@
 		>
 			<div
 				aria-hidden="true"
-				class="absolute inset-0 bg-black/50 backdrop-blur-sm z-0"
+				class="absolute inset-0 bg-black/50 z-0"
 				onclick={() => (showShareDialog = false)}
 			></div>
 
 			<div
-				class="bg-page-bg p-6 rounded-lg max-w-[34rem] w-full mx-4 relative"
+				class="bg-page-bg p-6 rounded-xl max-w-[34rem] w-full mx-4 relative z-10 shadow-lg border border-form-border"
 				transition:fade={{ duration: 200, easing: quartInOut }}
 			>
-				<h2 class="text-xl mb-4">Share Conversation</h2>
+				<h2 class="text-xl font-semibold mb-4">Share Conversation</h2>
 
 				<form onsubmit={preventDefault(() => copyShareUrl())} class="space-y-4">
 					<div class="flex space-x-2">
-						<input type="text" readonly value={shareUrl} class="w-full input" />
-						<button type="submit" class="secondary px-4">
+						<input
+							type="text"
+							readonly
+							value={shareUrl}
+							class="input w-full px-4 py-2 rounded-xl bg-primary-card-bg border border-form-border focus:border-btn-bg transition duration-200"
+						/>
+						<button
+							type="submit"
+							class="secondary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
+						>
 							{#if copiedShareIndex === -1}
 								<span class="iconify lucide--copy"></span>
 							{:else}
@@ -397,7 +413,11 @@
 					</div>
 
 					<div class="flex justify-end">
-						<button type="button" class="primary px-4" onclick={() => (showShareDialog = false)}>
+						<button
+							type="button"
+							class="primary px-4 py-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
+							onclick={() => (showShareDialog = false)}
+						>
 							Close
 						</button>
 					</div>

@@ -173,33 +173,36 @@
 ></div>
 
 <header
-	class={`fixed top-0 left-0 w-screen bg-chat-bar-bg border-b border-form-border transition-colors duration-300 ease-out will-change-transform z-50 h-16 ${
-		$isVisible ? 'bg-transparent border-transparent' : ''
+	class={`fixed top-0 left-0 w-screen transition-all duration-300 ease-out will-change-transform z-50 h-16 ${
+		$isVisible ? 'bg-transparent border-transparent' : 'bg-chat-bar-bg border-b border-form-border'
 	}`}
 >
-	<div class="h-full flex items-center justify-between">
+	<div class="h-full flex items-center justify-between max-w-7xl mx-auto px-4 md:px-8">
 		<div class="flex-shrink-0">
 			{#if page.url.pathname !== '/'}
 				<a
-					class="inline-block p-0 border-none"
+					class="inline-flex items-center space-x-2 p-2 rounded-lg border-0"
 					href="/"
 					in:fade={{ duration: 200, easing: quartInOut }}
 				>
-					<h1 class="text-xl">
+					<h1
+						class="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
+					>
 						{PUBLIC_APP_TITLE || 'Librai UI'}
 					</h1>
 				</a>
 			{/if}
 		</div>
 
-		<div class="flex items-center space-x-4">
+		<div class="flex items-center space-x-3">
 			{#if !isCheckingConversations}
 				<Auth />
 			{/if}
 
-			<ThemeSwitcher {currentTheme} />
-
-			<DarkModeToggle {isDarkMode} {toggleDarkMode} />
+			<div class="flex items-center space-x-2 p-1 rounded-lg">
+				<ThemeSwitcher {currentTheme} />
+				<DarkModeToggle {isDarkMode} {toggleDarkMode} />
+			</div>
 		</div>
 	</div>
 </header>

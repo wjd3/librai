@@ -67,8 +67,13 @@
 </script>
 
 {#if isLoading}
-	<div class="flex justify-center items-center min-h-[100lvh]">
-		<span class="iconify lucide--rotate-cw animate-spin"></span>
+	<div
+		class="flex justify-center items-center min-h-[100lvh] bg-gradient-to-b from-page-bg to-primary-card-bg"
+	>
+		<div class="flex flex-col items-center space-y-4">
+			<span class="iconify lucide--rotate-cw animate-spin w-8 h-8"></span>
+			<p class="text-lg opacity-70">Loading conversation...</p>
+		</div>
 	</div>
 {:else}
 	<ChatInterface />

@@ -166,38 +166,44 @@
 </script>
 
 {#if !$isAuthenticated}
-	<button
-		class="secondary px-4"
-		onclick={() => {
-			showAuthModal = true
-			isRegistering = false
-			isResettingPassword = false
-			resetForm()
-		}}
-		disabled={$isAuthLoading}
-		transition:fade={{ duration: 200, easing: quartInOut }}
-		aria-label="Login"
-	>
-		<span class="iconify lucide--log-in"> </span>
-	</button>
+	<div class="flex items-center space-x-2 p-1 rounded-lg bg-primary-card-bg/30 backdrop-blur-sm">
+		<button
+			class="secondary px-4 py-2 rounded-lg transition duration-200"
+			onclick={() => {
+				showAuthModal = true
+				isRegistering = false
+				isResettingPassword = false
+				resetForm()
+			}}
+			disabled={$isAuthLoading}
+			transition:fade={{ duration: 200, easing: quartInOut }}
+			aria-label="Login"
+		>
+			<span class="iconify lucide--log-in"></span>
+		</button>
 
-	<button
-		class="secondary px-4"
-		onclick={() => {
-			showAuthModal = true
-			isRegistering = true
-			isResettingPassword = false
-			resetForm()
-		}}
-		disabled={$isAuthLoading}
-		transition:fade={{ duration: 200, easing: quartInOut }}
-		aria-label="Sign Up"
-	>
-		<span class="iconify lucide--user-plus"> </span>
-	</button>
+		<button
+			class="secondary px-4 py-2 rounded-lg transition duration-200"
+			onclick={() => {
+				showAuthModal = true
+				isRegistering = true
+				isResettingPassword = false
+				resetForm()
+			}}
+			disabled={$isAuthLoading}
+			transition:fade={{ duration: 200, easing: quartInOut }}
+			aria-label="Sign Up"
+		>
+			<span class="iconify lucide--user-plus"></span>
+		</button>
+	</div>
 {:else}
-	<a href="/account" class="secondary px-4 py-2" aria-label="Account">
-		<span class="iconify lucide--user"> </span>
+	<a
+		href="/account"
+		class="secondary px-4 py-2 rounded-lg transition duration-200"
+		aria-label="Account"
+	>
+		<span class="iconify lucide--user"></span>
 	</a>
 {/if}
 
@@ -216,7 +222,7 @@
 			}}
 		></div>
 		<div
-			class="bg-page-bg p-8 rounded-lg max-w-md w-full mx-4 relative z-10"
+			class="bg-page-bg p-8 rounded-2xl max-w-md w-full mx-4 relative z-10 shadow-xl border border-form-border backdrop-blur-sm"
 			transition:fade={{ duration: 200, easing: quartInOut }}
 		>
 			{#if isResettingPassword}
@@ -328,7 +334,7 @@
 								id="email"
 								bind:value={email}
 								required
-								class="input w-full px-4 py-3"
+								class="input w-full px-4 py-3 rounded-xl bg-primary-card-bg border border-form-border focus:border-btn-bg transition duration-200"
 								maxlength="254"
 							/>
 						</div>
@@ -342,7 +348,7 @@
 									required
 									minlength="8"
 									maxlength={maxPasswordLength}
-									class="input w-full pr-10"
+									class="input w-full px-4 py-3 rounded-xl bg-primary-card-bg border border-form-border focus:border-btn-bg transition duration-200"
 								/>
 								{#if isRegistering}
 									<button
@@ -371,7 +377,7 @@
 										required
 										minlength="8"
 										maxlength={maxPasswordLength}
-										class="input w-full pr-10"
+										class="input w-full px-4 py-3 rounded-xl bg-primary-card-bg border border-form-border focus:border-btn-bg transition duration-200"
 									/>
 									<button
 										type="button"
@@ -409,9 +415,13 @@
 
 						<!-- Main action buttons -->
 						<div class="flex flex-col gap-4">
-							<button type="submit" class="primary w-full" disabled={$isAuthLoading}>
+							<button
+								type="submit"
+								class="primary w-full py-3 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
+								disabled={$isAuthLoading}
+							>
 								{#if $isAuthLoading}
-									<span class="iconify lucide--rotate-cw animate-spin m-auto"> </span>
+									<span class="iconify lucide--rotate-cw animate-spin m-auto"></span>
 								{:else if isRegistering}
 									Sign Up
 								{:else}
@@ -420,7 +430,7 @@
 							</button>
 							<button
 								type="button"
-								class="secondary w-full"
+								class="secondary w-full py-3 rounded-xl transition duration-200"
 								onclick={() => (showAuthModal = false)}
 								disabled={$isAuthLoading}
 							>
@@ -429,11 +439,11 @@
 						</div>
 
 						<!-- Secondary actions -->
-						<div class="space-y-4 text-center">
+						<div class="space-y-4 text-center mt-6">
 							{#if !isRegistering}
 								<button
 									type="button"
-									class="text-sm"
+									class="text-sm hover:text-btn-bg transition duration-200"
 									onclick={showPasswordReset}
 									disabled={$isAuthLoading}
 								>
@@ -443,10 +453,10 @@
 
 							<div class="space-y-2">
 								{#if isRegistering}
-									<p>Already have an account?</p>
+									<p class="text-sm opacity-70">Already have an account?</p>
 									<button
 										type="button"
-										class="text-sm primary"
+										class="text-sm primary px-6 py-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 										onclick={() => {
 											isRegistering = false
 											resetForm()
@@ -456,10 +466,10 @@
 										Login
 									</button>
 								{:else}
-									<p>Need an account?</p>
+									<p class="text-sm opacity-70">Need an account?</p>
 									<button
 										type="button"
-										class="text-sm primary"
+										class="text-sm primary px-6 py-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
 										onclick={() => {
 											isRegistering = true
 											resetForm()
