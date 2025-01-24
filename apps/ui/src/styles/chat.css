@@ -1,62 +1,104 @@
 .chat-history {
-	@apply w-full md:w-[45rem];
+	@apply w-full md:w-[45rem] space-y-4;
 }
-@media (max-width: 360px) {
-	.chat-history {
-		@apply w-full;
-	}
-}
+
 .chat-message {
-	@apply overflow-x-scroll w-full px-4 py-2 rounded-t-lg flex flex-col;
+	@apply w-full px-4 py-3 rounded-xl flex flex-col break-words bg-[var(--bot-bubble-bg)] text-[var(--text-color)] shadow;
 }
+
 .chat-message.is-user {
-	@apply rounded-bl-lg self-end bg-user-bubble-bg max-w-[440px] w-fit;
+	@apply self-end max-w-[85%] md:max-w-[75%] bg-[var(--user-bubble-bg)] border dark:border-[var(--form-border)] border-[var(--btn-secondary-bg)] rounded-br;
 }
+
 .chat-message:not(.is-user) {
-	@apply flex flex-col space-y-2 rounded-br-lg self-start bg-bot-bubble-bg;
+	@apply self-start max-w-[85%] md:max-w-[75%] bg-[var(--bot-bubble-bg)] border border-[var(--form-border)] dark:border-[var(--btn-secondary-hover-bg)] rounded-bl;
 }
-.chat-message:not(.is-user) > :nth-child(2) {
-	@apply !mt-0;
+
+/* Message content styling */
+.chat-message :where(h1, h2, h3, h4, h5, h6) {
+	@apply font-semibold text-[var(--text-color)];
 }
 
 .chat-message h1 {
-	@apply text-4xl font-bold mb-2;
+	@apply text-2xl mb-4 pt-2;
 }
 .chat-message h2 {
-	@apply text-3xl font-semibold mb-2;
+	@apply text-xl mb-3 pt-2;
 }
 .chat-message h3 {
-	@apply text-2xl font-medium mb-2;
+	@apply text-lg mb-2;
 }
 .chat-message h4 {
-	@apply text-xl font-medium mb-2;
+	@apply text-base mb-2;
 }
 .chat-message h5 {
-	@apply text-lg font-medium mb-2;
+	@apply text-sm mb-2;
 }
 .chat-message h6 {
-	@apply text-lg font-normal mb-2;
-}
-.chat-message li,
-.chat-message p strong,
-.chat-message p em,
-.chat-message p b,
-.chat-message span,
-.chat-message p {
-	@apply text-base;
-}
-.chat-message table {
-	@apply w-full border-collapse;
-}
-.chat-message th,
-.chat-message td {
-	@apply border px-4 py-2;
-}
-.chat-message th {
-	@apply text-left;
+	@apply text-xs mb-2;
 }
 
-/* Katex */
-li .katex-display {
-	@apply w-fit;
+.chat-message p {
+	@apply mb-3 leading-relaxed;
+}
+
+.chat-message ul,
+.chat-message ol {
+	@apply mb-4 pl-6;
+}
+
+.chat-message li {
+	@apply mb-2 leading-relaxed list-inside;
+}
+
+.chat-message ul li {
+	@apply list-disc;
+}
+
+.chat-message ol li {
+	@apply list-decimal;
+}
+
+.chat-message pre {
+	@apply p-4 rounded-lg my-3 overflow-x-auto text-sm bg-[var(--primary-card-bg)] border border-[var(--form-border)];
+}
+
+.chat-message code {
+	@apply px-1.5 py-1 rounded-md text-sm bg-[var(--primary-card-bg)] border border-[var(--form-border)];
+}
+
+.chat-message table {
+	@apply w-full my-4 border-collapse rounded-lg overflow-hidden shadow-sm bg-[var(--primary-card-bg)] border border-[var(--form-border)];
+}
+
+.chat-message th,
+.chat-message td {
+	@apply px-4 py-2 text-left border-b border-[var(--form-border)];
+}
+
+.chat-message th {
+	@apply font-semibold bg-[var(--secondary-card-bg)];
+}
+
+.chat-message tr:last-child td {
+	@apply border-b-0;
+}
+
+/* Katex adjustments */
+.katex-display {
+	@apply my-3 p-2 rounded-lg overflow-x-auto overflow-y-hidden bg-[var(--primary-card-bg)] border border-[var(--form-border)];
+}
+
+@media (max-width: 768px) {
+	.chat-message {
+		@apply max-w-[90%] text-sm;
+	}
+
+	.chat-message pre {
+		@apply text-xs;
+	}
+
+	.chat-message table {
+		@apply text-xs;
+	}
 }

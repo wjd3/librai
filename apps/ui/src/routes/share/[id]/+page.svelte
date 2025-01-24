@@ -85,13 +85,19 @@
 	<meta name="twitter:image" content={meta.ogImage} />
 </svelte:head>
 
-<section class="container max-w-2xl mx-auto !pb-16">
+<section class="container max-w-2xl mx-auto !pb-16 px-4 md:px-8">
 	<div class="space-y-3 mb-6">
-		<button class="primary px-2" onclick={forkConversation} aria-label="Continue Chat">
-			<span class="iconify lucide--step-forward"></span>
+		<button
+			class="primary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200"
+			onclick={forkConversation}
+			aria-label="Continue Chat"
+		>
+			<span class="iconify lucide--square-pen"></span>
 		</button>
 
-		<h1 class="text-2xl sm:text-3xl">
+		<h1
+			class="text-2xl sm:text-3xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
+		>
 			{conversation.title}
 		</h1>
 	</div>
@@ -100,24 +106,32 @@
 		<div class="space-y-6 flex flex-col">
 			{#each conversation.messages as { message, isUser }, i}
 				<div
-					class="chat-message"
+					class="chat-message p-6 rounded-2xl shadow-lg border border-form-border transition duration-200"
 					class:is-user={isUser}
 					transition:fade={{ duration: 200, easing: quartInOut }}
 				>
 					{#if isUser}
 						<h2 class="sr-only">User said:</h2>
-						<p>{DOMPurify.sanitize(message)}</p>
+						<p class="text-lg leading-relaxed">{DOMPurify.sanitize(message)}</p>
 					{:else}
 						<h2 class="sr-only">AI said:</h2>
-						{@html parseMarkdownToHtml(message)}
-						<CopyButton {message} messageIndex={i} />
+						<div class="prose prose-lg max-w-none">
+							{@html parseMarkdownToHtml(message)}
+						</div>
+						<div class="mt-4">
+							<CopyButton {message} messageIndex={i} />
+						</div>
 					{/if}
 				</div>
 			{/each}
 		</div>
 
-		<button class="primary px-2 self-end" onclick={forkConversation} aria-label="Continue Chat">
-			<span class="iconify lucide--step-forward"></span>
+		<button
+			class="primary p-2 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200 self-end"
+			onclick={forkConversation}
+			aria-label="Continue Chat"
+		>
+			<span class="iconify lucide--square-pen"></span>
 		</button>
 	</div>
 </section>

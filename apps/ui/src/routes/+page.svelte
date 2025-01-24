@@ -1,12 +1,174 @@
 <script lang="ts">
+	import DOMPurify from 'isomorphic-dompurify'
+	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
+	import { chatHistory, currentConversation } from '$lib/stores/index'
+	import { authToken, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
-	import HomeChatInterface from '$components/HomeChatInterface.svelte'
-	import { currentConversation, chatHistory } from '$lib/stores/index'
+	import { goto } from '$app/navigation'
+	import { preventDefault } from '$lib/utils'
+	import { censorText } from '$lib/utils/censor'
+
+	let promptInput: HTMLInputElement | null = $state(null)
+	let isDisabled = $state(true)
+	let isSubmitting = $state(false)
+	let userInput = $state('')
+	let honeypot = $state('')
 
 	onMount(() => {
 		currentConversation.set(null)
 		chatHistory.set([])
+
+		if (promptInput) {
+			promptInput.focus()
+		}
 	})
+
+	$effect(() => {
+		if (!isSubmitting) {
+			isDisabled = userInput.length < 1
+		}
+	})
+
+	const minQueryLength = 1
+
+	async function startConversation() {
+		isSubmitting = true
+
+		if (honeypot) {
+			isSubmitting = false
+			return
+		}
+
+		const rawQuery = DOMPurify.sanitize(userInput || '').trim()
+		if (!rawQuery || rawQuery.length < minQueryLength) {
+			isSubmitting = false
+			return
+		}
+
+		// Censor the query before processing
+		const query = censorText(rawQuery)
+
+		try {
+			if ($isAuthenticated) {
+				// Create permanent conversation in database
+				const response = await fetch('/api/conversations', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${$authToken}`
+					},
+					body: JSON.stringify({
+						messages: [{ message: query, isUser: true, created: new Date().toISOString() }]
+					})
+				})
+
+				if (!response.ok) {
+					throw new Error('Failed to create conversation')
+				}
+
+				const conversation = await response.json()
+				await goto(`/conversations/${conversation.id}`)
+			} else {
+				// Create temporary conversation in memory
+				const tempId = crypto.randomUUID()
+
+				currentConversation.set({
+					id: tempId,
+					messages: [{ message: query, isUser: true, created: new Date().toISOString() }],
+					user: '',
+					title: 'New Conversation',
+					created: new Date().toISOString(),
+					updated: new Date().toISOString(),
+					isPublic: false,
+					shareId: undefined
+				})
+				chatHistory.set([{ message: query, isUser: true, created: new Date().toISOString() }])
+
+				await goto(`/conversations/${tempId}`)
+			}
+		} catch (error) {
+			console.error('Error starting conversation:', error)
+			isSubmitting = false
+		}
+	}
 </script>
 
-<HomeChatInterface />
+<section
+	class="min-h-[100svh] relative z-40 flex flex-col items-center justify-center bg-gradient-to-b from-page-bg to-primary-card-bg"
+>
+	<div class="container flex flex-col justify-center items-center px-4 md:px-8 max-w-4xl mx-auto">
+		<!-- Title -->
+		<h1
+			class="text-4xl md:text-5xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
+		>
+			{#if PUBLIC_APP_TITLE}
+				{PUBLIC_APP_TITLE}
+			{:else}
+				Librai UI
+			{/if}
+		</h1>
+
+		<p class="text-center text-base md:text-lg mb-6 max-w-[600px] leading-relaxed opacity-90">
+			{PUBLIC_CHATBOT_DESCRIPTION ||
+				'This is a chatbot trained on custom data. Check answers for accuracy.'}
+		</p>
+
+		<!-- Input Form -->
+		<div
+			class="w-full max-w-2xl backdrop-blur-sm bg-primary-card-bg/50 p-6 rounded-2xl shadow-lg border border-form-border"
+		>
+			<form
+				class="flex flex-col md:flex-row items-stretch md:items-center justify-center gap-4 w-full"
+				onsubmit={preventDefault(startConversation)}
+			>
+				<div class="flex-grow">
+					<label for="chat-input" class="sr-only">Query the chatbot.</label>
+					<input
+						required
+						minlength={minQueryLength}
+						autocomplete="off"
+						maxlength="4096"
+						id="chat-input"
+						placeholder="Ask a question..."
+						bind:this={promptInput}
+						bind:value={userInput}
+						class="input w-full resize-y min-h-[3rem] max-h-40 text-lg transition-all duration-200 focus:shadow-lg"
+						onkeydown={(e) => {
+							if (e.key === 'Enter' && !e.shiftKey) {
+								e.preventDefault()
+								startConversation()
+							}
+						}}
+					/>
+				</div>
+
+				<div class="sr-only">
+					<label for="email_2">Leave this field blank:</label>
+					<input
+						bind:value={honeypot}
+						type="text"
+						id="email_2"
+						name="email_2"
+						maxlength="4096"
+						autocomplete="off"
+						tabindex="-1"
+					/>
+				</div>
+
+				<button
+					disabled={isDisabled || $isAuthLoading}
+					type="submit"
+					class="primary h-12 md:w-16 flex items-center justify-center self-end hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
+					class:animate-pulse={isSubmitting}
+					class:opacity-70={isDisabled || $isAuthLoading}
+				>
+					{#if isSubmitting}
+						<span class="iconify lucide--ellipsis w-6 h-6"> </span>
+					{:else}
+						<span class="iconify lucide--arrow-up w-6 h-6"> </span>
+					{/if}
+				</button>
+			</form>
+		</div>
+	</div>
+</section>

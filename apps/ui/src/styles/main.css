@@ -6,10 +6,10 @@
 @import './chat.css';
 
 ::selection {
-	@apply bg-highlight text-text-color;
+	@apply bg-btn-secondary-bg text-text-color;
 }
 ::-moz-selection {
-	@apply bg-highlight text-text-color;
+	@apply bg-btn-secondary-bg text-text-color;
 }
 
 /* Body Styles */
@@ -36,19 +36,19 @@ footer {
 .input,
 .textarea,
 .select {
-	@apply border-2 bg-form-bg border-form-border focus:border-form-focus-border w-full rounded-lg text-text-color placeholder:text-placeholder-color shadow-sm focus:outline-none focus:ring-0 transition duration-200 text-lg;
+	@apply border-2 bg-form-bg border-form-border focus:border-form-focus-border w-full rounded-lg text-text-color placeholder:text-placeholder-color shadow-sm focus:outline-none focus:ring-0 transition duration-300 text-lg;
 }
 
 /* Button Styles */
 button,
 a {
-	@apply text-text-color px-4 py-2 rounded-lg border transition duration-200;
+	@apply text-text-color px-4 py-2 rounded-lg border transition duration-300;
 }
 button.primary,
 a.primary,
 button.secondary,
 a.secondary {
-	@apply transition-colors duration-200 text-btn-text;
+	@apply text-btn-text;
 }
 button.primary,
 a.primary {
@@ -78,12 +78,17 @@ a.secondary svg {
 }
 
 button.primary:not(:disabled):hover,
-a.primary:not(:disabled):hover {
-	@apply bg-btn-hover-bg;
-}
+a.primary:not(:disabled):hover,
 button.secondary:not(:disabled):hover,
 a.secondary:not(:disabled):hover {
-	@apply bg-btn-secondary-hover-bg;
+	@apply scale-105;
+}
+
+button.primary:not(:disabled):active,
+a.primary:not(:disabled):active,
+button.secondary:not(:disabled):active,
+a.secondary:not(:disabled):active {
+	@apply scale-95;
 }
 
 button:disabled,

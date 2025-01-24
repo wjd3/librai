@@ -25,7 +25,7 @@ input[type='file'] {
 }
 
 button {
-	@apply transition-colors duration-200;
+	@apply transition-colors duration-300;
 }
 
 button:disabled {

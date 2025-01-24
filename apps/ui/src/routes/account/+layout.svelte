@@ -8,20 +8,20 @@
 		<aside class="flex md:flex-col gap-2 md:w-16">
 			<a
 				href="/account"
-				class="flex items-center justify-center w-full px-4 py-3 rounded-lg transition-colors hover:bg-primary-card-bg duration-300"
+				class="flex items-center justify-center w-full p-3 rounded-xl transition duration-200 hover:scale-[1.02] active:scale-[0.98] border border-form-border"
 				class:bg-primary-card-bg={page.url.pathname === '/account'}
 				aria-label="Profile"
 			>
-				<span class="iconify lucide--user"> </span>
+				<span class="iconify lucide--user"></span>
 			</a>
 
 			<a
 				href="/account/conversations"
-				class="flex items-center justify-center w-full px-4 py-3 rounded-lg transition-colors hover:bg-primary-card-bg duration-300"
+				class="flex items-center justify-center w-full p-3 rounded-xl transition duration-200 hover:scale-[1.02] active:scale-[0.98] border border-form-border"
 				class:bg-primary-card-bg={page.url.pathname === '/account/conversations'}
 				aria-label="Conversations"
 			>
-				<span class="iconify lucide--message-square-text"> </span>
+				<span class="iconify lucide--message-square-text"></span>
 			</a>
 		</aside>
 
