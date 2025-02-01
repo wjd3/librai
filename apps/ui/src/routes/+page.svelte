@@ -6,7 +6,7 @@
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import { preventDefault } from '$lib/utils'
-	import { censorText } from '$lib/utils/censor'
+	// import { censorText } from '$lib/utils/censor'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
 	let isDisabled = $state(true)
@@ -39,14 +39,14 @@
 			return
 		}
 
-		const rawQuery = DOMPurify.sanitize(userInput || '').trim()
-		if (!rawQuery || rawQuery.length < minQueryLength) {
+		const query = DOMPurify.sanitize(userInput || '').trim()
+		if (!query || query.length < minQueryLength) {
 			isSubmitting = false
 			return
 		}
 
 		// Censor the query before processing
-		const query = censorText(rawQuery)
+		// const censoredQuery = censorText(query)
 
 		try {
 			if ($isAuthenticated) {
