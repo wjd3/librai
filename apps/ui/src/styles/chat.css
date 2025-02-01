@@ -3,7 +3,15 @@
 }
 
 .chat-message {
-	@apply w-full px-4 py-3 rounded-xl flex flex-col break-words bg-[var(--bot-bubble-bg)] text-[var(--text-color)] shadow;
+	@apply w-full px-4 py-3 rounded-xl flex flex-col break-words bg-[var(--bot-bubble-bg)] text-[var(--text-color)] shadow max-md:max-w-[90%] max-md:text-sm;
+}
+
+.chat-message pre {
+	@apply max-md:text-xs;
+}
+
+.chat-message table {
+	@apply max-md:text-xs;
 }
 
 .chat-message.is-user {
@@ -87,18 +95,4 @@
 /* Katex adjustments */
 .katex-display {
 	@apply my-3 p-2 rounded-lg overflow-x-auto overflow-y-hidden bg-[var(--primary-card-bg)] border border-[var(--form-border)];
-}
-
-@media (max-width: 768px) {
-	.chat-message {
-		@apply max-w-[90%] text-sm;
-	}
-
-	.chat-message pre {
-		@apply text-xs;
-	}
-
-	.chat-message table {
-		@apply text-xs;
-	}
 }
