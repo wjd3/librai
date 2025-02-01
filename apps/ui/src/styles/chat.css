@@ -6,6 +6,10 @@
 	@apply w-full px-4 py-3 rounded-xl flex flex-col break-words bg-[var(--bot-bubble-bg)] text-[var(--text-color)] shadow max-md:max-w-[90%] max-md:text-sm;
 }
 
+.chat-message > *:last-child {
+	@apply mb-0;
+}
+
 .chat-message pre {
 	@apply max-md:text-xs;
 }
@@ -15,11 +19,11 @@
 }
 
 .chat-message.is-user {
-	@apply self-end max-w-[85%] md:max-w-[75%] bg-[var(--user-bubble-bg)] border dark:border-[var(--form-border)] border-[var(--btn-secondary-bg)] rounded-br;
+	@apply self-end w-fit max-w-[90%] md:max-w-[80%] bg-[var(--user-bubble-bg)] border dark:border-[var(--form-border)] border-[var(--btn-secondary-bg)] rounded-br;
 }
 
 .chat-message:not(.is-user) {
-	@apply self-start max-w-[85%] md:max-w-[75%] bg-[var(--bot-bubble-bg)] border border-[var(--form-border)] dark:border-[var(--btn-secondary-hover-bg)] rounded-bl;
+	@apply self-start max-w-[90%] md:max-w-[80%] bg-[var(--bot-bubble-bg)] border border-[var(--form-border)] dark:border-[var(--btn-secondary-hover-bg)] rounded-bl;
 }
 
 /* Message content styling */
@@ -47,7 +51,7 @@
 }
 
 .chat-message p {
-	@apply mb-3 leading-relaxed;
+	@apply text-base mb-3 leading-relaxed;
 }
 
 .chat-message ul,
@@ -56,7 +60,7 @@
 }
 
 .chat-message li {
-	@apply mb-2 leading-relaxed list-inside;
+	@apply mb-2 leading-relaxed;
 }
 
 .chat-message ul li {
@@ -65,6 +69,10 @@
 
 .chat-message ol li {
 	@apply list-decimal;
+}
+
+.chat-message li > p {
+	@apply inline;
 }
 
 .chat-message pre {

@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation'
 	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken, isAuthLoading, isAuthenticated } from '$lib/stores/auth'
-	import ChatInterface from '$components/ChatInterface.svelte'
+	import Chat from '$components/Chat.svelte'
 
 	type Message = {
 		content: string
@@ -76,5 +76,5 @@
 		</div>
 	</div>
 {:else}
-	<ChatInterface />
+	<Chat />
 {/if}

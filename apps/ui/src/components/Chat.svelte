@@ -218,7 +218,7 @@
 						<div
 							class="p-4 rounded-2xl shadow-lg border border-form-border self-start animate-pulse"
 						>
-							<span class="opacity-80 text-text-color text-lg">
+							<span class="opacity-80 text-text-color text-base">
 								{PUBLIC_CHATBOT_THINKING_TEXT || 'Thinking...'}
 							</span>
 						</div>
@@ -304,13 +304,13 @@
 
 		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat && !isSubmitting}
 			<button
-				class="fixed left-1/2 -translate-x-1/2 z-50 p-3 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 bottom-40 transition-all duration-300 group"
+				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 md:p-3 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 bottom-40 transition-all duration-300 group"
 				in:fade={{ duration: 300, easing: quartOut }}
 				out:fade={{ duration: 300, easing: quartOut }}
 				onclick={scrollToBottom}
 				aria-label="Scroll to bottom"
 			>
-				<span class="text-btn-text iconify lucide--arrow-down w-6 h-6"> </span>
+				<span class="text-btn-text iconify lucide--arrow-down w-5 h-5 lg:w-6 lg:h-6"> </span>
 			</button>
 		{/if}
 	</div>
