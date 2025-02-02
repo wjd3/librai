@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DOMPurify from 'isomorphic-dompurify'
 	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
-	import { chatHistory, currentConversation } from '$lib/stores/index'
+	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
@@ -18,6 +18,7 @@
 	onMount(() => {
 		currentConversation.set(null)
 		chatHistory.set([])
+		shouldStartChat.set(false)
 
 		if (promptInput) {
 			promptInput.focus()
@@ -67,7 +68,7 @@
 				}
 				const conversation = await response.json()
 
-				await trackCustomEvent('authorized_conversation_created')
+				await trackCustomEvent('authenticated_conversation_created')
 
 				await goto(`/conversations/${conversation.id}`)
 			} else {
@@ -86,7 +87,7 @@
 				})
 				chatHistory.set([{ message: query, isUser: true, created: new Date().toISOString() }])
 
-				await trackCustomEvent('unauthorized_conversation_created')
+				await trackCustomEvent('unauthenticated_conversation_created')
 
 				await goto(`/conversations/${tempId}`)
 			}
