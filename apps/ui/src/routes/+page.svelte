@@ -155,7 +155,7 @@
 							placeholder="Ask a question..."
 							bind:this={promptInput}
 							bind:value={userInput}
-							class="input w-full h-12 min-h-12 resize-y max-h-48 transition duration-200 focus:shadow-lg cursor-text"
+							class="input w-full h-[72px] min-h-[72px] sm:h-12 sm:min-h-12 resize-y max-h-48 transition duration-200 focus:shadow-lg cursor-text"
 							onkeydown={(e) => {
 								if (e.key === 'Enter' && !e.shiftKey) {
 									e.preventDefault()
