@@ -177,11 +177,11 @@
 		$isVisible ? 'bg-transparent border-transparent' : 'bg-chat-bar-bg border-b border-form-border'
 	}`}
 >
-	<div class="h-full flex items-center justify-between max-w-7xl mx-auto px-4 md:px-8">
+	<div class="h-full flex items-center justify-between max-w-7xl mx-auto">
 		<div class="flex-shrink-0">
 			{#if page.url.pathname !== '/'}
 				<a
-					class="inline-flex items-center space-x-2 p-2 rounded-lg border-0"
+					class="inline-flex items-center space-x-2 py-2 rounded-lg border-0"
 					href="/"
 					in:fade={{ duration: 200, easing: quartInOut }}
 				>
@@ -199,7 +199,7 @@
 				<Auth />
 			{/if}
 
-			<div class="flex items-center space-x-2 p-1 rounded-lg">
+			<div class="flex items-center space-x-2 py-1 rounded-lg">
 				<ThemeSwitcher {currentTheme} />
 				<DarkModeToggle {isDarkMode} {toggleDarkMode} />
 			</div>

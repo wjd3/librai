@@ -11,11 +11,11 @@
 	import CopyButton from './CopyButton.svelte'
 	import { goto } from '$app/navigation'
 	import { currentUser, isAuthLoading } from '$lib/stores'
-	import { censorText } from '$lib/utils/censor'
+	// import { censorText } from '$lib/utils/censor'
 
 	onMount(() => promptInput?.focus())
 
-	let promptInput: HTMLInputElement | null = $state(null)
+	let promptInput: HTMLTextAreaElement | null = $state(null)
 	let isDisabled = $state(true)
 	let isSubmitting = $state(false)
 	let userInput = $state('')
@@ -39,13 +39,13 @@
 			return
 		}
 
-		const rawQuery = message || DOMPurify.sanitize(userInput || '').trim()
-		if (!rawQuery || rawQuery.length < 1) {
+		const query = message || DOMPurify.sanitize(userInput || '').trim()
+		if (!query) {
 			isSubmitting = false
 			return
 		}
 
-		const query = censorText(rawQuery)
+		// const censoredQuery = censorText(query)
 
 		const conversationHistory = JSON.stringify(
 			[...$chatHistory].map((msg) => ({
@@ -218,7 +218,7 @@
 						<div
 							class="p-4 rounded-2xl shadow-lg border border-form-border self-start animate-pulse"
 						>
-							<span class="opacity-80 text-text-color text-lg">
+							<span class="opacity-80 text-text-color text-base">
 								{PUBLIC_CHATBOT_THINKING_TEXT || 'Thinking...'}
 							</span>
 						</div>
@@ -233,31 +233,12 @@
 			style="background-color: color-mix(in srgb, var(--chat-bar-bg) 80%, transparent);"
 		>
 			<form
-				class="flex flex-row items-center justify-center gap-4 w-full max-w-2xl mx-auto px-4"
+				class="mx-auto w-full max-w-2xl"
 				onsubmit={async (e) => {
 					e.preventDefault()
 					await sendMessage()
 				}}
 			>
-				<div class="flex-grow">
-					<input
-						required
-						minlength={1}
-						maxlength="4096"
-						id="chat-input"
-						placeholder="Ask a question..."
-						bind:this={promptInput}
-						bind:value={userInput}
-						class="input w-full resize-y min-h-[3rem] max-h-40 text-lg transition-all duration-200 focus:shadow-lg"
-						onkeydown={async (e) => {
-							if (e.key === 'Enter' && !e.shiftKey) {
-								e.preventDefault()
-								await sendMessage()
-							}
-						}}
-					/>
-				</div>
-
 				<div class="sr-only">
 					<label for="email_2">Leave this field blank:</label>
 					<input
@@ -271,19 +252,40 @@
 					/>
 				</div>
 
-				<button
-					disabled={isDisabled || $isAuthLoading}
-					type="submit"
-					class="primary h-12 md:w-16 flex items-center justify-center self-end hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
-					class:animate-pulse={isSubmitting}
-					class:opacity-70={isDisabled || $isAuthLoading}
-				>
-					{#if isSubmitting}
-						<span class="iconify lucide--ellipsis w-6 h-6"> </span>
-					{:else}
-						<span class="iconify lucide--arrow-up w-6 h-6"> </span>
-					{/if}
-				</button>
+				<div class="flex flex-row items-start justify-center gap-4 px-4">
+					<div class="flex-grow flex">
+						<textarea
+							required
+							minlength={1}
+							maxlength="4096"
+							id="chat-input"
+							placeholder="Ask a question..."
+							bind:this={promptInput}
+							bind:value={userInput}
+							class="input w-full resize-y min-h-12 max-h-24 h-12 transition duration-200 focus:shadow-lg"
+							onkeydown={async (e) => {
+								if (e.key === 'Enter' && !e.shiftKey) {
+									e.preventDefault()
+									await sendMessage()
+								}
+							}}
+						></textarea>
+					</div>
+
+					<button
+						disabled={isDisabled || $isAuthLoading}
+						type="submit"
+						class="primary h-12 md:w-16 flex items-center justify-center hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
+						class:animate-pulse={isSubmitting}
+						class:opacity-70={isDisabled || $isAuthLoading}
+					>
+						{#if isSubmitting}
+							<span class="iconify lucide--ellipsis w-6 h-6"> </span>
+						{:else}
+							<span class="iconify lucide--arrow-up w-6 h-6"> </span>
+						{/if}
+					</button>
+				</div>
 			</form>
 
 			{#if $chatHistory.length > 0}
@@ -302,13 +304,13 @@
 
 		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat && !isSubmitting}
 			<button
-				class="fixed left-1/2 -translate-x-1/2 z-50 p-3 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 bottom-40 transition-all duration-300 group"
+				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 md:p-3 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 bottom-40 transition-all duration-300 group"
 				in:fade={{ duration: 300, easing: quartOut }}
 				out:fade={{ duration: 300, easing: quartOut }}
 				onclick={scrollToBottom}
 				aria-label="Scroll to bottom"
 			>
-				<span class="text-btn-text iconify lucide--arrow-down w-6 h-6"> </span>
+				<span class="text-btn-text iconify lucide--arrow-down w-5 h-5 lg:w-6 lg:h-6"> </span>
 			</button>
 		{/if}
 	</div>

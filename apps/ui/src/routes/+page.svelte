@@ -6,9 +6,9 @@
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import { preventDefault } from '$lib/utils'
-	import { censorText } from '$lib/utils/censor'
+	// import { censorText } from '$lib/utils/censor'
 
-	let promptInput: HTMLInputElement | null = $state(null)
+	let promptInput: HTMLTextAreaElement | null = $state(null)
 	let isDisabled = $state(true)
 	let isSubmitting = $state(false)
 	let userInput = $state('')
@@ -39,14 +39,14 @@
 			return
 		}
 
-		const rawQuery = DOMPurify.sanitize(userInput || '').trim()
-		if (!rawQuery || rawQuery.length < minQueryLength) {
+		const query = DOMPurify.sanitize(userInput || '').trim()
+		if (!query || query.length < minQueryLength) {
 			isSubmitting = false
 			return
 		}
 
 		// Censor the query before processing
-		const query = censorText(rawQuery)
+		// const censoredQuery = censorText(query)
 
 		try {
 			if ($isAuthenticated) {
@@ -117,31 +117,7 @@
 		<div
 			class="w-full max-w-2xl backdrop-blur-sm bg-primary-card-bg/50 p-6 rounded-2xl shadow-lg border border-form-border"
 		>
-			<form
-				class="flex flex-col md:flex-row items-stretch md:items-center justify-center gap-4 w-full"
-				onsubmit={preventDefault(startConversation)}
-			>
-				<div class="flex-grow">
-					<label for="chat-input" class="sr-only">Query the chatbot.</label>
-					<input
-						required
-						minlength={minQueryLength}
-						autocomplete="off"
-						maxlength="4096"
-						id="chat-input"
-						placeholder="Ask a question..."
-						bind:this={promptInput}
-						bind:value={userInput}
-						class="input w-full resize-y min-h-[3rem] max-h-40 text-lg transition-all duration-200 focus:shadow-lg"
-						onkeydown={(e) => {
-							if (e.key === 'Enter' && !e.shiftKey) {
-								e.preventDefault()
-								startConversation()
-							}
-						}}
-					/>
-				</div>
-
+			<form class="w-full" onsubmit={preventDefault(startConversation)}>
 				<div class="sr-only">
 					<label for="email_2">Leave this field blank:</label>
 					<input
@@ -155,19 +131,42 @@
 					/>
 				</div>
 
-				<button
-					disabled={isDisabled || $isAuthLoading}
-					type="submit"
-					class="primary h-12 md:w-16 flex items-center justify-center self-end hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
-					class:animate-pulse={isSubmitting}
-					class:opacity-70={isDisabled || $isAuthLoading}
-				>
-					{#if isSubmitting}
-						<span class="iconify lucide--ellipsis w-6 h-6"> </span>
-					{:else}
-						<span class="iconify lucide--arrow-up w-6 h-6"> </span>
-					{/if}
-				</button>
+				<div class="flex flex-col md:flex-row items-stretch justify-center gap-4">
+					<div class="flex-grow flex">
+						<label for="chat-input" class="sr-only">Query the chatbot.</label>
+						<textarea
+							required
+							minlength={minQueryLength}
+							autocomplete="off"
+							maxlength="4096"
+							id="chat-input"
+							placeholder="Ask a question..."
+							bind:this={promptInput}
+							bind:value={userInput}
+							class="input w-full h-12 min-h-12 resize-y max-h-48 transition duration-200 focus:shadow-lg cursor-text"
+							onkeydown={(e) => {
+								if (e.key === 'Enter' && !e.shiftKey) {
+									e.preventDefault()
+									startConversation()
+								}
+							}}
+						></textarea>
+					</div>
+
+					<button
+						disabled={isDisabled || $isAuthLoading}
+						type="submit"
+						class="primary max-h-12 md:w-16 flex items-center justify-center hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
+						class:animate-pulse={isSubmitting}
+						class:opacity-70={isDisabled || $isAuthLoading}
+					>
+						{#if isSubmitting}
+							<span class="iconify lucide--ellipsis w-6 h-6"> </span>
+						{:else}
+							<span class="iconify lucide--arrow-up w-6 h-6"> </span>
+						{/if}
+					</button>
+				</div>
 			</form>
 		</div>
 	</div>

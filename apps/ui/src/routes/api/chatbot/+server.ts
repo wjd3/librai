@@ -11,16 +11,17 @@ import { RateLimitService } from '$lib/server/services/rateLimitService'
 import { searchWithHybrid } from '$lib/server/services/qdrantService'
 import { chatService } from '$lib/server/services/chatService'
 import { PRIVATE_SYSTEM_PROMPT } from '$env/static/private'
-import { censorText } from '$lib/utils/censor'
 
 export const POST = async ({ request, locals, getClientAddress }) => {
 	const { query: rawQuery, history: rawHistory, conversationId, name } = await request.json()
 
 	// Censor the query and history
-	const query = censorText(DOMPurify.sanitize(rawQuery))
+	// const censoredQuery = censorText(DOMPurify.sanitize(rawQuery))
+	const query = DOMPurify.sanitize(rawQuery)
 	const history = JSON.parse(rawHistory || '[]').map((msg: ChatMessage) => ({
 		...msg,
-		message: censorText(msg.message)
+		// message: censorText(msg.message)
+		message: msg.message
 	}))
 
 	const userId = locals.user?.id
