@@ -79,9 +79,9 @@
 				}
 				const conversation = await response.json()
 
-				await trackCustomEvent('authenticated_conversation_created')
+				await trackCustomEvent('authenticated_chat')
 
-				await goto(`/conversations/${conversation.id}`)
+				await goto(`/chat/${conversation.id}`)
 			} else {
 				// Create temporary conversation in memory
 				const tempId = crypto.randomUUID()
@@ -98,9 +98,9 @@
 				})
 				chatHistory.set([{ message: query, isUser: true, created: new Date().toISOString() }])
 
-				await trackCustomEvent('unauthenticated_conversation_created')
+				await trackCustomEvent('unauthenticated_chat')
 
-				await goto(`/conversations/${tempId}`)
+				await goto(`/chat/${tempId}`)
 			}
 		} catch (error) {
 			console.error('Error starting conversation:', error)
