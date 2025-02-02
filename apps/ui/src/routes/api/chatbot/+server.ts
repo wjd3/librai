@@ -114,7 +114,18 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 				try {
 					const stream = await OpenAIService.getChatCompletion(messages)
 
+					// Add event listener for request cancellation
+					request.signal.addEventListener('abort', () => {
+						controller.close()
+					})
+
 					for await (const chunk of stream) {
+						// Check if request was aborted
+						if (request.signal.aborted) {
+							controller.close()
+							return
+						}
+
 						const content = chunk.choices[0]?.delta?.content
 						if (content) {
 							responseMessage += content
@@ -151,6 +162,10 @@ export const POST = async ({ request, locals, getClientAddress }) => {
 					controller.close()
 				} catch (error) {
 					console.error('Stream error:', error)
+					if ((error as Error).name === 'AbortError') {
+						controller.close()
+						return
+					}
 					controller.enqueue('An error occurred while processing your request.')
 					controller.error(error)
 				}

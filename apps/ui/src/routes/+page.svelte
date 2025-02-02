@@ -1,11 +1,16 @@
 <script lang="ts">
 	import DOMPurify from 'isomorphic-dompurify'
-	import { PUBLIC_APP_TITLE, PUBLIC_CHATBOT_DESCRIPTION } from '$env/static/public'
-	import { chatHistory, currentConversation } from '$lib/stores/index'
+	import {
+		PUBLIC_APP_TITLE,
+		PUBLIC_CHATBOT_DESCRIPTION,
+		PUBLIC_PROMPT_SUGGESTIONS
+	} from '$env/static/public'
+	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import { preventDefault } from '$lib/utils'
+	import { trackCustomEvent } from '$lib/utils/trackCustomEvent'
 	// import { censorText } from '$lib/utils/censor'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
@@ -13,10 +18,14 @@
 	let isSubmitting = $state(false)
 	let userInput = $state('')
 	let honeypot = $state('')
+	let promptSuggestions = $state(
+		PUBLIC_PROMPT_SUGGESTIONS ? PUBLIC_PROMPT_SUGGESTIONS.split(', ') : []
+	)
 
 	onMount(() => {
 		currentConversation.set(null)
 		chatHistory.set([])
+		shouldStartChat.set(false)
 
 		if (promptInput) {
 			promptInput.focus()
@@ -61,12 +70,13 @@
 						messages: [{ message: query, isUser: true, created: new Date().toISOString() }]
 					})
 				})
-
 				if (!response.ok) {
 					throw new Error('Failed to create conversation')
 				}
-
 				const conversation = await response.json()
+
+				await trackCustomEvent('authenticated_conversation_created')
+
 				await goto(`/conversations/${conversation.id}`)
 			} else {
 				// Create temporary conversation in memory
@@ -83,6 +93,8 @@
 					shareId: undefined
 				})
 				chatHistory.set([{ message: query, isUser: true, created: new Date().toISOString() }])
+
+				await trackCustomEvent('unauthenticated_conversation_created')
 
 				await goto(`/conversations/${tempId}`)
 			}
@@ -115,7 +127,7 @@
 
 		<!-- Input Form -->
 		<div
-			class="w-full max-w-2xl backdrop-blur-sm bg-primary-card-bg/50 p-6 rounded-2xl shadow-lg border border-form-border"
+			class="w-full max-w-2xl backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-form-border"
 		>
 			<form class="w-full" onsubmit={preventDefault(startConversation)}>
 				<div class="sr-only">
@@ -131,7 +143,7 @@
 					/>
 				</div>
 
-				<div class="flex flex-col md:flex-row items-stretch justify-center gap-4">
+				<div class="flex flex-col sm:flex-row items-stretch justify-center gap-4">
 					<div class="flex-grow flex">
 						<label for="chat-input" class="sr-only">Query the chatbot.</label>
 						<textarea
@@ -169,5 +181,23 @@
 				</div>
 			</form>
 		</div>
+
+		{#if promptSuggestions.length > 0}
+			<div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl backdrop-blur-sm">
+				{#each promptSuggestions as suggestion}
+					<button
+						onclick={() => {
+							userInput = suggestion
+							if (promptInput) {
+								promptInput.focus()
+							}
+						}}
+						class="text-left px-4 py-3 rounded-xl border border-secondary-card-bg bg-primary-card-bg hover:bg-primary-card-bg hover:border-form-border transition duration-300 shadow-md"
+					>
+						<span class="text-base opacity-90">{suggestion}</span>
+					</button>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </section>

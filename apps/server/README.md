@@ -2,18 +2,25 @@
 
 ## Description
 
-A Node.js application that processes documents into embeddings using the OpenAI API and stores them in a Qdrant vector database. Features a modern web interface for file uploads and provides a backend service that can be consumed by chatbot front-ends.
+A Node.js/Express application that processes documents into embeddings using the OpenAI API and stores them in a Qdrant vector database. Features intelligent text chunking and metadata preservation for improved context retrieval.
 
 ## Features
 
-- Modern web interface with Alpine.js and Tailwind CSS
-- Drag-and-drop file upload support
-- Progress tracking for file uploads
-- Optional page range exclusion for PDF and EPUB files
-- Supports PDF, EPUB, TXT, and MD file formats
-- OpenAI embeddings generation
+- File upload support with progress tracking
+- Multiple file format support:
+  - PDF with page range exclusion
+  - EPUB with section exclusion
+  - TXT files
+  - Markdown files
+- Smart text chunking:
+  - Configurable chunk sizes
+  - Overlap for context preservation
+  - Rich metadata generation
+- OpenAI embeddings integration:
+  - text-embedding-3-large model
+  - 3072-dimensional embeddings
 - Qdrant vector database integration
-- RESTful API endpoints
+- Express.js REST API
 
 ## Installation
 
@@ -26,7 +33,7 @@ cd apps/server
 2. Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 3. Create a `.env` file:
@@ -34,7 +41,7 @@ npm install
 ```plaintext
 PORT=3000
 OPENAI_API_KEY=your_api_key
-OPENAI_EMBEDDINGS_MODEL=text-embedding-3-small
+OPENAI_EMBEDDINGS_MODEL=text-embedding-3-large
 QDRANT_API_URL=your_qdrant_url
 QDRANT_API_KEY=your_qdrant_key
 QDRANT_COLLECTION=your_collection_name
@@ -45,13 +52,7 @@ QDRANT_COLLECTION=your_collection_name
 Start the development server with hot reloading:
 
 ```bash
-npm run dev
-```
-
-Build CSS separately (optional):
-
-```bash
-npm run dev:css
+pnpm dev
 ```
 
 ## Production
@@ -59,8 +60,8 @@ npm run dev:css
 Build and start the server:
 
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
 ```
 
 ## API Endpoints
@@ -74,7 +75,28 @@ Content-Type: multipart/form-data
 Parameters:
 - file: File (required)
 - excludePages: JSON string (optional, for PDF/EPUB)
+  Format: [{"start": number, "end": number}]
 ```
+
+## Technical Details
+
+### Text Chunking
+
+- Maximum tokens per chunk: 512
+- Overlap tokens: 50
+- Preserves paragraph boundaries
+- Includes metadata:
+  - Book title
+  - Chunk index/total
+  - Previous/next chunk previews
+  - Start/end paragraphs
+
+### Embeddings
+
+- Uses OpenAI's text-embedding-3-large
+- 3072-dimensional embeddings
+- Rich context including metadata
+- Batch processing support
 
 ## License
 

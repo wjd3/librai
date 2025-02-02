@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state'
-	import { goto } from '$app/navigation'
+	import { beforeNavigate, goto } from '$app/navigation'
 	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken, isAuthLoading, isAuthenticated } from '$lib/stores/auth'
 	import Chat from '$components/Chat.svelte'
@@ -63,6 +63,13 @@
 				}
 			}
 		})()
+	})
+
+	// Add cleanup when navigating away
+	beforeNavigate(() => {
+		currentConversation.set(null)
+		chatHistory.set([])
+		shouldStartChat.set(false)
 	})
 </script>
 

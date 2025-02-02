@@ -37,6 +37,10 @@ self.addEventListener('fetch', (event) => {
 	// ignore POST requests etc
 	if (event.request.method !== 'GET') return
 
+	// check if request is made by chrome extensions or web page
+	// if request is made for web page url must contains http.
+	if (!(event.request.url.indexOf('http') === 0)) return
+
 	async function respond() {
 		const url = new URL(event.request.url)
 		const cache = await caches.open(CACHE)

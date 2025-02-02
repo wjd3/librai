@@ -9,7 +9,7 @@
 	import { quartInOut, quartOut } from 'svelte/easing'
 	import { tick } from 'svelte'
 	import CopyButton from './CopyButton.svelte'
-	import { goto } from '$app/navigation'
+	import { goto, beforeNavigate } from '$app/navigation'
 	import { currentUser, isAuthLoading } from '$lib/stores'
 	// import { censorText } from '$lib/utils/censor'
 
@@ -22,12 +22,22 @@
 	let honeypot = $state('')
 	let remainingMessages = $state<number | null>(null)
 	let rateLimitResetAt = $state<Date | null>(null)
+	let activeController: AbortController | null = $state(null)
 
 	$effect(() => {
 		if (isSubmitting) {
 			isDisabled = true
 		} else {
 			isDisabled = userInput.length < 1
+		}
+	})
+
+	beforeNavigate(() => {
+		if (activeController) {
+			if (!activeController.signal.aborted) {
+				activeController.abort()
+			}
+			activeController = null
 		}
 	})
 
@@ -71,6 +81,9 @@
 		scrollToBottom()
 
 		try {
+			// Create new AbortController for this request
+			activeController = new AbortController()
+
 			const response = await fetch('/api/chatbot', {
 				method: 'POST',
 				headers: {
@@ -82,7 +95,9 @@
 					history: conversationHistory,
 					conversationId: $currentConversation?.id,
 					name: $currentUser?.name
-				})
+				}),
+				// Add signal to the request
+				signal: activeController.signal
 			})
 
 			if (!response.ok) {
@@ -136,6 +151,12 @@
 			remainingMessages = remainingMessagesHeader ? parseInt(remainingMessagesHeader) : null
 			rateLimitResetAt = rateLimitResetHeader ? new Date(rateLimitResetHeader) : null
 		} catch (error) {
+			// Check if this was an abort error
+			if ((error as Error).name === 'AbortError') {
+				console.log('Request was aborted')
+				return
+			}
+
 			console.error('Error:', error)
 			chatHistory.update((history) => [
 				...history,
@@ -144,10 +165,12 @@
 					isUser: false
 				}
 			])
+		} finally {
+			// Clear the active controller
+			activeController = null
+			isSubmitting = false
+			isDisabled = false
 		}
-
-		isSubmitting = false
-		isDisabled = false
 	}
 
 	let isAtBottom = $state(false)
