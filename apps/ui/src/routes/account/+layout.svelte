@@ -16,10 +16,10 @@
 			</a>
 
 			<a
-				href="/account/conversations"
+				href="/account/chats"
 				class="flex items-center justify-center w-full p-3 rounded-xl transition duration-200 hover:scale-[1.02] active:scale-[0.98] border border-form-border"
-				class:bg-primary-card-bg={page.url.pathname === '/account/conversations'}
-				aria-label="Conversations"
+				class:bg-primary-card-bg={page.url.pathname === '/account/chats'}
+				aria-label="Chats"
 			>
 				<span class="iconify lucide--message-square-text"></span>
 			</a>

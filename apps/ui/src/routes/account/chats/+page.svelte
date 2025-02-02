@@ -58,7 +58,7 @@
 	}
 
 	async function loadConversation(conversation: Conversation) {
-		goto(`/conversations/${conversation.id}`)
+		goto(`/chat/${conversation.id}`)
 	}
 
 	function confirmDelete(id: string) {

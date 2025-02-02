@@ -25,7 +25,7 @@
 
 				if (response.ok) {
 					// User owns this conversation, redirect to continue it
-					await goto(`/conversations/${conversation.id}`)
+					await goto(`/chat/${conversation.id}`)
 					return
 				}
 			} catch (error) {
@@ -48,7 +48,7 @@
 
 				if (response.ok) {
 					const result = await response.json()
-					await goto(`/conversations/${result.id}`)
+					await goto(`/chat/${result.id}`)
 				}
 			} catch (error) {
 				console.error('Error forking conversation:', error)
@@ -67,7 +67,7 @@
 				user: ''
 			})
 			chatHistory.set(conversation.messages)
-			await goto(`/conversations/${tempId}`)
+			await goto(`/chat/${tempId}`)
 		}
 	}
 </script>

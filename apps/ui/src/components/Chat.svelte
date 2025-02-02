@@ -111,7 +111,7 @@
 			const newConversationId = response.headers.get('X-Conversation-Id')
 			if (newConversationId && !$currentConversation?.id) {
 				// Redirect to the new conversation if this was a new conversation
-				goto(`/conversations/${newConversationId}`)
+				goto(`/chat/${newConversationId}`)
 				return
 			}
 
