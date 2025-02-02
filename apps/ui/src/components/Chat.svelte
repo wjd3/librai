@@ -205,7 +205,7 @@
 <section
 	class="min-h-[100svh] relative z-40 flex flex-col items-center justify-start bg-gradient-to-b from-page-bg to-primary-card-bg"
 >
-	<div class="container flex flex-col justify-center items-center px-4 md:px-8 max-w-4xl mx-auto">
+	<div class="container flex flex-col justify-center items-center px-2 md:px-8 max-w-4xl mx-auto">
 		<!-- Chat History -->
 		{#if $chatHistory.length > 0}
 			<div class="chat-history w-full" in:fade={{ duration: 400, easing: quartInOut }}>
@@ -285,7 +285,7 @@
 							placeholder="Ask a question..."
 							bind:this={promptInput}
 							bind:value={userInput}
-							class="input w-full resize-y min-h-12 max-h-24 h-12 transition duration-200 focus:shadow-lg"
+							class="input w-full resize-y min-h-[72px] h-[72px] sm:min-h-12 max-h-24 sm:h-12 transition duration-200 focus:shadow-lg"
 							onkeydown={async (e) => {
 								if (e.key === 'Enter' && !e.shiftKey) {
 									e.preventDefault()
