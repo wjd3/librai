@@ -2,24 +2,31 @@
 
 ## Description
 
-A SvelteKit-based application providing an interactive AI chatbot interface for querying document collections. Features OpenAI integration, Qdrant vector search, and PocketBase authentication.
+A SvelteKit-based application providing an interactive AI chatbot interface for querying document collections. Features OpenAI integration, Qdrant vector search, PocketBase authentication, and real-time streaming responses.
 
 ## Features
 
 - Interactive AI chatbot with context-aware responses
 - Multiple theme support:
-  - Simple (light/dark)
+  - Charcoal (light/dark)
   - Leaf (light/dark)
-  - Blush (light/dark)
-  - Glow (light/dark)
+  - Sunset (light/dark)
+  - Volcano (light/dark)
   - Ocean (light/dark)
-- User authentication via PocketBase
+- User authentication via PocketBase:
+  - Login/Register
+  - Password reset
+  - Email verification
+  - Profile management
 - Conversation management:
   - Save and resume conversations
   - Delete conversations
+  - Edit conversation titles
   - Share via public links
+- Rate limiting with Upstash Redis
+- Real-time streaming responses
+- Markdown and LaTeX support
 - Responsive design with Tailwind CSS
-- Real-time updates with streaming responses
 
 ## Prerequisites
 
@@ -27,13 +34,14 @@ A SvelteKit-based application providing an interactive AI chatbot interface for 
 - PocketBase (version 0.20.0+)
 - OpenAI API access
 - Qdrant vector database
+- Upstash Redis account
 
 ## Setup
 
 1. Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 2. Configure PocketBase:
@@ -46,13 +54,21 @@ npm install
 3. Create `.env` file:
 
 ```plaintext
-PRIVATE_OPENAI_API_KEY=your_api_key
-PRIVATE_OPENAI_CHAT_MODEL=gpt-4-turbo-preview
+PRIVATE_CHAT_API_KEY=your_api_key
+PRIVATE_EMBEDDINGS_API_KEY=your_api_key
+PRIVATE_CHAT_MODEL=gpt-4o-mini
+PRIVATE_EMBEDDINGS_MODEL=text-embedding-3-large
+PRIVATE_CHAT_BASE_URL=your_openai_base_url
 PRIVATE_QDRANT_ENDPOINT_URL=your_qdrant_url
 PRIVATE_QDRANT_API_KEY=your_qdrant_key
+PRIVATE_QDRANT_COLLECTION_NAME=your_collection_name
+PRIVATE_SYSTEM_PROMPT=your_custom_prompt
+PRIVATE_UPSTASH_REDIS_REST_URL=your_upstash_url
+PRIVATE_UPSTASH_REDIS_REST_TOKEN=your_upstash_token
 VITE_POCKETBASE_URL=http://127.0.0.1:8090
 PUBLIC_APP_TITLE=Librai
-PUBLIC_THEME=default
+PUBLIC_APP_DESCRIPTION=Your app description
+PUBLIC_THEME=charcoal
 ```
 
 ## Development
@@ -60,7 +76,7 @@ PUBLIC_THEME=default
 Start the development server:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ## Production
@@ -68,11 +84,19 @@ npm run dev
 Build and preview:
 
 ```bash
-npm run build
-npm run preview
+pnpm build
+pnpm preview
 ```
 
 ## PocketBase Schema
+
+### Users Collection
+
+```plaintext
+name      : Text
+email     : Email
+password  : Password
+```
 
 ### Conversations Collection
 
@@ -85,6 +109,11 @@ shareId   : Text (unique)
 created   : Date
 updated   : Date
 ```
+
+## Rate Limiting
+
+- Unauthenticated users: 30 requests per 6 hours
+- Authenticated users: 60 requests per 6 hours
 
 ## License
 
