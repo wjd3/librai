@@ -1,4 +1,4 @@
-import { QdrantClient } from '@qdrant/js-client-rest'
+import { QdrantClient } from '@qdrant/qdrant-js'
 import { generatePoints } from './openAiService'
 
 export class QdrantService {

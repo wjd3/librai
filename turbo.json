@@ -53,7 +53,8 @@
 		},
 		"preview": {
 			"dependsOn": ["build"],
-			"cache": false
+			"cache": false,
+			"persistent": true
 		},
 		"check": {
 			"outputs": []
