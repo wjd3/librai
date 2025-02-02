@@ -10,7 +10,7 @@ A SvelteKit-based application providing an interactive AI chatbot interface for 
 - Multiple theme support:
   - Charcoal (light/dark)
   - Leaf (light/dark)
-  - Sunset (light/dark)
+  - Twilight (light/dark)
   - Volcano (light/dark)
   - Ocean (light/dark)
 - User authentication via PocketBase:
