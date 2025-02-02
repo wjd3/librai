@@ -3,7 +3,8 @@
 	import {
 		PUBLIC_APP_TITLE,
 		PUBLIC_CHATBOT_DESCRIPTION,
-		PUBLIC_PROMPT_SUGGESTIONS
+		PUBLIC_PROMPT_SUGGESTIONS,
+		PUBLIC_PROMPT_SUGGESTION_ICONS
 	} from '$env/static/public'
 	import { chatHistory, currentConversation, shouldStartChat } from '$lib/stores/index'
 	import { authToken, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
@@ -20,6 +21,9 @@
 	let honeypot = $state('')
 	let promptSuggestions = $state(
 		PUBLIC_PROMPT_SUGGESTIONS ? PUBLIC_PROMPT_SUGGESTIONS.split(', ') : []
+	)
+	let promptSuggestionIcons = $state(
+		PUBLIC_PROMPT_SUGGESTION_ICONS ? PUBLIC_PROMPT_SUGGESTION_ICONS.split(', ') : []
 	)
 
 	onMount(() => {
@@ -184,7 +188,7 @@
 
 		{#if promptSuggestions.length > 0}
 			<div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl backdrop-blur-sm">
-				{#each promptSuggestions as suggestion}
+				{#each promptSuggestions as suggestion, index}
 					<button
 						onclick={() => {
 							userInput = suggestion
@@ -192,8 +196,11 @@
 								promptInput.focus()
 							}
 						}}
-						class="text-left px-4 py-3 rounded-xl border border-secondary-card-bg bg-primary-card-bg hover:bg-primary-card-bg hover:border-form-border transition duration-300 shadow-md"
+						class="text-left px-4 py-3 rounded-xl border border-secondary-card-bg bg-primary-card-bg hover:bg-primary-card-bg hover:border-form-border transition duration-300 shadow-md flex items-center gap-2"
 					>
+						{#if promptSuggestionIcons[index]}
+							<span class={`iconify ${promptSuggestionIcons[index]} w-6 h-6`}></span>
+						{/if}
 						<span class="text-base opacity-90">{suggestion}</span>
 					</button>
 				{/each}

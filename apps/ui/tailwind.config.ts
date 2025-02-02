@@ -7,6 +7,10 @@ export default {
 
 	darkMode: ['selector', '[data-mode="dark"]'],
 
+	plugins: [forms, addIconSelectors(['lucide'])],
+
+	safelist: [{ pattern: /lucide--./ }],
+
 	theme: {
 		extend: {
 			colors: {
@@ -238,7 +242,5 @@ export default {
 				'btn-secondary-hover-bg': 'var(--btn-secondary-hover-bg)'
 			}
 		}
-	},
-
-	plugins: [forms, addIconSelectors(['lucide'])]
+	}
 } as Config
