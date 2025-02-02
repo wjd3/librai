@@ -6,7 +6,7 @@
 	const themeIcons: { [key in Theme]: string } = {
 		charcoal: 'lucide--cuboid',
 		leaf: 'lucide--leaf',
-		sunset: 'lucide--sunset',
+		twilight: 'lucide--sparkles',
 		volcano: 'lucide--flame',
 		ocean: 'lucide--waves'
 	} as const

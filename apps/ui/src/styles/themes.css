@@ -133,49 +133,49 @@
 	--btn-secondary-hover-bg: theme('colors.mystic.600');
 }
 
-/* Sunset Theme */
-:root[data-theme='sunset'] {
-	--btn-bg: theme('colors.coral.500');
-	--btn-hover-bg: theme('colors.coral.600');
-	--btn-text: theme('colors.coral.50');
-	--page-bg: theme('colors.sundown.50');
+/* Twilight Theme - Serene purple/mauve palette */
+:root[data-theme='twilight'] {
+	--btn-bg: theme('colors.lavender.500');
+	--btn-hover-bg: theme('colors.lavender.600');
+	--btn-text: theme('colors.lavender.50');
+	--page-bg: theme('colors.lavender.50');
 	--primary-card-bg: theme('colors.white');
-	--secondary-card-bg: theme('colors.coral.50');
-	--form-border: theme('colors.coral.200');
-	--form-focus-border: theme('colors.mulled-wine.400');
+	--secondary-card-bg: theme('colors.periwinkle.50');
+	--form-border: theme('colors.lavender.200');
+	--form-focus-border: theme('colors.periwinkle.400');
 	--form-bg: theme('colors.white');
-	--link-color: theme('colors.coral.600');
-	--link-hover-color: theme('colors.coral.700');
-	--text-color: theme('colors.coral.900');
-	--placeholder-color: theme('colors.coral.400');
-	--user-bubble-bg: theme('colors.sundown.200');
-	--bot-bubble-bg: theme('colors.coral.100');
-	--chat-bar-bg: theme('colors.sundown.100');
-	--highlight: theme('colors.mulled-wine.400');
-	--highlight-dark: theme('colors.mulled-wine.600');
-	--btn-secondary-bg: theme('colors.sundown.400');
-	--btn-secondary-hover-bg: theme('colors.sundown.500');
+	--link-color: theme('colors.lavender.600');
+	--link-hover-color: theme('colors.lavender.700');
+	--text-color: theme('colors.lavender.900');
+	--placeholder-color: theme('colors.lavender.400');
+	--user-bubble-bg: theme('colors.periwinkle.100');
+	--bot-bubble-bg: theme('colors.lavender.100');
+	--chat-bar-bg: theme('colors.periwinkle.50');
+	--highlight: theme('colors.orchid.400');
+	--highlight-dark: theme('colors.orchid.600');
+	--btn-secondary-bg: theme('colors.periwinkle.400');
+	--btn-secondary-hover-bg: theme('colors.periwinkle.500');
 }
 
-:root[data-theme='sunset'][data-mode='dark'] {
-	--btn-bg: theme('colors.mulled-wine.500');
-	--btn-hover-bg: theme('colors.mulled-wine.600');
-	--btn-text: theme('colors.coral.50');
-	--page-bg: theme('colors.coral.950');
-	--primary-card-bg: theme('colors.coral.900');
-	--secondary-card-bg: theme('colors.coral.800');
-	--form-border: theme('colors.coral.700');
-	--form-focus-border: theme('colors.sundown.400');
-	--form-bg: theme('colors.coral.900');
-	--link-color: theme('colors.sundown.400');
-	--link-hover-color: theme('colors.sundown.300');
-	--text-color: theme('colors.coral.50');
-	--placeholder-color: theme('colors.coral.600');
-	--user-bubble-bg: theme('colors.coral.800');
-	--bot-bubble-bg: theme('colors.sundown.900');
-	--chat-bar-bg: theme('colors.coral.900');
-	--btn-secondary-bg: theme('colors.sundown.500');
-	--btn-secondary-hover-bg: theme('colors.sundown.600');
+:root[data-theme='twilight'][data-mode='dark'] {
+	--btn-bg: theme('colors.periwinkle.600');
+	--btn-hover-bg: theme('colors.periwinkle.700');
+	--btn-text: theme('colors.lavender.50');
+	--page-bg: theme('colors.lavender.950');
+	--primary-card-bg: theme('colors.lavender.900');
+	--secondary-card-bg: theme('colors.lavender.800');
+	--form-border: theme('colors.lavender.700');
+	--form-focus-border: theme('colors.periwinkle.400');
+	--form-bg: theme('colors.lavender.900');
+	--link-color: theme('colors.periwinkle.400');
+	--link-hover-color: theme('colors.periwinkle.300');
+	--text-color: theme('colors.lavender.50');
+	--placeholder-color: theme('colors.lavender.600');
+	--user-bubble-bg: theme('colors.lavender.800');
+	--bot-bubble-bg: theme('colors.periwinkle.900');
+	--chat-bar-bg: theme('colors.lavender.900');
+	--btn-secondary-bg: theme('colors.periwinkle.500');
+	--btn-secondary-hover-bg: theme('colors.periwinkle.600');
 }
 
 /* Volcano Theme - Dramatic, intense, earthy */

@@ -28,7 +28,7 @@ Librai is a monorepo containing a full-stack application that enables users to p
 - Multiple theme support:
   - Charcoal (light/dark)
   - Leaf (light/dark)
-  - Sunset (light/dark)
+  - Twilight (light/dark)
   - Volcano (light/dark)
   - Ocean (light/dark)
 - UI built with SvelteKit
