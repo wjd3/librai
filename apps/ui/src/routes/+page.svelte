@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	import { preventDefault } from '$lib/utils'
+	import { trackCustomEvent } from '$lib/utils/trackCustomEvent'
 	// import { censorText } from '$lib/utils/censor'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
@@ -61,12 +62,13 @@
 						messages: [{ message: query, isUser: true, created: new Date().toISOString() }]
 					})
 				})
-
 				if (!response.ok) {
 					throw new Error('Failed to create conversation')
 				}
-
 				const conversation = await response.json()
+
+				await trackCustomEvent('authorized_conversation_created')
+
 				await goto(`/conversations/${conversation.id}`)
 			} else {
 				// Create temporary conversation in memory
@@ -83,6 +85,8 @@
 					shareId: undefined
 				})
 				chatHistory.set([{ message: query, isUser: true, created: new Date().toISOString() }])
+
+				await trackCustomEvent('unauthorized_conversation_created')
 
 				await goto(`/conversations/${tempId}`)
 			}

@@ -164,6 +164,10 @@
 		integrity="sha256-NKg8QXp7tt8XVGCRSD7mBlZe7t3UK8Jyrh2CPTByCWY="
 		crossorigin="anonymous"
 	/>
+
+	{#if !import.meta.env.DEV}
+		<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+	{/if}
 </svelte:head>
 
 <div
