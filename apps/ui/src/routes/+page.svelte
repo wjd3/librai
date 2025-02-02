@@ -115,7 +115,7 @@
 	<div class="container flex flex-col justify-center items-center px-4 md:px-8 max-w-4xl mx-auto">
 		<!-- Title -->
 		<h1
-			class="text-4xl md:text-5xl font-bold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
+			class="text-4xl md:text-5xl font-bold md:mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
 		>
 			{#if PUBLIC_APP_TITLE}
 				{PUBLIC_APP_TITLE}

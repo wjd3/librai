@@ -285,7 +285,7 @@
 							placeholder="Ask a question..."
 							bind:this={promptInput}
 							bind:value={userInput}
-							class="input w-full resize-y min-h-[72px] h-[72px] sm:min-h-12 max-h-24 sm:h-12 transition duration-200 focus:shadow-lg"
+							class="input w-full resize-y min-h-12 max-h-24 h-12 transition duration-200 focus:shadow-lg"
 							onkeydown={async (e) => {
 								if (e.key === 'Enter' && !e.shiftKey) {
 									e.preventDefault()
@@ -327,13 +327,13 @@
 
 		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat && !isSubmitting}
 			<button
-				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 md:p-3 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 bottom-40 transition-all duration-300 group"
+				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 bottom-40 transition-all duration-300 group"
 				in:fade={{ duration: 300, easing: quartOut }}
 				out:fade={{ duration: 300, easing: quartOut }}
 				onclick={scrollToBottom}
 				aria-label="Scroll to bottom"
 			>
-				<span class="text-btn-text iconify lucide--arrow-down w-5 h-5 lg:w-6 lg:h-6"> </span>
+				<span class="text-btn-text iconify lucide--arrow-down w-4 h-4"> </span>
 			</button>
 		{/if}
 	</div>

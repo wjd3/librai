@@ -70,7 +70,7 @@ h6 {
 }
 
 .chat-message li {
-	@apply mb-2 leading-relaxed;
+	@apply mb-2 leading-relaxed text-base;
 }
 
 .chat-message ul li {
