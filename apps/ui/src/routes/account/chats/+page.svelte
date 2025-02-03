@@ -205,10 +205,10 @@
 	}
 
 	function handleTitleKeydown(event: KeyboardEvent, conversation: Conversation) {
-		if (event.key === 'Enter') {
+		if (event.key === 'Enter' && !isSavingTitle) {
 			event.preventDefault()
 			updateConversationTitle(conversation)
-		} else if (event.key === 'Escape') {
+		} else if (event.key === 'Escape' && !isSavingTitle) {
 			editingTitleId = null
 		}
 	}

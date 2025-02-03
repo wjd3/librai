@@ -161,7 +161,7 @@
 							bind:value={userInput}
 							class="input w-full h-[72px] min-h-[72px] sm:h-12 sm:min-h-12 resize-y max-h-48 transition duration-200 focus:shadow-lg cursor-text"
 							onkeydown={(e) => {
-								if (e.key === 'Enter' && !e.shiftKey) {
+								if (e.key === 'Enter' && !e.shiftKey && !isDisabled && !$isAuthLoading) {
 									e.preventDefault()
 									startConversation()
 								}

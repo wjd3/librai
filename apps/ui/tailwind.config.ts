@@ -4,13 +4,9 @@ import type { Config } from 'tailwindcss'
 
 export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
-
 	darkMode: ['selector', '[data-mode="dark"]'],
-
 	plugins: [forms, addIconSelectors(['lucide'])],
-
 	safelist: [{ pattern: /lucide--./ }],
-
 	theme: {
 		extend: {
 			colors: {

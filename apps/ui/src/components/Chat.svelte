@@ -285,9 +285,9 @@
 							placeholder="Ask a question..."
 							bind:this={promptInput}
 							bind:value={userInput}
-							class="input w-full resize-y min-h-12 max-h-24 h-12 transition duration-200 focus:shadow-lg"
+							class="input w-full resize-y max-h-24 h-[72px] min-h-[72px] sm:h-12 sm:min-h-12 transition duration-200 focus:shadow-lg"
 							onkeydown={async (e) => {
-								if (e.key === 'Enter' && !e.shiftKey) {
+								if (e.key === 'Enter' && !e.shiftKey && !isDisabled && !$isAuthLoading) {
 									e.preventDefault()
 									await sendMessage()
 								}

@@ -112,9 +112,12 @@
 			})
 			if (response.ok) {
 				const data = await response.json()
-				authToken.set(data.token)
-				currentUser.set(data.user)
-				isAuthenticated.set(true)
+
+				if (data.token && data.user) {
+					authToken.set(data.token)
+					currentUser.set(data.user)
+					isAuthenticated.set(true)
+				}
 			}
 		}
 
