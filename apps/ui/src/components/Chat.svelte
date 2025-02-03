@@ -327,7 +327,7 @@
 
 		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat && !isSubmitting}
 			<button
-				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 bottom-40 transition-all duration-300 group"
+				class="fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 bottom-40 transition duration-300 group"
 				in:fade={{ duration: 300, easing: quartOut }}
 				out:fade={{ duration: 300, easing: quartOut }}
 				onclick={scrollToBottom}

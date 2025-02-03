@@ -187,7 +187,7 @@
 		</div>
 
 		{#if promptSuggestions.length > 0}
-			<div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl backdrop-blur-sm">
+			<div class="mt-6 grid grid-cols-2 gap-3 w-full max-w-2xl backdrop-blur-sm">
 				{#each promptSuggestions as suggestion, index}
 					<button
 						onclick={() => {
@@ -196,7 +196,7 @@
 								promptInput.focus()
 							}
 						}}
-						class="text-left px-4 py-3 rounded-xl border border-secondary-card-bg bg-primary-card-bg hover:bg-primary-card-bg hover:border-form-border transition duration-300 shadow-md flex items-center gap-2"
+						class="text-left px-4 py-3 rounded-xl border border-secondary-card-bg bg-primary-card-bg hover:bg-primary-card-bg hover:border-form-border transition duration-300 shadow-md flex items-center gap-2 max-sm:flex-col max-sm:items-start"
 					>
 						{#if promptSuggestionIcons[index]}
 							<span class={`iconify ${promptSuggestionIcons[index]} w-6 h-6`}></span>
