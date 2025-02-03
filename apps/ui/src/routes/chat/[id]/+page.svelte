@@ -77,9 +77,12 @@
 	<div
 		class="flex justify-center items-center min-h-[100lvh] bg-gradient-to-b from-page-bg to-primary-card-bg"
 	>
-		<div class="flex flex-col items-center space-y-4">
-			<span class="iconify lucide--rotate-cw animate-spin w-8 h-8"></span>
-			<p class="text-lg opacity-70">Loading conversation...</p>
+		<div class="relative">
+			<div class="absolute inset-0 animate-ping rounded-full bg-btn-bg opacity-25 w-12 h-12"></div>
+			<div class="relative rounded-full bg-btn-bg w-12 h-12 animate-pulse"></div>
+			<span class="absolute inset-0 flex items-center justify-center">
+				<span class="iconify lucide--loader animate-spin w-6 h-6 text-btn-text"></span>
+			</span>
 		</div>
 	</div>
 {:else}
