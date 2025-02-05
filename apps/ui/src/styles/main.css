@@ -152,3 +152,7 @@ button.secondary svg {
 span.iconify {
 	@apply text-2xl w-6 h-6 leading-none block;
 }
+
+.scroll-to-bottom span.iconify {
+	@apply text-base w-4 h-4;
+}

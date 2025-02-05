@@ -7,7 +7,7 @@
 }
 
 .chat-message.is-user > *:last-child,
-.chat-message:not(.is-user) > prose > *:last-child {
+.chat-message:not(.is-user) > .prose > *:last-child {
 	@apply mb-0;
 }
 

@@ -26,6 +26,23 @@
 		PUBLIC_PROMPT_SUGGESTION_ICONS ? PUBLIC_PROMPT_SUGGESTION_ICONS.split(', ') : []
 	)
 
+	const MIN_TEXTAREA_HEIGHT = 48
+	const MAX_TEXTAREA_HEIGHT = 128
+
+	function autoResizeTextarea(textarea: HTMLTextAreaElement) {
+		if (!textarea) return
+
+		// Reset height to allow shrinking
+		textarea.style.height = 'auto'
+
+		// Set new height based on scroll height
+		const newHeight = Math.min(
+			Math.max(textarea.scrollHeight, MIN_TEXTAREA_HEIGHT),
+			MAX_TEXTAREA_HEIGHT
+		)
+		textarea.style.height = `${newHeight}px`
+	}
+
 	onMount(() => {
 		currentConversation.set(null)
 		chatHistory.set([])
@@ -39,6 +56,12 @@
 	$effect(() => {
 		if (!isSubmitting) {
 			isDisabled = userInput.length < 1
+		}
+	})
+
+	$effect(() => {
+		if (promptInput) {
+			autoResizeTextarea(promptInput)
 		}
 	})
 
@@ -161,7 +184,9 @@
 							placeholder="Ask a question..."
 							bind:this={promptInput}
 							bind:value={userInput}
-							class="input w-full h-[72px] min-h-[72px] sm:h-12 sm:min-h-12 resize-none transition duration-200 focus:shadow-lg cursor-text"
+							class="input w-full min-h-[48px] resize-none transition duration-200 focus:shadow-lg cursor-text overflow-y-auto"
+							style="max-height: {MAX_TEXTAREA_HEIGHT}px"
+							oninput={(e) => autoResizeTextarea(e.currentTarget)}
 							onkeydown={(e) => {
 								if (e.key === 'Enter' && !e.shiftKey && !isDisabled && !$isAuthLoading) {
 									e.preventDefault()
