@@ -14,7 +14,7 @@
 
 /* Body Styles */
 body {
-	@apply bg-page-bg; /* Changed to a cleaner white */
+	@apply bg-gradient-to-b from-page-bg to-primary-card-bg; /* Changed to a cleaner white */
 }
 body *:not(svg, path) {
 	@apply font-sans text-text-color;

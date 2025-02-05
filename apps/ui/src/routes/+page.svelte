@@ -110,24 +110,26 @@
 </script>
 
 <section
-	class="min-h-[100svh] relative z-40 flex flex-col items-center justify-center bg-gradient-to-b from-page-bg to-primary-card-bg"
+	class="min-h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-b from-page-bg to-primary-card-bg pt-24 pb-8 md:py-16 px-4"
 >
 	<div class="container flex flex-col justify-center items-center px-4 md:px-8 max-w-4xl mx-auto">
 		<!-- Title -->
-		<h1
-			class="text-4xl md:text-5xl font-bold md:mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
-		>
-			{#if PUBLIC_APP_TITLE}
-				{PUBLIC_APP_TITLE}
-			{:else}
-				Librai UI
-			{/if}
-		</h1>
+		<div class="mb-4 md:mb-16">
+			<h1
+				class="text-4xl md:text-5xl font-bold md:mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
+			>
+				{#if PUBLIC_APP_TITLE}
+					{PUBLIC_APP_TITLE}
+				{:else}
+					Librai UI
+				{/if}
+			</h1>
 
-		<p class="text-center text-base md:text-lg mb-6 max-w-[600px] leading-relaxed opacity-90">
-			{PUBLIC_CHATBOT_DESCRIPTION ||
-				'This is a chatbot trained on custom data. Check answers for accuracy.'}
-		</p>
+			<p class="text-center text-base md:text-lg max-w-[600px] leading-relaxed opacity-90">
+				{PUBLIC_CHATBOT_DESCRIPTION ||
+					'This is a chatbot trained on custom data. Check answers for accuracy.'}
+			</p>
+		</div>
 
 		<!-- Input Form -->
 		<div
@@ -159,7 +161,7 @@
 							placeholder="Ask a question..."
 							bind:this={promptInput}
 							bind:value={userInput}
-							class="input w-full h-[72px] min-h-[72px] sm:h-12 sm:min-h-12 resize-y max-h-48 transition duration-200 focus:shadow-lg cursor-text"
+							class="input w-full h-[72px] min-h-[72px] sm:h-12 sm:min-h-12 resize-none transition duration-200 focus:shadow-lg cursor-text"
 							onkeydown={(e) => {
 								if (e.key === 'Enter' && !e.shiftKey && !isDisabled && !$isAuthLoading) {
 									e.preventDefault()
@@ -172,7 +174,7 @@
 					<button
 						disabled={isDisabled || $isAuthLoading}
 						type="submit"
-						class="primary max-h-12 md:w-16 flex items-center justify-center hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
+						class="primary h-12 w-full sm:w-16 flex items-center justify-center hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
 						class:animate-pulse={isSubmitting}
 						class:opacity-70={isDisabled || $isAuthLoading}
 					>
@@ -187,7 +189,7 @@
 		</div>
 
 		{#if promptSuggestions.length > 0}
-			<div class="mt-6 grid grid-cols-2 gap-3 w-full max-w-2xl backdrop-blur-sm">
+			<div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl">
 				{#each promptSuggestions as suggestion, index}
 					<button
 						onclick={() => {
@@ -196,10 +198,10 @@
 								promptInput.focus()
 							}
 						}}
-						class="text-left px-4 py-3 rounded-xl border border-secondary-card-bg bg-primary-card-bg hover:bg-primary-card-bg hover:border-form-border transition duration-300 shadow-md flex items-center gap-2 max-sm:flex-col max-sm:items-start"
+						class="text-left px-4 py-3 rounded-xl border border-secondary-card-bg bg-primary-card-bg hover:bg-primary-card-bg hover:border-form-border transition duration-300 shadow-md flex items-center gap-2"
 					>
 						{#if promptSuggestionIcons[index]}
-							<span class={`iconify ${promptSuggestionIcons[index]} w-6 h-6`}></span>
+							<span class={`iconify ${promptSuggestionIcons[index]} w-6 h-6 shrink-0`}></span>
 						{/if}
 						<span class="text-base opacity-90">{suggestion}</span>
 					</button>
