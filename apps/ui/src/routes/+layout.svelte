@@ -156,6 +156,7 @@
 
 		{#if PUBLIC_APP_TWITTER_IMAGE}
 			<meta property="twitter:image" content={PUBLIC_APP_TWITTER_IMAGE} />
+			<meta name="twitter:card" content="summary_large_image" />
 			<meta property="twitter:image:alt" content={appDescription} />
 		{/if}
 	{/if}
