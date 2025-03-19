@@ -28,5 +28,6 @@
 		"openai": "^4.87.4",
 		"pdfjs-dist": "^4.10.38",
 		"uuid": "^11.1.0"
-	}
+	},
+	"packageManager": "pnpm@10.6.5"
 }
