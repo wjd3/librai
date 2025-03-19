@@ -8,7 +8,7 @@
 		"dev": "vite dev",
 		"dev:host": "vite dev --host",
 		"generate-manifest": "node src/scripts/generate-pwa-manifest.js",
-		"build": "npm run generate-manifest && vite build",
+		"build": "npm run generate-manifest && svelte-kit sync && vite build",
 		"preview": "vite preview",
 		"start": "npm run preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
