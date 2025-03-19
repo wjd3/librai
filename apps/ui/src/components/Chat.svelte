@@ -20,33 +20,40 @@
 	const MAX_TEXTAREA_HEIGHT = 144 // Maximum height before scrolling
 	let textareaHeight = $state(MIN_TEXTAREA_HEIGHT)
 	let scrollButton = $state<HTMLButtonElement | null>(null)
-
 	function autoResizeTextarea(textarea: HTMLTextAreaElement) {
 		if (!textarea) return
 
-		// Reset height to allow shrinking
-		textarea.style.height = 'auto'
-
-		// Set new height based on scroll height
-		const newHeight = Math.min(
-			Math.max(textarea.scrollHeight, MIN_TEXTAREA_HEIGHT),
-			MAX_TEXTAREA_HEIGHT
-		)
-		textarea.style.height = `${newHeight}px`
-
-		// Calculate the new bottom position of the scroll button
-		if (typeof window != 'undefined' && scrollButton) {
-			const scrollButtonBottom = window.getComputedStyle(scrollButton).bottom
-			const scrollButtonBottomPx = parseInt(scrollButtonBottom.split('px')?.[0] || '0')
-
-			if (scrollButtonBottomPx && scrollButtonBottomPx > 0) {
-				const newBottom = scrollButtonBottomPx + (newHeight - textareaHeight)
-				scrollButton.style.bottom = `${newBottom}px`
-			}
+		// Set initial height to MIN_TEXTAREA_HEIGHT if no content
+		if (!textarea.value.trim()) {
+			textarea.style.height = `${MIN_TEXTAREA_HEIGHT}px`
+			return
 		}
 
-		// Update the textarea height
-		textareaHeight = newHeight
+		// Reset height to allow shrinking
+		textarea.style.height = `${MIN_TEXTAREA_HEIGHT}px`
+
+		// Calculate the scroll height
+		const scrollHeight = textarea.scrollHeight
+
+		// Only increase height if content exceeds the single line height
+		if (scrollHeight > MIN_TEXTAREA_HEIGHT) {
+			const newHeight = Math.min(scrollHeight, MAX_TEXTAREA_HEIGHT)
+			textarea.style.height = `${newHeight}px`
+
+			// Calculate the new bottom position of the scroll button
+			if (typeof window != 'undefined' && scrollButton) {
+				const scrollButtonBottom = window.getComputedStyle(scrollButton).bottom
+				const scrollButtonBottomPx = parseInt(scrollButtonBottom.split('px')?.[0] || '0')
+
+				if (scrollButtonBottomPx && scrollButtonBottomPx > 0) {
+					const newBottom = scrollButtonBottomPx + (newHeight - textareaHeight)
+					scrollButton.style.bottom = `${newBottom}px`
+				}
+			}
+
+			// Update the textarea height
+			textareaHeight = newHeight
+		}
 	}
 
 	let isDisabled = $state(true)
@@ -374,7 +381,7 @@
 
 		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat && !isSubmitting}
 			<button
-				class="scroll-to-bottom fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 transition duration-300 group bottom-[13rem] sm:bottom-48 md:bottom-40 lg:bottom-36 xl:bottom-40"
+				class="scroll-to-bottom fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 transition duration-300 group bottom-48 sm:bottom-32 md:bottom-36"
 				in:fade={{ duration: 300, easing: quartOut }}
 				out:fade={{ duration: 300, easing: quartOut }}
 				onclick={scrollToBottom}

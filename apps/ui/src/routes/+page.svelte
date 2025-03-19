@@ -28,19 +28,26 @@
 
 	const MIN_TEXTAREA_HEIGHT = 48
 	const MAX_TEXTAREA_HEIGHT = 128
-
 	function autoResizeTextarea(textarea: HTMLTextAreaElement) {
 		if (!textarea) return
 
-		// Reset height to allow shrinking
-		textarea.style.height = 'auto'
+		// Set initial height to MIN_TEXTAREA_HEIGHT if no content
+		if (!textarea.value.trim()) {
+			textarea.style.height = `${MIN_TEXTAREA_HEIGHT}px`
+			return
+		}
 
-		// Set new height based on scroll height
-		const newHeight = Math.min(
-			Math.max(textarea.scrollHeight, MIN_TEXTAREA_HEIGHT),
-			MAX_TEXTAREA_HEIGHT
-		)
-		textarea.style.height = `${newHeight}px`
+		// Reset height to allow shrinking
+		textarea.style.height = `${MIN_TEXTAREA_HEIGHT}px`
+
+		// Calculate the scroll height
+		const scrollHeight = textarea.scrollHeight
+
+		// Only increase height if content exceeds the single line height
+		if (scrollHeight > MIN_TEXTAREA_HEIGHT) {
+			const newHeight = Math.min(scrollHeight, MAX_TEXTAREA_HEIGHT)
+			textarea.style.height = `${newHeight}px`
+		}
 	}
 
 	onMount(() => {
@@ -137,9 +144,9 @@
 >
 	<div class="container flex flex-col justify-center items-center px-4 md:px-8 max-w-4xl mx-auto">
 		<!-- Title -->
-		<div class="mb-4 md:mb-16">
+		<div class="mb-4 md:mb-8">
 			<h1
-				class="text-4xl md:text-5xl font-bold md:mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
+				class="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
 			>
 				{#if PUBLIC_APP_TITLE}
 					{PUBLIC_APP_TITLE}
@@ -184,7 +191,7 @@
 							placeholder="Ask a question..."
 							bind:this={promptInput}
 							bind:value={userInput}
-							class="input w-full min-h-[48px] resize-none transition duration-200 focus:shadow-lg cursor-text overflow-y-auto"
+							class="input w-full min-h-12 h-12 resize-none transition duration-200 focus:shadow-lg cursor-text overflow-y-auto"
 							style="max-height: {MAX_TEXTAREA_HEIGHT}px"
 							oninput={(e) => autoResizeTextarea(e.currentTarget)}
 							onkeydown={(e) => {

@@ -12,6 +12,11 @@
 	@apply bg-btn-secondary-bg text-text-color;
 }
 
+/* HTML styles */
+html {
+	@apply scroll-smooth bg-gradient-to-b from-page-bg to-primary-card-bg;
+}
+
 /* Body Styles */
 body {
 	@apply bg-gradient-to-b from-page-bg to-primary-card-bg; /* Changed to a cleaner white */
