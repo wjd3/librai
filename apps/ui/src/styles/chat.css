@@ -3,7 +3,7 @@
 }
 
 .chat-message {
-	@apply w-fit px-4 py-3 rounded-xl flex flex-col break-words bg-[var(--bot-bubble-bg)] text-[var(--text-color)] shadow max-md:text-sm max-w-[95%] md:max-w-[85%] border;
+	@apply px-4 py-3 rounded-xl flex flex-col break-words bg-[var(--bot-bubble-bg)] text-[var(--text-color)] shadow max-md:text-sm border;
 }
 
 .chat-message.is-user > *:last-child,
@@ -20,11 +20,11 @@
 }
 
 .chat-message.is-user {
-	@apply self-end bg-[var(--user-bubble-bg)] dark:border-[var(--form-border)] border-[var(--btn-secondary-bg)] rounded-br;
+	@apply self-end bg-[var(--user-bubble-bg)] dark:border-[var(--form-border)] border-[var(--btn-secondary-bg)] rounded-br w-fit max-w-[95%] md:max-w-[85%];
 }
 
 .chat-message:not(.is-user) {
-	@apply self-start bg-[var(--bot-bubble-bg)] border-[var(--form-border)] dark:border-[var(--btn-secondary-hover-bg)] rounded-bl;
+	@apply self-start bg-[var(--bot-bubble-bg)] border-[var(--form-border)] dark:border-[var(--btn-secondary-hover-bg)] rounded-bl w-[95%] md:w-[85%];
 }
 
 /* Message content styling */

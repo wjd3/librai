@@ -9,24 +9,25 @@
 	"devDependencies": {
 		"@types/express": "^5.0.0",
 		"@types/multer": "^1.4.12",
-		"@types/node": "^22.8.0",
-		"@types/pdfjs-dist": "^2.10.377",
+		"@types/node": "^22.13.10",
+		"@types/pdfjs-dist": "^2.10.378",
 		"@types/uuid": "^10.0.0",
-		"concurrently": "^9.1.0",
-		"tailwindcss": "^3.4.14",
+		"concurrently": "^9.1.2",
+		"tailwindcss": "^3.4.17",
 		"ts-node": "^10.9.2",
 		"tsimportlib": "^0.0.5",
-		"typescript": "^5.6.3"
+		"typescript": "^5.8.2"
 	},
 	"dependencies": {
-		"@qdrant/qdrant-js": "^1.12.0",
-		"dotenv": "^16.4.5",
+		"@qdrant/qdrant-js": "^1.13.0",
+		"dotenv": "^16.4.7",
 		"epub2md": "^1.2.1",
-		"express": "^4.21.1",
-		"gpt-tokenizer": "^2.8.1",
-		"multer": "^1.4.5-lts.1",
-		"openai": "^4.68.4",
-		"pdfjs-dist": "^4.7.76",
-		"uuid": "^11.0.0"
-	}
+		"express": "^4.21.2",
+		"gpt-tokenizer": "^2.9.0",
+		"multer": "1.4.5-lts.1",
+		"openai": "^4.87.4",
+		"pdfjs-dist": "^4.10.38",
+		"uuid": "^11.1.0"
+	},
+	"packageManager": "pnpm@10.6.5"
 }
