@@ -39,7 +39,7 @@
 				<span class="iconify {themeIcons[theme]}"></span>
 				<span class="capitalize">{theme}</span>
 				{#if theme === currentTheme}
-					<span class="iconify lucide--check ml-auto"></span>
+					<span class="iconify lucide--check ml-auto !w-5 !h-5"></span>
 				{/if}
 			</button>
 		{/each}
