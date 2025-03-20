@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition'
 	import { quartInOut } from 'svelte/easing'
 	import DOMPurify from 'isomorphic-dompurify'
+	import DropdownMenu from './DropdownMenu.svelte'
 
 	let showAuthModal = $state(false)
 	let isRegistering = $state(false)
@@ -22,6 +23,22 @@
 	let showPasswordConfirm = $state(false)
 
 	const maxPasswordLength = 128
+
+	const openAuthModal = (register: boolean) => {
+		isRegistering = register
+		showAuthModal = true
+	}
+
+	function resetForm() {
+		email = ''
+		password = ''
+		passwordConfirm = ''
+		name = ''
+		error = ''
+		honeypot = ''
+		resetEmail = ''
+		resetSuccess = false
+	}
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault()
@@ -104,17 +121,6 @@
 		isAuthLoading.set(false)
 	}
 
-	function resetForm() {
-		email = ''
-		password = ''
-		passwordConfirm = ''
-		name = ''
-		error = ''
-		honeypot = ''
-		resetEmail = ''
-		resetSuccess = false
-	}
-
 	async function handlePasswordReset(e: Event) {
 		e.preventDefault()
 		if (honeypot) {
@@ -165,39 +171,7 @@
 	}
 </script>
 
-{#if !$isAuthenticated}
-	<div class="flex items-center space-x-2 p-1 rounded-lg bg-primary-card-bg/30 backdrop-blur-sm">
-		<button
-			class="secondary px-4 py-2 rounded-lg transition duration-200"
-			onclick={() => {
-				showAuthModal = true
-				isRegistering = false
-				isResettingPassword = false
-				resetForm()
-			}}
-			disabled={$isAuthLoading}
-			transition:fade={{ duration: 200, easing: quartInOut }}
-			aria-label="Login"
-		>
-			<span class="iconify lucide--log-in"></span>
-		</button>
-
-		<button
-			class="secondary px-4 py-2 rounded-lg transition duration-200"
-			onclick={() => {
-				showAuthModal = true
-				isRegistering = true
-				isResettingPassword = false
-				resetForm()
-			}}
-			disabled={$isAuthLoading}
-			transition:fade={{ duration: 200, easing: quartInOut }}
-			aria-label="Sign Up"
-		>
-			<span class="iconify lucide--user-plus"></span>
-		</button>
-	</div>
-{:else}
+{#if $isAuthenticated}
 	<a
 		href="/account"
 		class="secondary px-4 py-2 rounded-lg transition duration-200"
@@ -205,6 +179,36 @@
 	>
 		<span class="iconify lucide--user"></span>
 	</a>
+{:else}
+	<DropdownMenu>
+		{#snippet trigger()}
+			<button
+				class="secondary px-4 py-2 rounded-lg transition duration-200"
+				aria-label="Authentication menu"
+			>
+				<span class="iconify lucide--user"></span>
+			</button>
+		{/snippet}
+
+		{#snippet content()}
+			<button
+				class="rounded-none border-none w-full px-4 py-2 text-left text-sm hover:bg-primary-card-bg flex items-center gap-2"
+				onclick={() => openAuthModal(false)}
+				disabled={$isAuthLoading}
+			>
+				<span class="iconify lucide--log-in"></span>
+				<span>Login</span>
+			</button>
+			<button
+				class="rounded-none border-none w-full px-4 py-2 text-left text-sm hover:bg-primary-card-bg flex items-center gap-2"
+				onclick={() => openAuthModal(true)}
+				disabled={$isAuthLoading}
+			>
+				<span class="iconify lucide--user-plus"></span>
+				<span>Sign Up</span>
+			</button>
+		{/snippet}
+	</DropdownMenu>
 {/if}
 
 {#if showAuthModal}

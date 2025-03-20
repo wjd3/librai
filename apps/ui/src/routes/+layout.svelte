@@ -12,11 +12,10 @@
 	import { themes, type Theme } from '$lib/constants/themes'
 	import { fade } from 'svelte/transition'
 	import { quartInOut } from 'svelte/easing'
-	import Auth from '$components/Auth.svelte'
-	import DarkModeToggle from '$components/DarkModeToggle.svelte'
+	import AuthMenu from '$components/AuthMenu.svelte'
+	import AppMenu from '$components/AppMenu.svelte'
 	import { page } from '$app/state'
 	import { authToken, currentUser, isAuthenticated, isAuthLoading } from '$lib/stores/auth'
-	import ThemeSwitcher from '$components/ThemeSwitcher.svelte'
 
 	let { children } = $props()
 
@@ -204,13 +203,10 @@
 
 		<div class="flex items-center space-x-3">
 			{#if !isCheckingConversations}
-				<Auth />
+				<AuthMenu />
 			{/if}
 
-			<div class="flex items-center space-x-2 py-1 rounded-lg">
-				<ThemeSwitcher {currentTheme} />
-				<DarkModeToggle {isDarkMode} {toggleDarkMode} />
-			</div>
+			<AppMenu {currentTheme} {isDarkMode} {toggleDarkMode} />
 		</div>
 	</div>
 </header>
