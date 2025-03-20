@@ -302,7 +302,7 @@
 
 		<!-- Input Form -->
 		<div
-			class={`fixed bottom-0 left-0 right-0 py-4 md:py-6 flex flex-col space-y-2 z-40 border-t border-form-border backdrop-blur ${
+			class={`fixed bottom-0 left-0 right-0 py-2 md:py-3 flex flex-col space-y-2 z-40 border-t border-form-border backdrop-blur ${
 				$chatHistory.length === 0 ? 'items-center' : ''
 			}`}
 			style="background-color: color-mix(in srgb, var(--chat-bar-bg) 80%, transparent);"
