@@ -10,7 +10,7 @@
 	})
 </script>
 
-<div class="flex flex-col items-center justify-center min-h-[100lvh] space-y-4">
+<div class="flex flex-col items-center justify-center min-h-svh space-y-4">
 	<h1 class="text-3xl font-bold">
 		{page.status}:
 		{page.error?.message}

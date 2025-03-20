@@ -75,7 +75,7 @@
 
 {#if isLoading}
 	<div
-		class="flex justify-center items-center min-h-[100lvh] bg-gradient-to-b from-page-bg to-primary-card-bg"
+		class="flex justify-center items-center min-h-svh bg-gradient-to-b from-page-bg to-primary-card-bg"
 	>
 		<div class="relative">
 			<div class="absolute inset-0 animate-ping rounded-full bg-btn-bg opacity-25 w-12 h-12"></div>

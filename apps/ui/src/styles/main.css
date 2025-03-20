@@ -14,7 +14,7 @@
 
 /* HTML styles */
 html {
-	@apply scroll-smooth bg-gradient-to-b from-page-bg to-primary-card-bg;
+	@apply scroll-smooth bg-page-bg;
 }
 
 /* Body Styles */
@@ -27,7 +27,7 @@ body *:not(svg, path) {
 
 /* Section Styles */
 section {
-	@apply px-4 md:px-6 lg:px-8 pt-16 md:pt-20 lg:pt-24 pb-28 md:pb-36;
+	@apply px-4 md:px-6 lg:px-8 pt-16 md:pt-20 lg:pt-20 pb-16 md:pb-28;
 }
 header,
 footer {

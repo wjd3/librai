@@ -188,7 +188,7 @@
 		<div class="flex-shrink-0">
 			{#if page.url.pathname !== '/'}
 				<a
-					class="inline-flex items-center space-x-2 py-2 rounded-lg border-0"
+					class="inline-flex items-center space-x-2 py-2 px-1 lg:px-0 rounded-lg border-0"
 					href="/"
 					in:fade={{ duration: 200, easing: quartInOut }}
 				>
@@ -201,7 +201,7 @@
 			{/if}
 		</div>
 
-		<div class="flex items-center space-x-3">
+		<div class="flex items-center space-x-3 max-md:pr-1">
 			{#if !isCheckingConversations}
 				<AuthMenu />
 			{/if}

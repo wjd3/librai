@@ -213,7 +213,7 @@
 
 {#if showAuthModal}
 	<div
-		class="fixed inset-0 flex items-center justify-center z-50 !ml-0 h-[100lvh]"
+		class="fixed inset-0 flex items-center justify-center z-50 !ml-0 h-lvh"
 		transition:fade={{ duration: 200, easing: quartInOut }}
 	>
 		<div

@@ -14,7 +14,6 @@
 	// import { censorText } from '$lib/utils/censor'
 
 	let promptInput: HTMLTextAreaElement | null = $state(null)
-	onMount(() => promptInput?.focus())
 
 	const MIN_TEXTAREA_HEIGHT = 48 // 12 * 4 (h-12 = 48px)
 	const MAX_TEXTAREA_HEIGHT = 144 // Maximum height before scrolling
@@ -249,15 +248,13 @@
 </script>
 
 <section
-	class="min-h-[100dvh] flex flex-col items-center justify-start bg-gradient-to-b from-page-bg to-primary-card-bg"
+	class="min-h-svh flex flex-col items-center justify-start bg-gradient-to-b from-page-bg to-primary-card-bg"
 >
-	<div
-		class="container flex flex-col justify-center items-center px-2 md:px-8 max-w-4xl mx-auto max-sm:pb-20"
-	>
+	<div class="container flex flex-col justify-center items-center max-w-4xl mx-auto max-sm:pb-20">
 		<!-- Chat History -->
 		{#if $chatHistory.length > 0}
-			<div class="chat-history w-full pt-6" in:fade={{ duration: 400, easing: quartInOut }}>
-				<div class="flex flex-col space-y-6 mb-4">
+			<div class="chat-history w-full" in:fade={{ duration: 400, easing: quartInOut }}>
+				<div class="flex flex-col space-y-3 sm:space-y-6">
 					{#each $chatHistory as { message, isUser }, i}
 						<div
 							class="chat-message p-6 rounded-2xl shadow-lg border border-form-border transition duration-200"
@@ -302,7 +299,7 @@
 
 		<!-- Input Form -->
 		<div
-			class={`fixed bottom-0 left-0 right-0 py-2 md:py-3 flex flex-col space-y-2 z-40 border-t border-form-border backdrop-blur ${
+			class={`fixed bottom-0 left-0 right-0 py-3 flex flex-col gap-1 sm:gap-2 z-40 border-t border-form-border backdrop-blur ${
 				$chatHistory.length === 0 ? 'items-center' : ''
 			}`}
 			style="background-color: color-mix(in srgb, var(--chat-bar-bg) 80%, transparent);"
@@ -327,7 +324,7 @@
 					/>
 				</div>
 
-				<div class="flex flex-col sm:flex-row items-stretch justify-center gap-4">
+				<div class="flex flex-col sm:flex-row items-stretch justify-center gap-2 sm:gap-4">
 					<div class="flex-grow flex">
 						<textarea
 							required
@@ -352,7 +349,7 @@
 					<button
 						disabled={isDisabled || $isAuthLoading}
 						type="submit"
-						class="primary h-12 w-full sm:w-16 flex items-center justify-center hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
+						class="primary h-8 sm:h-12 w-full sm:w-16 flex items-center justify-center hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
 						class:animate-pulse={isSubmitting}
 						class:opacity-70={isDisabled || $isAuthLoading}
 					>
@@ -366,7 +363,7 @@
 			</form>
 
 			{#if $chatHistory.length > 0}
-				<p class="text-sm text-center opacity-70 px-4">
+				<p class="text-xs text-center opacity-70 px-4">
 					Check answers for accuracy. {#if remainingMessages && remainingMessages <= 0}
 						No messages remaining
 						{#if rateLimitResetAt}
@@ -381,7 +378,7 @@
 
 		{#if !isAtBottom && $chatHistory.length && !$shouldStartChat && !isSubmitting}
 			<button
-				class="scroll-to-bottom fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 transition duration-300 group bottom-48 sm:bottom-32 md:bottom-36"
+				class="scroll-to-bottom fixed left-1/2 -translate-x-1/2 z-50 p-2 bg-btn-bg rounded-full shadow-lg hover:shadow-xl hover:translate-y-2 transition duration-300 group bottom-36 sm:bottom-28"
 				in:fade={{ duration: 300, easing: quartOut }}
 				out:fade={{ duration: 300, easing: quartOut }}
 				onclick={scrollToBottom}

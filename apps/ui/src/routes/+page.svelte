@@ -140,11 +140,11 @@
 </script>
 
 <section
-	class="min-h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-b from-page-bg to-primary-card-bg pt-24 pb-8 md:py-16 px-4"
+	class="min-h-svh flex flex-col items-center justify-center bg-gradient-to-b from-page-bg to-primary-card-bg pt-24 pb-8 md:py-16 px-4"
 >
 	<div class="container flex flex-col justify-center items-center px-4 md:px-8 max-w-4xl mx-auto">
 		<!-- Title -->
-		<div class="mb-4 md:mb-8">
+		<div class="mb-4">
 			<h1
 				class="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
 			>
@@ -163,7 +163,7 @@
 
 		<!-- Input Form -->
 		<div
-			class="w-full max-w-2xl backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-form-border"
+			class="w-full max-w-2xl backdrop-blur-sm p-6 rounded-2xl shadow-md border border-form-border"
 		>
 			<form class="w-full" onsubmit={preventDefault(startConversation)}>
 				<div class="sr-only">
@@ -179,7 +179,7 @@
 					/>
 				</div>
 
-				<div class="flex flex-col sm:flex-row items-stretch justify-center gap-4">
+				<div class="flex flex-col sm:flex-row items-stretch justify-center gap-2">
 					<div class="flex-grow flex">
 						<label for="chat-input" class="sr-only">Query the chatbot.</label>
 						<textarea
@@ -191,7 +191,7 @@
 							placeholder="Ask a question..."
 							bind:this={promptInput}
 							bind:value={userInput}
-							class="input w-full min-h-12 h-12 resize-none transition duration-200 focus:shadow-lg cursor-text overflow-y-auto"
+							class="input w-full min-h-12 h-12 resize-none transition duration-200 focus:shadow-md cursor-text overflow-y-auto"
 							style="max-height: {MAX_TEXTAREA_HEIGHT}px"
 							oninput={(e) => autoResizeTextarea(e.currentTarget)}
 							onkeydown={(e) => {
@@ -206,7 +206,7 @@
 					<button
 						disabled={isDisabled || $isAuthLoading}
 						type="submit"
-						class="primary h-12 w-full sm:w-16 flex items-center justify-center hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
+						class="primary h-8 sm:h-12 w-full sm:w-16 flex items-center justify-center hover:scale-105 active:scale-95 disabled:active:scale-100 disabled:hover:scale-100 transition duration-200"
 						class:animate-pulse={isSubmitting}
 						class:opacity-70={isDisabled || $isAuthLoading}
 					>
@@ -221,7 +221,7 @@
 		</div>
 
 		{#if promptSuggestions.length > 0}
-			<div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl">
+			<div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl">
 				{#each promptSuggestions as suggestion, index}
 					<button
 						onclick={() => {

@@ -52,7 +52,7 @@
 		<div
 			bind:this={dropdownRef}
 			class="absolute right-0 mt-2 w-48 bg-page-bg rounded-xl shadow-lg border border-form-border z-50 overflow-hidden"
-			transition:fade={{ duration: 200, easing: quartInOut }}
+			transition:fade={{ duration: 175, easing: quartInOut }}
 		>
 			{@render content()}
 		</div>
