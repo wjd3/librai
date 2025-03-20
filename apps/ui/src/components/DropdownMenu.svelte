@@ -13,11 +13,13 @@
 	let isOpen = $state(false)
 
 	const handleClickOutside = (event: MouseEvent) => {
+		const eventTarget = event.target as HTMLElement
 		if (
 			dropdownRef &&
 			triggerRef &&
-			!dropdownRef.contains(event.target as Node) &&
-			!triggerRef.contains(event.target as Node)
+			!dropdownRef.contains(eventTarget) &&
+			!triggerRef.contains(eventTarget) &&
+			!eventTarget.hasAttribute('data-dropdown-element')
 		) {
 			isOpen = false
 		}

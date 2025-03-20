@@ -51,13 +51,12 @@
 			onclick={toggleDarkMode}
 		>
 			{#if isDarkMode}
-				<span class="iconify lucide--moon"></span>
-				<span>Dark Mode</span>
+				<span class="iconify lucide--moon" data-dropdown-element></span>
+				<span data-dropdown-element>Dark Mode</span>
 			{:else}
-				<span class="iconify lucide--sun"></span>
-				<span>Light Mode</span>
+				<span class="iconify lucide--sun" data-dropdown-element></span>
+				<span data-dropdown-element>Light Mode</span>
 			{/if}
-			<span class="iconify lucide--check ml-auto"></span>
 		</button>
 	{/snippet}
 </DropdownMenu>

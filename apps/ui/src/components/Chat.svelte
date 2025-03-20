@@ -248,7 +248,7 @@
 </script>
 
 <section
-	class="min-h-svh flex flex-col items-center justify-start bg-gradient-to-b from-page-bg to-primary-card-bg"
+	class="min-h-svh flex flex-col items-center justify-start bg-gradient-to-t from-page-bg to-primary-card-bg transition-colors duration-200"
 >
 	<div class="container flex flex-col justify-center items-center max-w-4xl mx-auto max-sm:pb-20">
 		<!-- Chat History -->

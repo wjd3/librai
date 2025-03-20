@@ -140,13 +140,13 @@
 </script>
 
 <section
-	class="min-h-svh flex flex-col items-center justify-center bg-gradient-to-b from-page-bg to-primary-card-bg pt-24 pb-8 md:py-16 px-4"
+	class="min-h-svh flex flex-col items-center justify-center bg-gradient-to-t from-page-bg to-primary-card-bg pt-24 pb-8 md:py-16 px-4 duration-200 transition-colors"
 >
 	<div class="container flex flex-col justify-center items-center px-4 md:px-8 max-w-4xl mx-auto">
 		<!-- Title -->
 		<div class="mb-4">
 			<h1
-				class="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg"
+				class="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-btn-bg to-btn-hover-bg transition-colors duration-200"
 			>
 				{#if PUBLIC_APP_TITLE}
 					{PUBLIC_APP_TITLE}

@@ -19,7 +19,7 @@ html {
 
 /* Body Styles */
 body {
-	@apply bg-gradient-to-b from-page-bg to-primary-card-bg; /* Changed to a cleaner white */
+	@apply bg-gradient-to-t from-page-bg to-primary-card-bg transition-colors duration-200;
 }
 body *:not(svg, path) {
 	@apply font-sans text-text-color;
