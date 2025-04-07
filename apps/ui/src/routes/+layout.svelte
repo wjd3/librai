@@ -7,7 +7,8 @@
 		PUBLIC_APP_TITLE,
 		PUBLIC_APP_DESCRIPTION,
 		PUBLIC_APP_OG_IMAGE,
-		PUBLIC_APP_TWITTER_IMAGE
+		PUBLIC_APP_TWITTER_IMAGE,
+		PUBLIC_UMAMI_WEBSITE_ID
 	} from '$env/static/public'
 	import { themes, type Theme } from '$lib/constants/themes'
 	import { fade } from 'svelte/transition'
@@ -168,8 +169,12 @@
 		crossorigin="anonymous"
 	/>
 
-	{#if !import.meta.env.DEV}
-		<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+	{#if !import.meta.env.DEV && PUBLIC_UMAMI_WEBSITE_ID}
+		<script
+			defer
+			src="https://cloud.umami.is/script.js"
+			data-website-id={PUBLIC_UMAMI_WEBSITE_ID}
+		></script>
 	{/if}
 </svelte:head>
 
